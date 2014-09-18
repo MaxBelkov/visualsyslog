@@ -13,3 +13,5 @@ Visual Syslog have graphical user interface with message filtering. Live message
 
 Download setup:
 https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true
+
+To build from sources use CodeGear RAD Studio C++Builder 2007
