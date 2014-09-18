@@ -9,4 +9,5 @@ __history/
 *.obj
 *.local
 *.dsk
+*.skincfg
 *.~*
