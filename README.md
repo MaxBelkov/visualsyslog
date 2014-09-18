@@ -1,15 +1,15 @@
 visualsyslog
 ============
 
-Syslog server (daemon) for Windows with a graphical user interface.
+Visual Syslog server (daemon) for Windows with a graphical user interface.
 
-Support Windows XP, Vista, 7, 8, Server.
+Compliant to RFC 3164.
 
-A simple program to receive syslog messages. Useful when setting up routers and systems based on Linux. Works immediately - no adjustments.
+Support Windows XP, Vista, 7, 8.
 
-Graphical user interface with message filtering.
-Live view: аutomatically switches to a new message.
-Color selection.
+Visual Syslog is a simple program to receive syslog messages. Useful when setting up routers and systems based on Linux. Works immediately - no adjustments.
+
+Visual Syslog have graphical user interface with message filtering. Live messages view: switches to a new received message. Helpful color highlighting.
 
 Download setup:
 https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true
