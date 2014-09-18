@@ -11,4 +11,5 @@ Graphical user interface with message filtering.
 Live view: аutomatically switches to a new message.
 Color selection.
 
-Download setup: https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe
+Download setup:
+https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true
