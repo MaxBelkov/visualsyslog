@@ -5,6 +5,7 @@
 [Dd]ebug/
 [Rr]elease/
 __history/
+not for git/
 
 *.obj
 *.local
