@@ -1,0 +1,12 @@
+# CodeGear Builder C++
+
+# Build results
+
+[Dd]ebug/
+[Rr]elease/
+__history/
+
+*.obj
+*.local
+*.dsk
+*.~*
