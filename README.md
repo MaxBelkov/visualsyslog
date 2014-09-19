@@ -1,13 +1,13 @@
 Visual Syslog Server
 ===
 
-Visual Syslog Server (daemon) for Windows with a graphical user interface.
-
-Compliant to RFC 3164. Visual Syslog Server support Windows XP, Vista, 7, 8.
+Visual Syslog Server (daemon) for Windows with a graphical user interface.  
+Visual Syslog Server support Windows XP, Vista, 7, 8.  
+Compliant to RFC 3164.
 
 Visual Syslog Server is a simple program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.
 
-Visual Syslog have graphical user interface. Live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
+Visual Syslog Server have graphical user interface. Live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
 
 Screenshot
 ===
