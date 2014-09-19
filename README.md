@@ -10,6 +10,9 @@ Visual Syslog Server have graphical user interface. Live messages view: switches
 Visual Syslog Server support Windows XP, Vista, 7, 8.  
 Compliant to RFC 3164.
 
+Visual Syslog Server is a Open Source application.
+Licensed under the GPL V2.
+
 Screenshot
 ===
 ![Visual Syslog Server Screen](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
