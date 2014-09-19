@@ -1,17 +1,29 @@
-visualsyslog
-============
+Visual Syslog Server
+===
 
-Visual Syslog server (daemon) for Windows with a graphical user interface.
+Visual Syslog Server (daemon) for Windows with a graphical user interface.
 
-Compliant to RFC 3164.
+Compliant to RFC 3164. Visual Syslog Server support Windows XP, Vista, 7, 8.
 
-Support Windows XP, Vista, 7, 8.
+Visual Syslog Server is a simple program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.
 
-Visual Syslog is a simple program to receive syslog messages. Useful when setting up routers and systems based on Linux. Works immediately - no adjustments.
+Visual Syslog have graphical user interface. Live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
 
-Visual Syslog have graphical user interface with message filtering. Live messages view: switches to a new received message. Helpful color highlighting.
+Screenshot
+===
+![Visual Syslog Server Screen](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
 
-Download setup:
-https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true
+Download
+===
+Visual Syslog Server version 1.0 \[Sep 18 2014\]  
+[Download the installer for Windows from here](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
 
-To build from sources use CodeGear RAD Studio C++Builder 2007
+Installation
+===
+After installation Visual Syslog Server works immediately: adjustment is not required.
+Visual Syslog Server is an Windows application (installing a system service is not required).
+
+Building from sources
+===
+To build Visual Syslog Server from sources use CodeGear RAD Studio C++Builder 2007.  
+Project file _visualsyslog.cbproj_
