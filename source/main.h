@@ -41,6 +41,9 @@ __published:	// IDE-managed Components
     TTimer *UdpTimer;
     TMenuItem *mOpenFileFolder;
     TMenuItem *mSetup;
+    TMenuItem *mAbout;
+    TMenuItem *N1;
+    TSpeedButton *SpeedButton1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -58,6 +61,7 @@ __published:	// IDE-managed Components
     void __fastcall UdpTimerTimer(TObject *Sender);
     void __fastcall mOpenFileFolderClick(TObject *Sender);
     void __fastcall mSetupClick(TObject *Sender);
+    void __fastcall mAboutClick(TObject *Sender);
 
 private:	// User declarations
   // Change TStringGrid columns width

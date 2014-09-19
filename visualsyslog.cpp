@@ -2,9 +2,10 @@
 #include <vcl.h>
 #pragma hdrstop
 //---------------------------------------------------------------------------
-USEFORM("..\lmcommon\messageform.cpp", MessageForm);
+USEFORM("sourcecommon\messageform.cpp", MessageForm);
 USEFORM("source\main.cpp", MainForm);
 USEFORM("source\setup.cpp", SetupForm);
+USEFORM("source\aboutbox.cpp", AboutBoxForm);
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {

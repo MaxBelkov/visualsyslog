@@ -11,6 +11,7 @@
 #include "saveini.h"     // TSaveParamsINI
 #include "file.h"        // work with files
 #include "setup.h"
+#include "aboutbox.h"
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -602,6 +603,13 @@ void __fastcall TMainForm::mSetupClick(TObject *Sender)
 void __fastcall TMainForm::RedrawProto(void)
 {
   SetFile(fFile);
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::mAboutClick(TObject *Sender)
+{
+  AboutBoxForm = new TAboutBoxForm(this);
+  AboutBoxForm->ShowModal();
+  delete AboutBoxForm;
 }
 //---------------------------------------------------------------------------
 
