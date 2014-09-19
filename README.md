@@ -28,3 +28,7 @@ Building from sources
 ===
 To build Visual Syslog Server from sources use CodeGear RAD Studio C++Builder 2007.  
 Project file _visualsyslog.cbproj_
+
+Support
+===
+Your questions and suggestions please send to ![ ](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
