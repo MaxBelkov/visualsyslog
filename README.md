@@ -16,7 +16,7 @@ Features
 * Compliant to RFC 3164
 * Syslog messages are displayed in real-time
 * Filter displayed syslog messages based on severity or message contents
-* Сolor highlighting based on severity
+* Сolor highlighting based on priority
 * Import historical syslog files after the start of the program
 * Store all syslog messages in a single file
 * Free open source software, licensed under the GPL V2
