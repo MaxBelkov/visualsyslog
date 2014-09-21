@@ -1,21 +1,25 @@
 Visual Syslog Server
 ===
-
 Visual Syslog Server (daemon) for Windows with a graphical user interface.
 
-Visual Syslog Server is a simple program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.
+Visual Syslog Server is a free open source program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.
 
-Visual Syslog Server have graphical user interface. Live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
+Live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
 
-Visual Syslog Server support Windows XP, Vista, 7, 8.  
-Compliant to RFC 3164.
-
-Visual Syslog Server is a Open Source application.
-Licensed under the GPL V2.
-
-Screenshot
-===
 ![Visual Syslog Server Screen](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
+
+Features
+===
+* Run as a Windows application
+* Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012
+* Receive messages from various devices via UDP protocol
+* Compliant to RFC 3164
+* Syslog messages are displayed in real-time
+* Filter displayed syslog messages based on severity or message contents
+* Сolor highlighting based on severity
+* Import historical syslog files after the start of the program
+* Store all syslog messages in a single file
+* Free open source software, licensed under the GPL V2
 
 Download
 ===
