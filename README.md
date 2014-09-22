@@ -34,7 +34,10 @@ Visual Syslog Server is an Windows application (installing a system service is n
 Building from sources
 ===
 To build Visual Syslog Server from sources use CodeGear RAD Studio C++Builder 2007.  
-Project file _visualsyslog.cbproj_
+Main project file _visualsyslog.cbproj_
+
+To build the installer, use Inno Setup Compiler 5.5.1(a)  
+Installer project file _visualsyslog.iss_
 
 Is not supported yet
 ===
