@@ -36,6 +36,16 @@ Building from sources
 To build Visual Syslog Server from sources use CodeGear RAD Studio C++Builder 2007.  
 Project file _visualsyslog.cbproj_
 
-Support
+Is not supported yet
 ===
+* Minimize to system tray
+* RFC 5424
+* Log file rotation
+* Files larger than 2 GB
+* TCP transport
+* Extended message filtering
+* Customizable color highlighting
+* Importing message file
+
+If you need these or other functions let me know.  
 Your questions and suggestions please send to ![ ](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
