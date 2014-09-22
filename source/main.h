@@ -25,7 +25,6 @@ __published:	// IDE-managed Components
     TLabel *Label1;
     TEdit *FilterEdit;
     TCheckBox *GotoNewMessCB;
-    TSpeedButton *ClearFilterButton;
     TStringGrid *LogSG;
     TPopupMenu *ClipboardPM;
     TMenuItem *N30;
@@ -44,6 +43,9 @@ __published:	// IDE-managed Components
     TMenuItem *mAbout;
     TMenuItem *N1;
     TSpeedButton *SpeedButton1;
+    TLabel *Label3;
+    TEdit *FilterIgnoreEdit;
+    TSpeedButton *ClearFilterButton;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -75,6 +77,7 @@ private:	// User declarations
   bool bLive;       // Live view ? (yes by default)
 
   String fFilter;   // Text filter string
+  String fFilterIgnore; // Text filter ignore string
   int ApplyFilter;  // Text filter timer in seconds
 
   DWORD FileSize;   // Size of fFile when open

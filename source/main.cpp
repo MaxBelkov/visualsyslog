@@ -29,7 +29,7 @@
 #define cl_Rose   ((TColor)RGB(255,151,203))
 
 // Start size in bytes, to read from text file
-#define StartProtoSize (200*1024)
+#define StartProtoSize (1024*1024)
 // Lines count to add to string grid
 #define StartProtoGridLines 200
 // Max lines count in the string grid
@@ -50,6 +50,10 @@ String WorkDir;
 String SyslogFile;
 String RawFile;
 
+BYTE HiVer=0, LoVer=0;
+String GetVersionString(void);
+String GetFullAppName(void);
+
 TMainForm * MainForm = NULL;
 //---------------------------------------------------------------------------
 __fastcall TMainForm::TMainForm(TComponent* Owner)
@@ -59,6 +63,14 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormCreate(TObject * Sender)
 {
+  // Extract program version for resources
+  WORD Major, Minor, Release, Build;
+  if( GetFileVersion(GetApplicationExeName(), Major, Minor, Release, Build) )
+  {
+    HiVer = (BYTE)Major;
+    LoVer = (BYTE)Minor;
+  }
+
   char str[MAX_PATH];
   // CSIDL_COMMON_APPDATA   C:\Documents and Settings\All Users\Application Data
   // CSIDL_LOCAL_APPDATA    C:\Documents and Settings\username\Local Settings\Application Data (nonroaming)
@@ -116,6 +128,7 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   *AppParams << this << LogSG;
   AppParams->Values["GotoNewMess"] = GotoNewMessCB->Checked;
   AppParams->Values["TextFilter"] = FilterEdit->Text;
+  AppParams->Values["TextFilterIgnore"] = FilterIgnoreEdit->Text;
 
   AppParams->Values["FontName"] = LogSG->Font->Name;
   AppParams->Values["FontSize"] = LogSG->Font->Size;
@@ -183,6 +196,13 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   {
 	FilterEdit->Text = v;
     fFilter = v;
+    ClearFilterButton->Visible = true;
+  }
+  v = AppParams->Values["TextFilterIgnore"];
+  if( ! v.IsEmpty() )
+  {
+	FilterIgnoreEdit->Text = v;
+    fFilterIgnore = v;
     ClearFilterButton->Visible = true;
   }
 
@@ -261,12 +281,18 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
     fFilter = FilterEdit->Text;
     ApplyFilter = 2;
   }
+  if( fFilterIgnore != FilterIgnoreEdit->Text )
+  {
+    fFilterIgnore = FilterIgnoreEdit->Text;
+    ApplyFilter = 2;
+  }
   else if( ApplyFilter > 0 )
   {
     ApplyFilter--;
     if( ApplyFilter == 0 )
     {
-      ClearFilterButton->Visible = FilterEdit->Text.Length() > 0;
+      ClearFilterButton->Visible = FilterEdit->Text.Length() > 0 ||
+                                   FilterIgnoreEdit->Text.Length() > 0;
       RedrawProto();
     }
   }
@@ -279,7 +305,7 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::UpdateCaption(void)
 {
-  String s = Application->Title + " [" + fFile + "]";
+  String s = GetFullAppName() + "  [" + fFile + "]";
   // If the text file is not completely read
   if( MoreButton->Visible )
     s += " the last " + GetBytesStringEng(ReadedSize) +
@@ -319,6 +345,7 @@ void __fastcall TMainForm::Read(void)
     // he read to the end and not at the end of the array p [] is to truncate
     // proto_line var is outside, to save cut line part
     bool TextFilterOn = fFilter.Length() > 0;
+    bool TextFilterIgnoreOn = fFilterIgnore.Length() > 0;
 
     for(DWORD i=0, c=in.Bytes; i<c; i++)
     {
@@ -329,11 +356,20 @@ void __fastcall TMainForm::Read(void)
           // Now proto_line contains new line
           TotalLines++;
 
-          // Text filter enabled
+          // Text to find enabled
           if( TextFilterOn )
             if( proto_line.Pos(fFilter) == 0 )
             {
-              // and the desired substring is not found - continue
+              // and the desired substring is NOT found - continue
+              proto_line.SetLength(0);
+              continue;
+            }
+
+          // Text to ignore enabled
+          if( TextFilterIgnoreOn )
+            if( proto_line.Pos(fFilterIgnore) > 0 )
+            {
+              // and the desired substring is found - continue
               proto_line.SetLength(0);
               continue;
             }
@@ -397,7 +433,7 @@ void __fastcall TMainForm::Read(void)
 
   if( LogSG->RowCount >= MaxGridLines )
   {
-    ReportMess2("Maximum number of lines exceeded");
+    ReportMess2("Maximum number of lines exceeded (%d)", MaxGridLines);
     // Read protocol file again
     RedrawProto();
   }
@@ -443,14 +479,23 @@ void __fastcall TMainForm::ClearFilterButtonClick(TObject *Sender)
 {
   FilterEdit->Text = "";
   fFilter = "";
+
+  FilterIgnoreEdit->Text = "";
+  fFilterIgnore = "";
+
   ApplyFilter = 0;
+
+  FilterByPriorityCB->ItemIndex = 0;
+
   ClearFilterButton->Visible = false;
+  
   // Read protocol file again
   RedrawProto();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FilterByPriorityCBSelect(TObject *Sender)
 {
+  ClearFilterButton->Visible = true;
   // Read protocol file again
   RedrawProto();
 }
@@ -610,6 +655,16 @@ void __fastcall TMainForm::mAboutClick(TObject *Sender)
   AboutBoxForm = new TAboutBoxForm(this);
   AboutBoxForm->ShowModal();
   delete AboutBoxForm;
+}
+//---------------------------------------------------------------------------
+String GetVersionString(void)
+{
+  return IntToStr(HiVer) + "." + IntToStr(LoVer);
+}
+//---------------------------------------------------------------------------
+String GetFullAppName(void)
+{
+  return Application->Title + " " + GetVersionString();
 }
 //---------------------------------------------------------------------------
 

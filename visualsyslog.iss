@@ -1,7 +1,7 @@
 [Setup]
-AppName=Visual Syslog server
-AppVerName=Visual Syslog server 1.0
-VersionInfoVersion=1.0.0.0
+AppName=Visual Syslog Server
+AppVerName=Visual Syslog Server 1.1
+VersionInfoVersion=1.1.0.0
 
 AppPublisher=Max Belkov
 AppPublisherURL=https://github.com/MaxBelkov/visualsyslog

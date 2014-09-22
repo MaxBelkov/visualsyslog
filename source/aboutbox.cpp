@@ -7,13 +7,13 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 
-extern int HiVer, LoVer;
+String GetFullAppName(void);
 TAboutBoxForm * AboutBoxForm;
 //---------------------------------------------------------------------------
 __fastcall TAboutBoxForm::TAboutBoxForm(TComponent* Owner)
     : TForm(Owner)
 {
-  Caption = Application->Title + " [" + __DATE__ + "]";
+  Caption = GetFullAppName() + " [" + __DATE__ + "]";
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBoxForm::LabelClick(TObject * Sender)

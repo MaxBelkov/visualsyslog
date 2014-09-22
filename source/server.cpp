@@ -43,21 +43,29 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   {
     DateStr.SetLength(15);
     lstrcpyn(DateStr.c_str(), p, 16);
-    p += 16;
-
-    for(int i=0; i<100 && *p; i++)
-    {
-      if( *p == ' ' )
-      {
-        p++;
-        break;
-      }
-      HostName += *p++;
-    }
+    p += 16; // including space
   }
   else
   {
     DateStr = FormatDateTime("mmm dd hh:nn:ss", Now());
+  }
+
+  // try to find host name
+  for(int i=0; i<32 && p[i]; i++)
+  {
+    if( p[i] == ' ' )
+    {
+      // found
+      HostName.SetLength(i);
+      lstrcpyn(HostName.c_str(), p, i+1);
+      p += i + 1;
+      break;
+    }
+    else if( p[i] == ':' || p[i] == '[' || p[i] == ']' )
+    {
+      // host name not exist - this is program name
+      break;
+    }
   }
 
   // try to find program name
@@ -73,6 +81,7 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
     }
   }
 
+  // and now - text message 
   // Replace all tabs by spaces
   // and cut line end
   for(int i=0; p[i]; i++)

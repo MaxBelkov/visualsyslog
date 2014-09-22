@@ -29,6 +29,7 @@ Visual Syslog Server version 1.0 \[Sep 18 2014\]
 Installation
 ===
 After installation Visual Syslog Server works immediately: adjustment is not required.
+Waiting for messages on the UDP port 514 (default setting).
 Visual Syslog Server is an Windows application (installing a system service is not required).
 
 Building from sources

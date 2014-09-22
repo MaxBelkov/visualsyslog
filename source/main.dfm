@@ -4,8 +4,10 @@ object MainForm: TMainForm
   ActiveControl = LogSG
   Caption = 'Visual Syslog'
   ClientHeight = 483
-  ClientWidth = 844
+  ClientWidth = 784
   Color = clBtnFace
+  Constraints.MinHeight = 220
+  Constraints.MinWidth = 400
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
@@ -17,66 +19,33 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object GroupBox1: TGroupBox
-    Left = 0
-    Top = 0
-    Width = 844
+    AlignWithMargins = True
+    Left = 6
+    Top = 3
+    Width = 772
     Height = 68
+    Margins.Left = 6
+    Margins.Right = 6
     Align = alTop
     Caption = 'Filter'
     TabOrder = 0
+    ExplicitLeft = 0
+    ExplicitTop = 0
+    ExplicitWidth = 844
     DesignSize = (
-      844
+      772
       68)
     object Label1: TLabel
-      Left = 56
+      Left = 22
       Top = 20
-      Width = 22
+      Width = 56
       Height = 13
       Alignment = taRightJustify
-      Caption = 'Text'
-    end
-    object ClearFilterButton: TSpeedButton
-      Left = 215
-      Top = 18
-      Width = 18
-      Height = 18
-      Hint = #1054#1095#1080#1089#1090#1080#1090#1100' '#1092#1080#1083#1100#1090#1088' ('#1087#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077' '#1089#1090#1088#1086#1082#1080')'
-      Flat = True
-      Glyph.Data = {
-        36030000424D3603000000000000360000002800000010000000100000000100
-        18000000000000030000130B0000130B00000000000000000000FFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFF6569BA707EE06A6DBEFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFEFFFFFFFFFFFFB9BADD7A83E6
-        6A80FF263CD9EBECF6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7677
-        C58788D9FFFFFFFFFFFFA0A1D34D54DE2536EB0A1FD9E4E4F3FFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFDDDDEE0D15C0B2B3DFFFFFFFFFFFFFE9E9F41519BF
-        060EDB0412D87A7CC2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2C34BA1721
-        C1FFFFFFFFFFFFFFFFFFFFFFFF595ABA0002CF0309D8080FC1DADAECFFFFFFFF
-        FFFFFFFFFFFFFFFF797BC50C21DF9D9ED3FFFFFFFFFFFFFFFFFFFFFFFFFDFDFE
-        1E1FB00001D00106D52326B1FFFFFFFFFFFFFFFFFFAAABD40C28E52733BEFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9EAF41112B50000D10103CE5A5CB9FF
-        FFFFB2B3D90A1ED30B25DFD2D1E7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFE3E4F21415B50000D20101C44C4DB7070EC30514E16F70BEFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5F5FA2D2DB00001CC00
-        00CC0103D13639B3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFE3E3F33135B70207CF0103D20001C97676C1FFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7073CA0E1DD10717E40510DE0E
-        13BA0406C00608CC6162BEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9C9CD3
-        4E58D13D57F71D3CFA0D26F01921BFEBEBF6C4C4E5191BBE2325D44949BBF9F9
-        FCFFFFFFFFFFFFFFFFFF8487D0A2ABF78D9DFF6A7FFF3A55F9303BC1EFEFF7FF
-        FFFFFFFFFFFDFDFE5A5BBE3F40D14849C3A3A3D6FFFFFFFFFFFF8688CCB6BBF5
-        A3ACFB6872E07677C8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8C8E65455
-        C16061CC5A5ABDADAED9E0E0F09192D29A9DE29697D3FFFFFFFFFFFFFFFFFFFF
-        FFFFFFFFFFFFFFFFFFFFFFFFFFFFEDEDF77C7CC86062C48282CA}
-      ParentShowHint = False
-      ShowHint = True
-      Visible = False
-      OnClick = ClearFilterButtonClick
+      Caption = 'Text to find'
     end
     object Label2: TLabel
-      Left = 270
-      Top = 20
+      Left = 478
+      Top = 19
       Width = 34
       Height = 13
       Alignment = taRightJustify
@@ -87,7 +56,7 @@ object MainForm: TMainForm
       Top = 44
       Width = 18
       Height = 18
-      Hint = 'Read previous record'
+      Hint = 'Read previous lines'
       Flat = True
       Glyph.Data = {
         46020000424D460200000000000036000000280000000E0000000C0000000100
@@ -115,7 +84,7 @@ object MainForm: TMainForm
       OnClick = MoreButtonClick
     end
     object SpeedButton1: TSpeedButton
-      Left = 808
+      Left = 736
       Top = 26
       Width = 23
       Height = 22
@@ -168,6 +137,54 @@ object MainForm: TMainForm
       ParentShowHint = False
       ShowHint = True
       OnClick = mAboutClick
+      ExplicitLeft = 808
+    end
+    object Label3: TLabel
+      Left = 241
+      Top = 20
+      Width = 68
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Text to ignore'
+    end
+    object ClearFilterButton: TSpeedButton
+      Left = 678
+      Top = 18
+      Width = 18
+      Height = 18
+      Hint = 'Clear filter (show all messages)'
+      Flat = True
+      Glyph.Data = {
+        36030000424D3603000000000000360000002800000010000000100000000100
+        18000000000000030000130B0000130B00000000000000000000FFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFF6569BA707EE06A6DBEFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFDFDFEFFFFFFFFFFFFB9BADD7A83E6
+        6A80FF263CD9EBECF6FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7677
+        C58788D9FFFFFFFFFFFFA0A1D34D54DE2536EB0A1FD9E4E4F3FFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFDDDDEE0D15C0B2B3DFFFFFFFFFFFFFE9E9F41519BF
+        060EDB0412D87A7CC2FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF2C34BA1721
+        C1FFFFFFFFFFFFFFFFFFFFFFFF595ABA0002CF0309D8080FC1DADAECFFFFFFFF
+        FFFFFFFFFFFFFFFF797BC50C21DF9D9ED3FFFFFFFFFFFFFFFFFFFFFFFFFDFDFE
+        1E1FB00001D00106D52326B1FFFFFFFFFFFFFFFFFFAAABD40C28E52733BEFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFE9EAF41112B50000D10103CE5A5CB9FF
+        FFFFB2B3D90A1ED30B25DFD2D1E7FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFE3E4F21415B50000D20101C44C4DB7070EC30514E16F70BEFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF5F5FA2D2DB00001CC00
+        00CC0103D13639B3FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFE3E3F33135B70207CF0103D20001C97676C1FFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF7073CA0E1DD10717E40510DE0E
+        13BA0406C00608CC6162BEFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9C9CD3
+        4E58D13D57F71D3CFA0D26F01921BFEBEBF6C4C4E5191BBE2325D44949BBF9F9
+        FCFFFFFFFFFFFFFFFFFF8487D0A2ABF78D9DFF6A7FFF3A55F9303BC1EFEFF7FF
+        FFFFFFFFFFFDFDFE5A5BBE3F40D14849C3A3A3D6FFFFFFFFFFFF8688CCB6BBF5
+        A3ACFB6872E07677C8FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFC8C8E65455
+        C16061CC5A5ABDADAED9E0E0F09192D29A9DE29697D3FFFFFFFFFFFFFFFFFFFF
+        FFFFFFFFFFFFFFFFFFFFFFFFFFFFEDEDF77C7CC86062C48282CA}
+      ParentShowHint = False
+      ShowHint = True
+      Visible = False
+      OnClick = ClearFilterButtonClick
     end
     object FilterEdit: TEdit
       Left = 88
@@ -184,18 +201,18 @@ object MainForm: TMainForm
       Caption = 'Goto new line'
       Checked = True
       State = cbChecked
-      TabOrder = 2
+      TabOrder = 3
     end
     object FilterByPriorityCB: TComboBox
-      Left = 312
-      Top = 18
+      Left = 520
+      Top = 17
       Width = 145
       Height = 19
       Style = csOwnerDrawFixed
       DropDownCount = 12
       ItemHeight = 13
       ItemIndex = 0
-      TabOrder = 1
+      TabOrder = 2
       Text = '<all>'
       OnDrawItem = FilterByPriorityCBDrawItem
       OnSelect = FilterByPriorityCBSelect
@@ -210,20 +227,35 @@ object MainForm: TMainForm
         'info'
         'debug')
     end
+    object FilterIgnoreEdit: TEdit
+      Left = 319
+      Top = 18
+      Width = 121
+      Height = 21
+      TabOrder = 1
+    end
   end
   object GroupBox2: TGroupBox
-    Left = 0
-    Top = 68
-    Width = 844
-    Height = 396
+    AlignWithMargins = True
+    Left = 6
+    Top = 77
+    Width = 772
+    Height = 384
+    Margins.Left = 6
+    Margins.Right = 6
     Align = alClient
     Caption = #1042#1089#1077#1075#1086' 0 '#1089#1090#1088#1086#1082
     TabOrder = 1
+    ExplicitLeft = 0
+    ExplicitTop = 68
+    ExplicitWidth = 844
+    ExplicitHeight = 396
     object LogSG: TStringGrid
-      Left = 2
-      Top = 15
-      Width = 840
-      Height = 379
+      AlignWithMargins = True
+      Left = 5
+      Top = 18
+      Width = 762
+      Height = 361
       Align = alClient
       ColCount = 7
       DefaultColWidth = 50
@@ -241,6 +273,10 @@ object MainForm: TMainForm
       TabOrder = 0
       OnDblClick = LogSGDblClick
       OnDrawCell = LogSGDrawCell
+      ExplicitLeft = 2
+      ExplicitTop = 15
+      ExplicitWidth = 840
+      ExplicitHeight = 379
       ColWidths = (
         120
         143
@@ -254,7 +290,7 @@ object MainForm: TMainForm
   object StatusBar: TStatusBar
     Left = 0
     Top = 464
-    Width = 844
+    Width = 784
     Height = 19
     Panels = <
       item
@@ -264,6 +300,7 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
+    ExplicitWidth = 844
   end
   object Timer: TTimer
     Enabled = False
@@ -294,7 +331,7 @@ object MainForm: TMainForm
       Caption = '-'
     end
     object mMoreMenu: TMenuItem
-      Caption = 'Read previous record'
+      Caption = 'Read previous lines'
       ImageIndex = 0
       Visible = False
       OnClick = MoreButtonClick
@@ -328,7 +365,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 152
     Bitmap = {
-      494C01010700B000B00010001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01010700B000B40010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000002000000001002000000000000020
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -596,7 +633,8 @@ object MainForm: TMainForm
       FFFF8101FFE08001FCFF81011F808001F8FFC0830F008001F0FFE0030F008001
       E003F0030F008001C003F00307808001C003F80303008001E003FC0300048001
       F0FFFC0380078001F8FFFE03C00F8001FCFFFE03E01F8001FFFFFF03FFFF8001
-      FFFFFF03FFFF8001FFFFFF83FFFFFFFF}
+      FFFFFF03FFFF8001FFFFFF83FFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object UdpTimer: TTimer
     Enabled = False

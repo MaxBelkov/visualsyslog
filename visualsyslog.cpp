@@ -13,7 +13,7 @@ WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
     {
          Application->Initialize();
          SetApplicationMainFormOnTaskBar(Application, true);
-         Application->Title = "Visual Syslog 1.0";
+         Application->Title = "Visual Syslog Server";
          Application->CreateForm(__classid(TMainForm), &MainForm);
          Application->Run();
     }

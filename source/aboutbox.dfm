@@ -36,9 +36,9 @@ object AboutBoxForm: TAboutBoxForm
     Height = 56
     AutoSize = False
     Caption = 
-      'Visual Syslog Server is a simple program to receive syslog messa' +
-      'ges. Compliant to RFC 3164. Visual Syslog Server is a Open Sourc' +
-      'e application. Licensed under the GPL V2.'
+      'Visual Syslog Server is a program to receive syslog messages. Co' +
+      'mpliant to RFC 3164. Visual Syslog Server is a free Open Source ' +
+      'application. Licensed under the GPL V2.'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
     Font.Height = -13
