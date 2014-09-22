@@ -36,42 +36,61 @@
 
 <p>Visual Syslog Server (daemon) for Windows with a graphical user interface.</p>
 
-<p>Visual Syslog Server is a simple program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.</p>
+<p>Visual Syslog Server is a free open source program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.</p>
 
-<p>Visual Syslog Server have graphical user interface. Live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.</p>
-
-<p>Visual Syslog Server support Windows XP, Vista, 7, 8.<br>
-Compliant to RFC 3164.</p>
-
-<p>Visual Syslog Server is a Open Source application.
-Licensed under the GPL V2.</p>
-
-<h1>
-<a name="screenshot" class="anchor" href="#screenshot"><span class="octicon octicon-link"></span></a>Screenshot</h1>
+<p>Visual Syslog Server has a live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.</p>
 
 <p><img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true" alt="Visual Syslog Server Screen"></p>
 
 <h1>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h1>
+
+<ul>
+<li>Run as a Windows application</li>
+<li>Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012</li>
+<li>Receive messages from various devices via UDP protocol</li>
+<li>Compliant to RFC 3164</li>
+<li>Syslog messages are displayed in real-time</li>
+<li>Filter displayed syslog messages based on priority or message contents</li>
+<li>Сolor highlighting based on priority</li>
+<li>Import historical syslog files after the start of the program</li>
+<li>Store all syslog messages in a single file</li>
+<li>Free open source software, licensed under the GPL V2</li>
+</ul><h1>
 <a name="download" class="anchor" href="#download"><span class="octicon octicon-link"></span></a>Download</h1>
 
-<p>Visual Syslog Server version 1.0 [Sep 18 2014]<br><a href="https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true">Download the installer for Windows from here</a>  </p>
+<p>Visual Syslog Server version 1.1 [Sep 22 2014]<br><a href="https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true">Download the installer for Windows from here</a>  </p>
 
 <h1>
 <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
 
 <p>After installation Visual Syslog Server works immediately: adjustment is not required.
+Waiting for messages on the UDP port 514 (default setting).
 Visual Syslog Server is an Windows application (installing a system service is not required).</p>
 
 <h1>
 <a name="building-from-sources" class="anchor" href="#building-from-sources"><span class="octicon octicon-link"></span></a>Building from sources</h1>
 
 <p>To build Visual Syslog Server from sources use CodeGear RAD Studio C++Builder 2007.<br>
-Project file <em>visualsyslog.cbproj</em></p>
+Main project file <em>visualsyslog.cbproj</em></p>
+
+<p>To build the installer, use Inno Setup Compiler 5.5.1(a)<br>
+Installer project file <em>visualsyslog.iss</em></p>
 
 <h1>
-<a name="support" class="anchor" href="#support"><span class="octicon octicon-link"></span></a>Support</h1>
+<a name="is-not-supported-yet" class="anchor" href="#is-not-supported-yet"><span class="octicon octicon-link"></span></a>Is not supported yet</h1>
 
-<p>Your questions and suggestions please send to <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true" alt=" "></p>
+<ul>
+<li>Minimize to system tray</li>
+<li>RFC 5424</li>
+<li>Log file rotation</li>
+<li>Files larger than 2 GB</li>
+<li>TCP transport</li>
+<li>Extended message filtering</li>
+<li>Customizable color highlighting</li>
+<li>Importing message file</li>
+</ul><p>If you need these or other functions let me know.<br>
+Your questions and suggestions please send to <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true" alt=" "></p>
       </section>
     </div>
 
