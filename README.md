@@ -23,8 +23,9 @@ Features
 
 Download
 ===
-Visual Syslog Server version 1.1 \[Sep 22 2014\]  
-[Download the installer for Windows from here](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+Visual Syslog Server download installer for Windows  
+[Download last developper snapshot from here](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Download latest stable release from here](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Installation
 ===
