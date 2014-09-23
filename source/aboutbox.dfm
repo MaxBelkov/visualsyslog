@@ -4,7 +4,7 @@ object AboutBoxForm: TAboutBoxForm
   BorderIcons = [biSystemMenu]
   BorderStyle = bsDialog
   Caption = 'About'
-  ClientHeight = 203
+  ClientHeight = 231
   ClientWidth = 545
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -20,14 +20,14 @@ object AboutBoxForm: TAboutBoxForm
     Left = 8
     Top = 8
     Width = 529
-    Height = 145
+    Height = 177
     Style = bsRaised
   end
   object Bevel2: TBevel
     Left = 16
     Top = 16
     Width = 513
-    Height = 129
+    Height = 161
   end
   object Label: TLabel
     Left = 104
@@ -250,7 +250,7 @@ object AboutBoxForm: TAboutBoxForm
   object Label1: TLabel
     Tag = 2
     Left = 27
-    Top = 118
+    Top = 150
     Width = 117
     Height = 16
     Cursor = crHandPoint
@@ -266,9 +266,25 @@ object AboutBoxForm: TAboutBoxForm
     OnClick = LabelClick
     IsControl = True
   end
+  object Label2: TLabel
+    Left = 27
+    Top = 128
+    Width = 302
+    Height = 16
+    Caption = 'Reviews, comments and suggestions please send to:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    Transparent = True
+    WordWrap = True
+    IsControl = True
+  end
   object OKButton: TBitBtn
     Left = 216
-    Top = 166
+    Top = 198
     Width = 113
     Height = 25
     Cancel = True

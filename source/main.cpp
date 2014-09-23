@@ -46,6 +46,7 @@ TSaveParamsINI * AppParams = NULL;
 TUDP * udp = NULL;
 int UdpPort = 514;
 
+String ApplicationExeName;
 String WorkDir;
 String SyslogFile;
 String RawFile;
@@ -53,6 +54,8 @@ String RawFile;
 BYTE HiVer=0, LoVer=0;
 String GetVersionString(void);
 String GetFullAppName(void);
+
+bool bHideToTray;
 
 TMainForm * MainForm = NULL;
 //---------------------------------------------------------------------------
@@ -63,13 +66,21 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormCreate(TObject * Sender)
 {
+  LastBalloonShowTime = 0UL;
+  ApplicationExeName = GetApplicationExeName();
+
   // Extract program version for resources
   WORD Major, Minor, Release, Build;
-  if( GetFileVersion(GetApplicationExeName(), Major, Minor, Release, Build) )
+  if( GetFileVersion(ApplicationExeName, Major, Minor, Release, Build) )
   {
     HiVer = (BYTE)Major;
     LoVer = (BYTE)Minor;
   }
+
+  if( bHideToTray )
+    Application->ShowMainForm = false;
+
+  TrayChangeIcon(0);
 
   char str[MAX_PATH];
   // CSIDL_COMMON_APPDATA   C:\Documents and Settings\All Users\Application Data
@@ -627,8 +638,12 @@ void __fastcall TMainForm::mOpenFileFolderClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::mSetupClick(TObject *Sender)
 {
+  bool se = IsShortcutExist(CSIDL_STARTUP);
+
   SetupForm = new TSetupForm(this);
   SetupForm->PortEdit->Text = IntToStr(UdpPort);
+  SetupForm->AutoStartCB->Checked = se;
+
   if( SetupForm->ShowModal() == mrOk )
   {
     int port;
@@ -640,6 +655,13 @@ void __fastcall TMainForm::mSetupClick(TObject *Sender)
         ServerStop();
         ServerStart();
       }
+    }
+    if( SetupForm->AutoStartCB->Checked != se )
+    {
+      if( se )
+        DeleteShortcut(CSIDL_STARTUP);
+      else
+        CreateShortcut(CSIDL_STARTUP);
     }
   }
   delete SetupForm;
@@ -665,6 +687,146 @@ String GetVersionString(void)
 String GetFullAppName(void)
 {
   return Application->Title + " " + GetVersionString();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::mOpenMainFormClick(TObject *Sender)
+{
+  // open the application if it is minimized
+  Application->Restore();
+
+  // If the main form is minimized or hidden
+  if( WindowState==wsMinimized )
+    WindowState = wsNormal;
+  else
+    Show();
+
+  // bring to the fore
+  Application->BringToFront();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::mExitClick(TObject *Sender)
+{
+  Application->Terminate();
+}
+//---------------------------------------------------------------------------
+// State: 0-ok 1-warning 2-error
+void __fastcall TMainForm::TrayChangeIcon(int State)
+{
+  if( TrayIcon->IconIndex != State )
+    TrayIcon->IconIndex = State;
+
+  String tip = GetFullAppName() +
+               "\nUDP port: " + IntToStr(UdpPort);
+
+  if( ! SameText(TrayIcon->Hint, tip) )
+    TrayIcon->Hint = tip;
+}
+//---------------------------------------------------------------------------
+// State: 0-ok 1-warning 2-error
+void __fastcall TMainForm::TrayShowBallon(AnsiString Title, AnsiString Text, int State)
+{
+  // That messages are not received, not more than once every 1000 ms
+  DWORD tc = GetTickCount();
+  if( tc - LastBalloonShowTime <= 1000UL )
+    return;
+  LastBalloonShowTime = tc;
+  TrayIcon->BalloonTitle = Title;
+  TrayIcon->BalloonHint = Text;
+  switch( State )
+  {
+    case 0: TrayIcon->BalloonFlags = bfInfo; break;
+    case 1: TrayIcon->BalloonFlags = bfWarning; break;
+    case 2: TrayIcon->BalloonFlags = bfError; break;
+    default: TrayIcon->BalloonFlags = bfNone; break;
+  }
+  TrayIcon->ShowBalloonHint();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::FormClose(TObject *Sender, TCloseAction &Action)
+{
+  Action = caNone;
+  Hide();
+}
+//---------------------------------------------------------------------------
+void __fastcall CreateShortcut(int where)
+{
+  TWaitCursor wait;
+  String ShortcuteName = Application->Title;
+  String ShortcutFileName;
+
+  try
+  {
+    char szLinkPath[MN];
+    HRESULT hr = SHGetFolderPath(NULL, where, NULL, 0, szLinkPath);
+    if( FAILED(hr) )
+      throw Exception(FormatLastError2(hr) + " [1:" + IntToStr(hr) + "]");
+
+    ShortcutFileName = String(szLinkPath) + "\\" + ShortcuteName + ".lnk";
+
+    hr = CreateLink(ApplicationExeName.c_str(),
+                    "",
+                    ShortcutFileName.c_str(),
+                    "",
+                    "tray");
+    if( FAILED(hr) )
+      throw Exception(FormatLastError2(hr) + " [2:" + IntToStr(hr) + "]");
+  }
+  catch(const Exception & E)
+  {
+    ReportError2("Error creating shortcut \"%s\"\nApplication \"%s\"\nError: \"%s\"",
+      ShortcutFileName.c_str(), ApplicationExeName.c_str(), E.Message.c_str());
+  }
+  catch(...)
+  {
+    ReportError2("Error creating shortcut \"%s\"\nApplication \"%s\"",
+      ShortcutFileName.c_str(), ApplicationExeName.c_str());
+  }
+}
+//---------------------------------------------------------------------------
+void __fastcall DeleteShortcut(int where)
+{
+  String ShortcuteName = Application->Title;
+  String ShortcutFileName;
+
+  try
+  {
+    char szLinkPath[MN];
+    HRESULT hr = SHGetFolderPath(NULL, where, NULL, 0, szLinkPath);
+    if( FAILED(hr) )
+      throw Exception(FormatLastError2(hr) + " [1:" + IntToStr(hr) + "]");
+
+    ShortcutFileName = String(szLinkPath) + "\\" + ShortcuteName + ".lnk";
+
+    if( ! ::DeleteFile(ShortcutFileName.c_str()) )
+    {
+      hr = GetLastError();
+      throw Exception(FormatLastError2(hr) + " [2:" + IntToStr(hr) + "]");
+    }
+  }
+  catch(const Exception & E)
+  {
+    ReportError2("Failed to delete a shortcut \"%s\"\nError: \"%s\"",
+      ShortcutFileName.c_str(), E.Message.c_str());
+  }
+  catch(...)
+  {
+    ReportError2("Failed to delete a shortcut \"%s\"",
+      ShortcutFileName.c_str());
+  }
+}
+//---------------------------------------------------------------------------
+bool __fastcall IsShortcutExist(int where)
+{
+  String ShortcuteName = Application->Title;
+  String ShortcutFileName;
+
+  char szLinkPath[MN];
+  HRESULT hr = SHGetFolderPath(NULL, where, NULL, 0, szLinkPath);
+  if( FAILED(hr) )
+    return false;
+
+  ShortcutFileName = String(szLinkPath) + "\\" + ShortcuteName + ".lnk";
+  return FileExists(ShortcutFileName);
 }
 //---------------------------------------------------------------------------
 

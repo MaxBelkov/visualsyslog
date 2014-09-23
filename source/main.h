@@ -46,6 +46,14 @@ __published:	// IDE-managed Components
     TLabel *Label3;
     TEdit *FilterIgnoreEdit;
     TSpeedButton *ClearFilterButton;
+    TImageList *TrayImageList;
+    TPopupMenu *TrayPopupMenu;
+    TMenuItem *mOpenMainForm;
+    TMenuItem *N_1;
+    TMenuItem *mExit;
+    TTrayIcon *TrayIcon;
+    TMenuItem *N2;
+    TMenuItem *mExit2;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -64,6 +72,9 @@ __published:	// IDE-managed Components
     void __fastcall mOpenFileFolderClick(TObject *Sender);
     void __fastcall mSetupClick(TObject *Sender);
     void __fastcall mAboutClick(TObject *Sender);
+    void __fastcall mOpenMainFormClick(TObject *Sender);
+    void __fastcall mExitClick(TObject *Sender);
+    void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
 
 private:	// User declarations
   // Change TStringGrid columns width
@@ -86,6 +97,8 @@ private:	// User declarations
   int VisibleLines; // Lines visible with filter working
 
   AnsiString proto_line; // Used in Read() function
+
+  DWORD LastBalloonShowTime;
 
 private:
   // Clear string grig
@@ -120,10 +133,19 @@ public:		// User declarations
   void ServerStop(void);
 
   void ReceiveMessage(void);
+
+  // Change icons and hint (State: 0-ok 1-warning 2-error)
+  void __fastcall TrayChangeIcon(int State);
+  void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
 bool WriteToLogRawMessage(char * p);
+
+// where = CSIDL_STARTUP
+void __fastcall CreateShortcut(int where);
+void __fastcall DeleteShortcut(int where);
+bool __fastcall IsShortcutExist(int where);
 //---------------------------------------------------------------------------
 #endif
 

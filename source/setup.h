@@ -16,6 +16,7 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox1;
     TLabel *Label1;
     TEdit *PortEdit;
+    TCheckBox *AutoStartCB;
 private:	// User declarations
 public:		// User declarations
     __fastcall TSetupForm(TComponent* Owner);

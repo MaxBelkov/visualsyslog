@@ -97,7 +97,7 @@ object SetupForm: TSetupForm
     TabOrder = 0
     object Label1: TLabel
       Left = 43
-      Top = 40
+      Top = 24
       Width = 166
       Height = 13
       Alignment = taRightJustify
@@ -105,13 +105,21 @@ object SetupForm: TSetupForm
     end
     object PortEdit: TEdit
       Left = 224
-      Top = 37
+      Top = 21
       Width = 65
       Height = 21
       Hint = 'Default syslog server port number 514'
       ParentShowHint = False
       ShowHint = True
       TabOrder = 0
+    end
+    object AutoStartCB: TCheckBox
+      Left = 43
+      Top = 56
+      Width = 254
+      Height = 17
+      Caption = 'Automatic start with windows'
+      TabOrder = 1
     end
   end
 end

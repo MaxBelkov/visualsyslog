@@ -18,6 +18,7 @@ Features
 * Filter displayed syslog messages based on priority or message contents
 * Сolor highlighting based on priority
 * Import historical syslog files after the start of the program
+* Minimize to system tray
 * Store all syslog messages in a single file
 * Free open source software, licensed under the GPL V2
 
@@ -43,14 +44,13 @@ Installer project file _visualsyslog.iss_
 
 Is not supported yet
 ===
-* Minimize to system tray
 * RFC 5424
 * Log file rotation
 * Files larger than 2 GB
 * TCP transport
 * Extended message filtering
 * Customizable color highlighting
-* Importing message file
+* Importing message from file
 
 If you need these or other functions let me know.  
 Your questions and suggestions please send to ![ ](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
