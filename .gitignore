@@ -6,7 +6,6 @@
 [Rr]elease/
 __history/
 not for git/
-Output/
 
 *.obj
 *.local
