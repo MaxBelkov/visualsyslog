@@ -29,7 +29,7 @@
 #define cl_Rose   ((TColor)RGB(255,151,203))
 
 // Start size in bytes, to read from text file
-#define StartProtoSize (1024*1024)
+#define StartSizeToRead (1024*1024)
 // Lines count to add to string grid
 #define StartProtoGridLines 200
 // Max lines count in the string grid
@@ -38,7 +38,7 @@
 // save StringGrid content to clipboard (defined in utils.cpp)
 void StringGridToClipboard(TStringGrid * p);
 
-#define SB(n) StatusBar->Panels->Items[n]->Text
+#define SB(n) MainForm->StatusBar->Panels->Items[n]->Text
 
 // save main form screen position and other params to .ini file
 TSaveParamsINI * AppParams = NULL;
@@ -49,6 +49,10 @@ int UdpPort = 514;
 String ApplicationExeName;
 String WorkDir;
 String SyslogFile;
+String ErrorlogFile;
+
+// raw file
+TFile rawout;
 String RawFile;
 
 BYTE HiVer=0, LoVer=0;
@@ -91,6 +95,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 	WorkDir = IncludeTrailingPathDelimiter(str) + "visualsyslog\\";
     SyslogFile = WorkDir + "syslog";
     RawFile = WorkDir + "raw";
+    ErrorlogFile = WorkDir + "errors.txt";
     if( ! DirectoryExists(WorkDir) )
       if( ! CreateDir(WorkDir) )
         ReportError2("Error creating directory: \"%s\"", WorkDir.c_str());
@@ -107,9 +112,8 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   udp = new TUDP();
   if( udp->GetError() )
   {
-    String err = String("Error udp: ") + udp->GetErrorMessageEnd();
-    SB(1) = err;
-    WriteToLogRawMessage((String("ERROR\t") + err).c_str());
+    String err = String("Error udp: ") + udp->GetErrorMessageEng();
+    WriteToLogError(String("ERROR\t") + err);
     ReportError2(err);
   }
   else
@@ -133,6 +137,8 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   
   delete udp;
   udp = NULL;
+
+  rawout.Close();
 
   delete LogSG_LivingColumns;
   // Save all
@@ -159,10 +165,9 @@ void TMainForm::ServerStart(void)
   }
   else
   {
-    String err = String("Error udp: ") + udp->GetErrorMessageEnd() +
+    String err = String("Error udp: ") + udp->GetErrorMessageEng() +
       " [udp port " + IntToStr(UdpPort) + "]";
-    SB(1) = err;
-    WriteToLogRawMessage((String("ERROR\t") + err).c_str());
+    WriteToLogError(String("ERROR\t") + err);
     ReportError2(err);
   }
 }
@@ -177,7 +182,7 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
 {
   bLive = _bLive;
   ApplyFilter = 0;
-  maxsize = StartProtoSize;
+  SizeToRead = StartSizeToRead;
   AddStringGridLines = StartProtoGridLines;
 
   // For "non-life" protocol remove function:
@@ -238,7 +243,7 @@ void __fastcall TMainForm::SetFile(String f)
   fFile = f;
   Clear();
   // important OPEN_ALWAYS
-  in.Open(fFile.c_str(), GENERIC_READ,
+  in.Open(fFile, GENERIC_READ,
                          FILE_SHARE_READ | FILE_SHARE_WRITE,
                          OPEN_ALWAYS,
                          FILE_ATTRIBUTE_NORMAL);
@@ -247,12 +252,12 @@ void __fastcall TMainForm::SetFile(String f)
 
   FileSize = in.GetSize();
   // Since the beginning of the file, look at the size limit
-  if( FileSize > maxsize )
+  if( FileSize > SizeToRead )
   {
     MoreButton->Visible = true;
     mMoreMenu->Visible = true;
 
-    in.Pointer = FileSize - maxsize;
+    in.Pointer = FileSize - SizeToRead;
     // Positioning at the beginning of a new line in the file
     GotoNewLine();
   }
@@ -268,7 +273,7 @@ void __fastcall TMainForm::SetFile(String f)
 void __fastcall TMainForm::GotoNewLine(void)
 {
   char c;
-  for(int i=0; i<500; i++)
+  for(int i=0; i<1024; i++)
   {
     in >> c;
     if( c=='\n' ) break;
@@ -277,8 +282,8 @@ void __fastcall TMainForm::GotoNewLine(void)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::MoreButtonClick(TObject *Sender)
 {
-  // Increase the amount of reading from a file on 200Kb
-  maxsize += StartProtoSize;
+  // Increase the amount of reading from a file
+  SizeToRead = ReadedSize + StartSizeToRead;
   // Increase the number of lines added
   AddStringGridLines += StartProtoGridLines;
   RedrawProto();
@@ -347,14 +352,14 @@ void __fastcall TMainForm::Clear(void)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Read(void)
 {
-  BYTE * p = new BYTE[maxsize];
-  in.Read(p, maxsize);
+  BYTE * p = new BYTE[SizeToRead];
+  in.Read(p, SizeToRead);
   if( in.Bytes > 0 )
   {
     ReadedSize += in.Bytes;
     // It is possible that the text file is filled so quickly that
     // he read to the end and not at the end of the array p [] is to truncate
-    // proto_line var is outside, to save cut line part
+    // proto_line var is global, to save cut line part
     bool TextFilterOn = fFilter.Length() > 0;
     bool TextFilterIgnoreOn = fFilterIgnore.Length() > 0;
 
@@ -390,7 +395,7 @@ void __fastcall TMainForm::Read(void)
 
           int priority = gettextcode(sm.Priority.c_str(), prioritynames);
           /*
-          sm.PRI not used
+          now sm.PRI is not used
           int facility = gettextcode(sm.Facility.c_str(), facilitynames);
           sm.PRI = priority + facility;
           */
@@ -577,10 +582,10 @@ void __fastcall TMainForm::mClearClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::UdpTimerTimer(TObject *Sender)
 {
-  ReceiveMessage();
+  UdpReceiveMessage();
 }
 //---------------------------------------------------------------------------
-void TMainForm::ReceiveMessage(void)
+void TMainForm::UdpReceiveMessage(void)
 {
   if( ! udp )
     return;
@@ -598,8 +603,7 @@ void TMainForm::ReceiveMessage(void)
         ; // Good error :) In the receive buffer still have UDP packets
       else
       {
-        SB(1) = String("Error udp: ") + udp->GetErrorMessageEnd();
-        WriteToLogRawMessage((String("ERROR\tudp: ") + udp->GetErrorMessageEnd()).c_str());
+        WriteToLogError(String("ERROR\tudp: ") + udp->GetErrorMessageEng());
       }
     }
 
@@ -612,7 +616,7 @@ void TMainForm::ReceiveMessage(void)
 
       TSyslogMessage sm;
       sm.ProcessMessageFromSyslogd((char *)ReceiveBuffer, udp->bytes, &a);
-      sm.Save();
+      sm.Save(SyslogFile);
     }
     delete [] ReceiveBuffer;
   }
@@ -620,14 +624,43 @@ void TMainForm::ReceiveMessage(void)
 //---------------------------------------------------------------------------
 bool WriteToLogRawMessage(char * p)
 {
-  TFile out(RawFile, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+  if( ! rawout.IsOpen() )
+  {
+    rawout.Open(RawFile, GENERIC_WRITE,
+                         FILE_SHARE_READ | FILE_SHARE_WRITE,
+                         OPEN_ALWAYS,
+                         FILE_ATTRIBUTE_NORMAL);
+    rawout.SetPointer(0, FILE_END);
+  }
+  if( ! rawout )
+    return false;
+
+  String s(p);
+  s += CR;
+  rawout << s;
+  return true;
+}
+//---------------------------------------------------------------------------
+bool WriteToLogError(String fmt, ...)
+{
+  TFile out(ErrorlogFile, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
     OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL);
   if( ! out )
     return false;
   out.SetPointer(0, FILE_END);
-  String s(p);
-  s += CR;
+
+  va_list argptr;
+  va_start(argptr, fmt);
+  String s;
+  s.vprintf(fmt.c_str(), argptr);
+
+  // Print in the status bar
+  if( s.Pos("ERROR\t") > 0 )
+    SB(1) = s.SubString(7, s.Length()-6);
+
+  s = Now().DateTimeString() + '\t' + s + CR;
   out << s;
+  va_end(argptr);
   return true;
 }
 //---------------------------------------------------------------------------
@@ -827,6 +860,78 @@ bool __fastcall IsShortcutExist(int where)
 
   ShortcutFileName = String(szLinkPath) + "\\" + ShortcuteName + ".lnk";
   return FileExists(ShortcutFileName);
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::mViewFileClick(TObject *Sender)
+{
+  OpenDialog->Filter = "All files (*.*)|*.*";
+  OpenDialog->FilterIndex = 1;
+  OpenDialog->Title = "View syslog file";
+  if( ! OpenDialog->Execute() )
+    return;
+
+  String viewfile = OpenDialog->FileName;
+  TFile viewin(viewfile, GENERIC_READ,
+                         FILE_SHARE_READ | FILE_SHARE_WRITE,
+                         OPEN_EXISTING,
+                         FILE_ATTRIBUTE_NORMAL);
+
+  if( ! viewin )
+    return;
+
+  TmpViewFileName = GetTemporaryFileName();
+  TFile out(TmpViewFileName, GENERIC_WRITE,
+                             FILE_SHARE_READ | FILE_SHARE_WRITE,
+                             OPEN_ALWAYS,
+                             FILE_ATTRIBUTE_NORMAL);
+  if( ! out )
+    return;
+  out.SetPointer(0, FILE_END);
+
+  TWaitCursor wait;
+
+  AnsiString file_line;
+  DWORD rsize = 1024*1024;
+  DWORD fsize = viewin.GetSize();
+  BYTE * p = new BYTE[rsize];
+
+  while( fsize > 0 )
+  {
+    viewin.Read(p, MIN(rsize,fsize));
+    if( viewin.Bytes <= 0 )
+      break;
+    fsize -= viewin.Bytes;
+    
+    for(DWORD i=0, c=viewin.Bytes; i<c; i++)
+    {
+      if( p[i]=='\n' || p[i]=='\r' )
+      {
+        if( file_line.Length() > 0 )
+        {
+          // Now file_line contains new line
+          TSyslogMessage sm;
+          sm.ProcessMessageFromSyslogd(file_line.c_str(), file_line.Length(), NULL);
+          sm.Save(out);
+          file_line.SetLength(0);
+        }
+        continue;
+      }
+      file_line += (char)p[i];
+    } // End for
+  }
+  delete [] p;
+
+  SetFile(TmpViewFileName);
+  
+  CancelViewButton->Hint = String("Cancel view file ") + viewfile;
+  CancelViewButton->Visible = true;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::CancelViewButtonClick(TObject *Sender)
+{
+  CancelViewButton->Visible = false;
+  SetFile(SyslogFile);
+  DeleteFile(TmpViewFileName);
 }
 //---------------------------------------------------------------------------
 

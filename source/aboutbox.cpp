@@ -8,12 +8,19 @@
 #pragma resource "*.dfm"
 
 String GetFullAppName(void);
+extern String ApplicationExeName;
 TAboutBoxForm * AboutBoxForm;
 //---------------------------------------------------------------------------
 __fastcall TAboutBoxForm::TAboutBoxForm(TComponent* Owner)
     : TForm(Owner)
 {
   Caption = GetFullAppName() + " [" + __DATE__ + "]";
+  try
+  {
+    Memo->Lines->LoadFromFile(ExtractFilePath(ApplicationExeName) + "changelog.txt");
+  }
+  catch (...)
+  {}
 }
 //---------------------------------------------------------------------------
 void __fastcall TAboutBoxForm::LabelClick(TObject * Sender)

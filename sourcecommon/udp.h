@@ -89,7 +89,7 @@ public:
   // получить сообщение об ошибке
   AnsiString GetErrorMessage(void);
   // получить сообщение об ошибке на инглише
-  AnsiString GetErrorMessageEnd(void);
+  AnsiString GetErrorMessageEng(void);
 
 public:
   bool operator ! () { return GetError()!=0; }

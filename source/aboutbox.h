@@ -22,6 +22,8 @@ __published:	// IDE-managed Components
     TBitBtn *OKButton;
         TLabel *Label1;
     TLabel *Label2;
+    TBevel *Bevel1;
+    TMemo *Memo;
         void __fastcall LabelClick(TObject *Sender);
 private:	// User declarations
 public:		// User declarations

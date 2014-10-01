@@ -2,11 +2,12 @@ object AboutBoxForm: TAboutBoxForm
   Left = 195
   Top = 113
   BorderIcons = [biSystemMenu]
-  BorderStyle = bsDialog
   Caption = 'About'
-  ClientHeight = 231
+  ClientHeight = 412
   ClientWidth = 545
   Color = clBtnFace
+  Constraints.MinHeight = 350
+  Constraints.MinWidth = 550
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -13
@@ -14,6 +15,9 @@ object AboutBoxForm: TAboutBoxForm
   Font.Style = []
   OldCreateOrder = True
   Position = poOwnerFormCenter
+  DesignSize = (
+    545
+    412)
   PixelsPerInch = 96
   TextHeight = 16
   object Bevel3: TBevel
@@ -21,6 +25,7 @@ object AboutBoxForm: TAboutBoxForm
     Top = 8
     Width = 529
     Height = 177
+    Anchors = [akLeft, akTop, akRight]
     Style = bsRaised
   end
   object Bevel2: TBevel
@@ -28,12 +33,14 @@ object AboutBoxForm: TAboutBoxForm
     Top = 16
     Width = 513
     Height = 161
+    Anchors = [akLeft, akTop, akRight]
   end
   object Label: TLabel
     Left = 104
     Top = 24
-    Width = 401
+    Width = 409
     Height = 56
+    Anchors = [akLeft, akTop, akRight]
     AutoSize = False
     Caption = 
       'Visual Syslog Server is a program to receive syslog messages. Co' +
@@ -282,11 +289,21 @@ object AboutBoxForm: TAboutBoxForm
     WordWrap = True
     IsControl = True
   end
+  object Bevel1: TBevel
+    Left = 8
+    Top = 194
+    Width = 529
+    Height = 174
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    Style = bsRaised
+    ExplicitHeight = 269
+  end
   object OKButton: TBitBtn
     Left = 216
-    Top = 198
+    Top = 379
     Width = 113
     Height = 25
+    Anchors = [akBottom]
     Cancel = True
     Caption = 'OK'
     Default = True
@@ -319,5 +336,16 @@ object AboutBoxForm: TAboutBoxForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    ExplicitTop = 198
+  end
+  object Memo: TMemo
+    Left = 16
+    Top = 202
+    Width = 513
+    Height = 157
+    Anchors = [akLeft, akTop, akRight, akBottom]
+    ReadOnly = True
+    TabOrder = 1
+    ExplicitHeight = 252
   end
 end

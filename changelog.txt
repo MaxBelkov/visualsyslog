@@ -1,0 +1,5 @@
+Version 1.2  2014-09-23
+
+- add "Text to ignore" filter
+- add "Automatic start with windows" option
+- fixed bugs

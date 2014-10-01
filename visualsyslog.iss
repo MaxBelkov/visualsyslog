@@ -16,6 +16,7 @@ SetupIconFile=visualsyslog.ico
 
 [Files]
 Source: "Release\visualsyslog.exe"; DestDir: "{app}";
+Source: "changelog.txt"; DestDir: "{app}";
 
 [Icons]
 Name: "{group}\Visual Syslog server"; Filename: "{app}\visualsyslog.exe"; WorkingDir: "{app}";

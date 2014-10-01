@@ -2,6 +2,7 @@
 #ifndef serverH
 #define serverH
 
+#include "file.h"
 //---------------------------------------------------------------------------
 class TSyslogMessage
 {
@@ -21,7 +22,8 @@ public:
   bool ProcessMessageFromSyslogd(char * p, int size, sockaddr_in * from_addr);
   void ProcessMessageFromFile(char * p);
   // Write to file
-  bool Save(void);
+  bool Save(const String & file);
+  bool Save(TFile & out);
 };
 //---------------------------------------------------------------------------
 bool IsValidSyslogDate(const char * p);

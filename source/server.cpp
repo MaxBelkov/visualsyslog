@@ -4,7 +4,6 @@
 
 #include "udp.h"
 #include "syslog.h"
-#include "file.h"
 #include "server.h"
 
 //---------------------------------------------------------------------------
@@ -16,7 +15,10 @@ TSyslogMessage::TSyslogMessage()
 bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   sockaddr_in * from_addr)
 {
-  SourceAddr = inet_ntoa(from_addr->sin_addr);
+  if( from_addr )
+    SourceAddr = inet_ntoa(from_addr->sin_addr);
+  else
+    SourceAddr = "";
 
   PRI = -1; // not exist
   if( *p == '<' )
@@ -47,11 +49,14 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   }
   else
   {
-    DateStr = FormatDateTime("mmm dd hh:nn:ss", Now());
+    // month names in english in compliance to syslog rfc
+    TFormatSettings fs;
+    GetLocaleFormatSettings(0x0409, fs); // usa
+    DateStr = FormatDateTime("mmm dd hh:nn:ss", Now(), fs);
   }
 
   // try to find host name
-  for(int i=0; i<32 && p[i]; i++)
+  for(int i=0; i<255 && p[i]; i++)
   {
     if( p[i] == ' ' )
     {
@@ -69,7 +74,7 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   }
 
   // try to find program name
-  for(int i=0; i<(32+2) && p[i]; i++)
+  for(int i=0; i<(48+2) && p[i]; i++)
   {
     if( p[i] == ':' && p[i+1] == ' ' )
     {
@@ -121,22 +126,24 @@ void TSyslogMessage::ProcessMessageFromFile(char * p)
     Msg += *p;
 }
 //---------------------------------------------------------------------------
-extern String SyslogFile;
-
-bool TSyslogMessage::Save(void)
+bool TSyslogMessage::Save(const String & file)
 {
-  TFile out(SyslogFile, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
+  TFile out(file, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
     OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL);
   if( ! out )
     return false;
   out.SetPointer(0, FILE_END);
 
+  return Save(out);
+}
+//---------------------------------------------------------------------------
+bool TSyslogMessage::Save(TFile & out)
+{
   out <<
     SourceAddr + '\t' + DateStr + '\t' + HostName + '\t' +
     ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
     Tag + '\t' + Msg + CR;
-
-  return true;
+  return ! out.GetError();  
 }
 //---------------------------------------------------------------------------
 //Sep  2 09:46:37

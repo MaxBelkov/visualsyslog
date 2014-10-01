@@ -600,7 +600,7 @@ AnsiString TUDP::GetErrorMessage(void)
   return AnsiString("Код ошибки: ") + IntToStr(WSAError);
 }
 //---------------------------------------------------------------------------
-AnsiString TUDP::GetErrorMessageEnd(void)
+AnsiString TUDP::GetErrorMessageEng(void)
 {
   switch( WSAError )
   {

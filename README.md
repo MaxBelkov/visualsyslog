@@ -2,7 +2,7 @@ Visual Syslog Server
 ===
 Visual Syslog Server (daemon) for Windows with a graphical user interface.
 
-Visual Syslog Server is a free open source program to receive syslog messages. Useful when setting up routers and systems based on Unix/Linux.
+Visual Syslog Server is a free open source program to receive and view syslog messages. Useful when setting up routers and systems based on Unix/Linux.
 
 Visual Syslog Server has a live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
 

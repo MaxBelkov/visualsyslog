@@ -54,6 +54,10 @@ __published:	// IDE-managed Components
     TTrayIcon *TrayIcon;
     TMenuItem *N2;
     TMenuItem *mExit2;
+    TOpenDialog *OpenDialog;
+    TMenuItem *N3;
+    TMenuItem *mViewFile;
+    TSpeedButton *CancelViewButton;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -75,13 +79,15 @@ __published:	// IDE-managed Components
     void __fastcall mOpenMainFormClick(TObject *Sender);
     void __fastcall mExitClick(TObject *Sender);
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
+    void __fastcall mViewFileClick(TObject *Sender);
+    void __fastcall CancelViewButtonClick(TObject *Sender);
 
 private:	// User declarations
   // Change TStringGrid columns width
   TStringGridLivingColumns * LogSG_LivingColumns;
 
-  TFile in;      // syslog file
-  DWORD maxsize; // Max syslog file size in bytes
+  TFile in;               // syslog file
+  DWORD SizeToRead;       // size to read from syslog file
   int AddStringGridLines; // how many rows to add to sting grid
 
   String fFile;     // Full file name
@@ -99,6 +105,7 @@ private:	// User declarations
   AnsiString proto_line; // Used in Read() function
 
   DWORD LastBalloonShowTime;
+  String TmpViewFileName;
 
 private:
   // Clear string grig
@@ -132,7 +139,7 @@ public:		// User declarations
   // stop udp server
   void ServerStop(void);
 
-  void ReceiveMessage(void);
+  void UdpReceiveMessage(void);
 
   // Change icons and hint (State: 0-ok 1-warning 2-error)
   void __fastcall TrayChangeIcon(int State);
@@ -141,6 +148,8 @@ public:		// User declarations
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
 bool WriteToLogRawMessage(char * p);
+// Write message to errors.txt & Print in the status bar
+bool WriteToLogError(String fmt, ...);
 
 // where = CSIDL_STARTUP
 void __fastcall CreateShortcut(int where);
