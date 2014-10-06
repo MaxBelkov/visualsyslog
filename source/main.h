@@ -37,7 +37,7 @@ __published:	// IDE-managed Components
     TImageList *ImageList;
     TMenuItem *mClear;
     TStatusBar *StatusBar;
-    TTimer *UdpTimer;
+    TTimer *NetTimer;
     TMenuItem *mOpenFileFolder;
     TMenuItem *mSetup;
     TMenuItem *mAbout;
@@ -72,7 +72,7 @@ __published:	// IDE-managed Components
           TRect &Rect, TOwnerDrawState State);
     void __fastcall mClearClick(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
-    void __fastcall UdpTimerTimer(TObject *Sender);
+    void __fastcall NetTimerTimer(TObject *Sender);
     void __fastcall mOpenFileFolderClick(TObject *Sender);
     void __fastcall mSetupClick(TObject *Sender);
     void __fastcall mAboutClick(TObject *Sender);
@@ -134,19 +134,13 @@ private:
 public:		// User declarations
   __fastcall TMainForm(TComponent* Owner);
 
-  // start udp server
-  void ServerStart(void);
-  // stop udp server
-  void ServerStop(void);
-
-  void UdpReceiveMessage(void);
-
   // Change icons and hint (State: 0-ok 1-warning 2-error)
   void __fastcall TrayChangeIcon(int State);
   void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
+
 bool WriteToLogRawMessage(char * p);
 // Write message to errors.txt & Print in the status bar
 bool WriteToLogError(String fmt, ...);
@@ -155,6 +149,11 @@ bool WriteToLogError(String fmt, ...);
 void __fastcall CreateShortcut(int where);
 void __fastcall DeleteShortcut(int where);
 bool __fastcall IsShortcutExist(int where);
+
+//---------------------------------------------------------------------------
+void UdpServerStart(void);
+void UdpServerStop(void);
+void UdpReceiveMessage(void);
 //---------------------------------------------------------------------------
 #endif
 

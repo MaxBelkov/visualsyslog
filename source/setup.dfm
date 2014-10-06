@@ -1,10 +1,10 @@
 object SetupForm: TSetupForm
   Left = 0
-  Top = 0
+  Top = -4
   BorderStyle = bsDialog
   Caption = 'Setup'
-  ClientHeight = 168
-  ClientWidth = 353
+  ClientHeight = 252
+  ClientWidth = 474
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -13,17 +13,21 @@ object SetupForm: TSetupForm
   Font.Style = []
   OldCreateOrder = False
   Position = poOwnerFormCenter
+  DesignSize = (
+    474
+    252)
   PixelsPerInch = 96
   TextHeight = 13
   object OKButton: TBitBtn
-    Left = 32
-    Top = 119
+    Left = 78
+    Top = 210
     Width = 113
     Height = 28
+    Anchors = [akBottom]
     Caption = 'OK'
     Default = True
-    ModalResult = 1
     TabOrder = 1
+    OnClick = OKButtonClick
     Glyph.Data = {
       36030000424D3603000000000000360000002800000010000000100000000100
       18000000000000030000C40E0000C40E00000000000000000000FFFFFFFFFFFF
@@ -51,12 +55,14 @@ object SetupForm: TSetupForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    ExplicitLeft = 84
   end
   object CancelButton: TBitBtn
-    Left = 192
-    Top = 119
+    Left = 272
+    Top = 210
     Width = 113
     Height = 28
+    Anchors = [akBottom]
     Cancel = True
     Caption = 'Cancel'
     ModalResult = 2
@@ -88,38 +94,90 @@ object SetupForm: TSetupForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    ExplicitLeft = 286
   end
   object GroupBox1: TGroupBox
     Left = 8
     Top = 8
-    Width = 337
-    Height = 89
+    Width = 457
+    Height = 185
     TabOrder = 0
     object Label1: TLabel
-      Left = 43
-      Top = 24
-      Width = 166
+      Left = 20
+      Top = 46
+      Width = 148
       Height = 13
-      Alignment = taRightJustify
-      Caption = 'UDP port number for syslog server'
+      Caption = 'UDP listener interface and port'
     end
-    object PortEdit: TEdit
-      Left = 224
-      Top = 21
+    object Label2: TLabel
+      Left = 20
+      Top = 110
+      Width = 147
+      Height = 13
+      Caption = 'TCP listener interface and port'
+    end
+    object UdpPortEdit: TEdit
+      Left = 368
+      Top = 43
       Width = 65
       Height = 21
-      Hint = 'Default syslog server port number 514'
+      Hint = 'Default syslog server udp port number: 514'
       ParentShowHint = False
       ShowHint = True
-      TabOrder = 0
+      TabOrder = 2
     end
     object AutoStartCB: TCheckBox
-      Left = 43
-      Top = 56
+      Left = 20
+      Top = 152
       Width = 254
       Height = 17
       Caption = 'Automatic start with windows'
+      TabOrder = 6
+    end
+    object UdpInterfaceCB: TComboBox
+      Left = 196
+      Top = 43
+      Width = 153
+      Height = 21
+      ItemHeight = 13
+      ParentShowHint = False
+      ShowHint = False
       TabOrder = 1
+    end
+    object EnableUdpCB: TCheckBox
+      Left = 20
+      Top = 15
+      Width = 162
+      Height = 17
+      Caption = 'Enable UDP listener'
+      TabOrder = 0
+    end
+    object EnableTcpCB: TCheckBox
+      Left = 20
+      Top = 87
+      Width = 162
+      Height = 17
+      Caption = 'Enable TCP listener'
+      TabOrder = 3
+    end
+    object TcpInterfaceCB: TComboBox
+      Left = 196
+      Top = 107
+      Width = 153
+      Height = 21
+      ItemHeight = 13
+      ParentShowHint = False
+      ShowHint = False
+      TabOrder = 4
+    end
+    object TcpPortEdit: TEdit
+      Left = 368
+      Top = 107
+      Width = 65
+      Height = 21
+      ParentShowHint = False
+      ShowHint = False
+      TabOrder = 5
     end
   end
 end

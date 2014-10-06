@@ -6,7 +6,7 @@ USEFORM("sourcecommon\messageform.cpp", MessageForm);
 USEFORM("source\main.cpp", MainForm);
 USEFORM("source\setup.cpp", SetupForm);
 USEFORM("source\aboutbox.cpp", AboutBoxForm);
-
+//---------------------------------------------------------------------------
 extern bool bHideToTray;
 //---------------------------------------------------------------------------
 WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR ParamStr, int)

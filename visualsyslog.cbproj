@@ -94,6 +94,9 @@
       <DependentOn>sourcecommon\messageform.h</DependentOn>
       <BuildOrder>3</BuildOrder>
     </CppCompile>
+    <CppCompile Include="sourcecommon\MibAccess.cpp">
+      <BuildOrder>10</BuildOrder>
+    </CppCompile>
     <CppCompile Include="sourcecommon\saveini.cpp">
       <DependentOn>sourcecommon\saveini.h</DependentOn>
       <BuildOrder>7</BuildOrder>
@@ -101,6 +104,9 @@
     <CppCompile Include="sourcecommon\savepar.cpp">
       <DependentOn>sourcecommon\savepar.h</DependentOn>
       <BuildOrder>8</BuildOrder>
+    </CppCompile>
+    <CppCompile Include="sourcecommon\tcpserv.cpp">
+      <BuildOrder>11</BuildOrder>
     </CppCompile>
     <CppCompile Include="sourcecommon\udp.cpp">
       <BuildOrder>2</BuildOrder>
@@ -111,25 +117,33 @@
     <CppCompile Include="source\aboutbox.cpp">
       <Form>AboutBoxForm</Form>
       <DependentOn>source\aboutbox.h</DependentOn>
-      <BuildOrder>14</BuildOrder>
+      <BuildOrder>16</BuildOrder>
+    </CppCompile>
+    <CppCompile Include="source\cfg.cpp">
+      <DependentOn>source\cfg.h</DependentOn>
+      <BuildOrder>17</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\main.cpp">
       <Form>MainForm</Form>
       <DependentOn>source\main.h</DependentOn>
-      <BuildOrder>12</BuildOrder>
+      <BuildOrder>14</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\server.cpp">
       <DependentOn>source\server.h</DependentOn>
-      <BuildOrder>11</BuildOrder>
+      <BuildOrder>13</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\setup.cpp">
       <Form>SetupForm</Form>
       <DependentOn>source\setup.h</DependentOn>
-      <BuildOrder>13</BuildOrder>
+      <BuildOrder>15</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\syslog.cpp">
       <DependentOn>source\syslog.h</DependentOn>
-      <BuildOrder>10</BuildOrder>
+      <BuildOrder>12</BuildOrder>
+    </CppCompile>
+    <CppCompile Include="source\tcpcon.cpp">
+      <DependentOn>source\tcpcon.h</DependentOn>
+      <BuildOrder>18</BuildOrder>
     </CppCompile>
     <CppCompile Include="visualsyslog.cpp">
       <BuildOrder>1</BuildOrder>

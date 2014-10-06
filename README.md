@@ -10,14 +10,14 @@ Visual Syslog Server has a live messages view: switches to a new received messag
 
 Features
 ===
-* Run as a Windows application
+* Receive messages from various devices via UDP or TCP protocol (compliant to RFC 3164)
 * Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012
-* Receive messages from various devices via UDP protocol
-* Compliant to RFC 3164
 * Syslog messages are displayed in real-time
 * Filter displayed syslog messages based on priority or message contents
 * Сolor highlighting based on priority
 * Import historical syslog files after the start of the program
+* View and analyze syslog messages from the file
+* Run as a Windows application
 * Minimize to system tray
 * Store all syslog messages in a single file
 * Free open source software, licensed under the GPL V2
@@ -47,10 +47,7 @@ Is not supported yet
 * RFC 5424
 * Log file rotation
 * Files larger than 2 GB
-* TCP transport
-* Extended message filtering
 * Customizable color highlighting
-* Importing message from file
 
 If you need these or other functions let me know.  
 Your questions and suggestions please send to ![ ](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)

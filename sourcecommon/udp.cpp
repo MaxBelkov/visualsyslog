@@ -605,7 +605,7 @@ AnsiString TUDP::GetErrorMessageEng(void)
   switch( WSAError )
   {
     case 0: return "";
-    case WSAEADDRINUSE: return "Address or port is already in use in the system";
+    case WSAEADDRINUSE: return "Address or port is already in use";
     case WSAENETDOWN: return "Network died";
     case WSAENETUNREACH: return "Network is not available";
     case WSAECONNABORTED: return "Connection closed because of an error";

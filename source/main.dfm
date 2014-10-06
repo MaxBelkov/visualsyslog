@@ -332,7 +332,11 @@ object MainForm: TMainForm
     Height = 19
     Panels = <
       item
-        Text = 'syslog server not started'
+        Text = 'udp'
+        Width = 200
+      end
+      item
+        Text = 'tcp'
         Width = 200
       end
       item
@@ -392,7 +396,7 @@ object MainForm: TMainForm
       OnClick = mOpenFileFolderClick
     end
     object mClear: TMenuItem
-      Caption = 'Clear'
+      Caption = 'Clear screen'
       ImageIndex = 3
       OnClick = mClearClick
     end
@@ -418,7 +422,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 152
     Bitmap = {
-      494C01010A000001040110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010A000001180110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       000000000000000000000000000000000000F6F6F6FFE9E9E9FFE5E5E5FFE5E5
       E5FFE5E5E5FFE5E5E5FFE5E5E5FFE5E5E5FFE5E5E5FFE5E5E5FFE5E5E5FFE5E5
@@ -821,10 +825,10 @@ object MainForm: TMainForm
       FFFFFF03FFFFFFFFFFFFFF83FFFFFFFF00000000000000000000000000000000
       000000000000}
   end
-  object UdpTimer: TTimer
+  object NetTimer: TTimer
     Enabled = False
     Interval = 500
-    OnTimer = UdpTimerTimer
+    OnTimer = NetTimerTimer
     Left = 64
     Top = 192
   end
@@ -832,7 +836,7 @@ object MainForm: TMainForm
     Left = 64
     Top = 248
     Bitmap = {
-      494C01010100D801F40110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010100D801080210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

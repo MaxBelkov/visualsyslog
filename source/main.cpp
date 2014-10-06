@@ -4,6 +4,7 @@
 #pragma hdrstop
 
 #include "udp.h"         // udp server
+#include "tcpcon.h"      // tcp server connections
 #include "syslog.h"      // base syslog definitions
 #include "server.h"      // parse syslog packets to TSyslogMessage
 #include "utils.h"       // common functions
@@ -12,6 +13,7 @@
 #include "file.h"        // work with files
 #include "setup.h"
 #include "aboutbox.h"
+#include "cfg.h"         // program config
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -44,12 +46,12 @@ void StringGridToClipboard(TStringGrid * p);
 TSaveParamsINI * AppParams = NULL;
 
 TUDP * udp = NULL;
-int UdpPort = 514;
 
 String ApplicationExeName;
 String WorkDir;
 String SyslogFile;
 String ErrorlogFile;
+String MainCfgFile;
 
 // raw file
 TFile rawout;
@@ -60,6 +62,8 @@ String GetVersionString(void);
 String GetFullAppName(void);
 
 bool bHideToTray;
+
+TMainCfg MainCfg;
 
 TMainForm * MainForm = NULL;
 //---------------------------------------------------------------------------
@@ -93,21 +97,20 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 					  NULL, SHGFP_TYPE_CURRENT, str) == S_OK )
   {
 	WorkDir = IncludeTrailingPathDelimiter(str) + "visualsyslog\\";
-    SyslogFile = WorkDir + "syslog";
-    RawFile = WorkDir + "raw";
-    ErrorlogFile = WorkDir + "errors.txt";
     if( ! DirectoryExists(WorkDir) )
       if( ! CreateDir(WorkDir) )
         ReportError2("Error creating directory: \"%s\"", WorkDir.c_str());
   }
 
+  SyslogFile = WorkDir + "syslog";
+  RawFile = WorkDir + "raw";
+  ErrorlogFile = WorkDir + "errors.txt";
+  MainCfgFile = WorkDir + "cfg.ini";
+
+  MainCfg.Load();
+
   AppParams = new TSaveParamsINI(WorkDir + "params.ini");
   AppParams->MinimumColumnWidth = 10;
-
-  Variant v = AppParams->Get("Setup", "UdpPort");
-  if( ! v.IsEmpty() )
-    if( (int)v > 0 )
-	  UdpPort = v;
 
   udp = new TUDP();
   if( udp->GetError() )
@@ -118,22 +121,30 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   }
   else
   {
-    ServerStart();
+    UdpServerStart();
+  }
+
+  if( TcpServerCreate() )
+  {
+    TcpServerStart();
   }
 
   Init(true, 1);
   SetFile(SyslogFile);
 
   Timer->Enabled = true;
-  UdpTimer->Enabled = true;
+  NetTimer->Enabled = true;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormDestroy(TObject *Sender)
 {
-  UdpTimer->Enabled = false;
+  NetTimer->Enabled = false;
   Timer->Enabled = false;
 
-  ServerStop();
+  TcpServerStop();
+  TcpServerDestroy();
+
+  UdpServerStop();
   
   delete udp;
   udp = NULL;
@@ -151,31 +162,38 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   AppParams->Values["FontSize"] = LogSG->Font->Size;
   AppParams->Values["FontStyle"] = LogSG->Font->Style.ToInt();
 
-  AppParams->Set("Setup", "UdpPort", UdpPort);
-
   delete AppParams;
   AppParams = NULL;
 }
 //---------------------------------------------------------------------------
-void TMainForm::ServerStart(void)
+void UdpServerStart(void)
 {
-  if( udp->Open("0.0.0.0", UdpPort, "0.0.0.0", 0) )
+  if( ! MainCfg.UdpEnable )
   {
-    SB(0) = String("syslog server ") + udp->GetLocalAddrPort();
+    SB(0) = "UDP: server disabled";
+    return;
+  }
+
+  if( udp->Open(MainCfg.UdpInterface.c_str(), MainCfg.UdpPort, "0.0.0.0", 0) )
+  {
+    SB(0) = String("UDP ") + udp->GetLocalAddrPort();
   }
   else
   {
     String err = String("Error udp: ") + udp->GetErrorMessageEng() +
-      " [udp port " + IntToStr(UdpPort) + "]";
+      " [udp port " + IntToStr(MainCfg.UdpPort) + "]";
     WriteToLogError(String("ERROR\t") + err);
     ReportError2(err);
   }
 }
 //---------------------------------------------------------------------------
-void TMainForm::ServerStop(void)
+void UdpServerStop(void)
 {
-  SB(0) = "syslog server not started";
-  udp->Close();
+  if( udp->IsOpen() )
+  {
+    SB(0) = "UDP: server not started";
+    udp->Close();
+  }
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
@@ -580,12 +598,17 @@ void __fastcall TMainForm::mClearClick(TObject *Sender)
   Clear();
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::UdpTimerTimer(TObject *Sender)
+void __fastcall TMainForm::NetTimerTimer(TObject *Sender)
 {
   UdpReceiveMessage();
+
+  // Accept new TCP connections
+  TcpAccept();
+
+  TcpReceiveMessage();
 }
 //---------------------------------------------------------------------------
-void TMainForm::UdpReceiveMessage(void)
+void UdpReceiveMessage(void)
 {
   if( ! udp )
     return;
@@ -656,7 +679,7 @@ bool WriteToLogError(String fmt, ...)
 
   // Print in the status bar
   if( s.Pos("ERROR\t") > 0 )
-    SB(1) = s.SubString(7, s.Length()-6);
+    SB(2) = s.SubString(7, s.Length()-6);
 
   s = Now().DateTimeString() + '\t' + s + CR;
   out << s;
@@ -674,21 +697,21 @@ void __fastcall TMainForm::mSetupClick(TObject *Sender)
   bool se = IsShortcutExist(CSIDL_STARTUP);
 
   SetupForm = new TSetupForm(this);
-  SetupForm->PortEdit->Text = IntToStr(UdpPort);
   SetupForm->AutoStartCB->Checked = se;
 
   if( SetupForm->ShowModal() == mrOk )
   {
-    int port;
-    if( TryStrToInt(SetupForm->PortEdit->Text, port) )
+    if( SetupForm->bUdpRestart )
     {
-      if( port > 0 && port < 65535 && port != UdpPort )
-      {
-        UdpPort = port;
-        ServerStop();
-        ServerStart();
-      }
+      UdpServerStop();
+      UdpServerStart();
     }
+    if( SetupForm->bTcpRestart )
+    {
+      TcpServerStop();
+      TcpServerStart();
+    }
+
     if( SetupForm->AutoStartCB->Checked != se )
     {
       if( se )
@@ -696,6 +719,7 @@ void __fastcall TMainForm::mSetupClick(TObject *Sender)
       else
         CreateShortcut(CSIDL_STARTUP);
     }
+    MainCfg.Save();
   }
   delete SetupForm;
 }
@@ -749,7 +773,7 @@ void __fastcall TMainForm::TrayChangeIcon(int State)
     TrayIcon->IconIndex = State;
 
   String tip = GetFullAppName() +
-               "\nUDP port: " + IntToStr(UdpPort);
+               "\nUDP port: " + IntToStr(MainCfg.UdpPort);
 
   if( ! SameText(TrayIcon->Hint, tip) )
     TrayIcon->Hint = tip;
@@ -932,6 +956,11 @@ void __fastcall TMainForm::CancelViewButtonClick(TObject *Sender)
   CancelViewButton->Visible = false;
   SetFile(SyslogFile);
   DeleteFile(TmpViewFileName);
+}
+//---------------------------------------------------------------------------
+void PrintSB(int i, String s)
+{
+  SB(i) = s;
 }
 //---------------------------------------------------------------------------
 
