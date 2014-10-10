@@ -74,6 +74,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormCreate(TObject * Sender)
 {
+  ViewFileMode = false;
   LastBalloonShowTime = 0UL;
   ApplicationExeName = GetApplicationExeName();
 
@@ -154,7 +155,7 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   delete LogSG_LivingColumns;
   // Save all
   *AppParams << this << LogSG;
-  AppParams->Values["GotoNewMess"] = GotoNewMessCB->Checked;
+  AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
   AppParams->Values["TextFilter"] = FilterEdit->Text;
   AppParams->Values["TextFilterIgnore"] = FilterIgnoreEdit->Text;
 
@@ -203,13 +204,13 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   SizeToRead = StartSizeToRead;
   AddStringGridLines = StartProtoGridLines;
 
-  // For "non-life" protocol remove function:
+  // For "non-life" protocol remove functions:
   //   "Goto new line"
-  //   "Clear"
+  //   "Clear screen"
   if( ! bLive )
   {
-    GotoNewMessCB->Visible = false;
-    mClear->Visible = false;
+    aGotoNewLine->Visible = false;
+    aClear->Visible = false;
   }
   LogSG->Cells[0][0] = " Time";
   LogSG->Cells[1][0] = " IP";
@@ -223,7 +224,7 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
 
   Variant v = AppParams->Values["GotoNewMess"];
   if( ! v.IsEmpty() )
-	GotoNewMessCB->Checked = v;
+	aGotoNewLine->Checked = v;
 
   v = AppParams->Values["TextFilter"];
   if( ! v.IsEmpty() )
@@ -272,8 +273,7 @@ void __fastcall TMainForm::SetFile(String f)
   // Since the beginning of the file, look at the size limit
   if( FileSize > SizeToRead )
   {
-    MoreButton->Visible = true;
-    mMoreMenu->Visible = true;
+    aMoreLines->Enabled = true;
 
     in.Pointer = FileSize - SizeToRead;
     // Positioning at the beginning of a new line in the file
@@ -281,8 +281,7 @@ void __fastcall TMainForm::SetFile(String f)
   }
   else
   {
-    MoreButton->Visible = false;
-    mMoreMenu->Visible = false;
+    aMoreLines->Enabled = false;
   }
 
   Read();
@@ -298,7 +297,7 @@ void __fastcall TMainForm::GotoNewLine(void)
   }
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::MoreButtonClick(TObject *Sender)
+void __fastcall TMainForm::aMoreLinesExecute(TObject *Sender)
 {
   // Increase the amount of reading from a file
   SizeToRead = ReadedSize + StartSizeToRead;
@@ -339,11 +338,13 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::UpdateCaption(void)
 {
-  String s = GetFullAppName() + "  [" + fFile + "]";
+  String s = GetFullAppName() +
+             "  [View file " + (ViewFileMode ? ViewFileName : fFile);
   // If the text file is not completely read
-  if( MoreButton->Visible )
+  if( aMoreLines->Enabled )
     s += " the last " + GetBytesStringEng(ReadedSize) +
          " of the " + GetBytesStringEng(FileSize);
+  s += "]";
   if( Caption != s )
     Caption = s;
 
@@ -352,7 +353,7 @@ void __fastcall TMainForm::UpdateCaption(void)
     GroupBox2->Caption = "Displaying " + IntToStr(lc) + " lines of " +
       IntToStr(TotalLines);
   else
-    GroupBox2->Caption = "Total " + IntToStr(lc) + " lines";
+    GroupBox2->Caption = "Displaying " + IntToStr(lc) + " lines";
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Clear(void)
@@ -460,7 +461,7 @@ void __fastcall TMainForm::Read(void)
     UpdateCaption();
 
     // Moves to the last line if enabled
-    if( GotoNewMessCB->Checked )
+    if( aGotoNewLine->Checked )
       LogSG->Row = LogSG->RowCount - 1;
   }
   delete [] p;
@@ -574,7 +575,7 @@ TColor TMainForm::GetLogRecordColor(int priority)
   return cl_Green; // default :)
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::FontButtonClick(TObject *Sender)
+void __fastcall TMainForm::aFontExecute(TObject *Sender)
 {
   FontDialog->Font = LogSG->Font;
   if( ! FontDialog->Execute() )
@@ -593,7 +594,7 @@ void __fastcall TMainForm::SetLinesHeight(void)
   FilterByPriorityCB->ItemHeight = 18;
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::mClearClick(TObject *Sender)
+void __fastcall TMainForm::aClearExecute(TObject *Sender)
 {
   Clear();
 }
@@ -687,12 +688,12 @@ bool WriteToLogError(String fmt, ...)
   return true;
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::mOpenFileFolderClick(TObject *Sender)
+void __fastcall TMainForm::mOpenFilesLocExecute(TObject *Sender)
 {
   ShellExecute(GetDesktopWindow(), "explore", WorkDir.c_str(), NULL, NULL, SW_SHOWNORMAL);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::mSetupClick(TObject *Sender)
+void __fastcall TMainForm::aSetupExecute(TObject *Sender)
 {
   bool se = IsShortcutExist(CSIDL_STARTUP);
 
@@ -729,7 +730,7 @@ void __fastcall TMainForm::RedrawProto(void)
   SetFile(fFile);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::mAboutClick(TObject *Sender)
+void __fastcall TMainForm::aAboutExecute(TObject *Sender)
 {
   AboutBoxForm = new TAboutBoxForm(this);
   AboutBoxForm->ShowModal();
@@ -761,7 +762,7 @@ void __fastcall TMainForm::mOpenMainFormClick(TObject *Sender)
   Application->BringToFront();
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::mExitClick(TObject *Sender)
+void __fastcall TMainForm::aExitExecute(TObject *Sender)
 {
   Application->Terminate();
 }
@@ -772,8 +773,7 @@ void __fastcall TMainForm::TrayChangeIcon(int State)
   if( TrayIcon->IconIndex != State )
     TrayIcon->IconIndex = State;
 
-  String tip = GetFullAppName() +
-               "\nUDP port: " + IntToStr(MainCfg.UdpPort);
+  String tip = GetFullAppName();
 
   if( ! SameText(TrayIcon->Hint, tip) )
     TrayIcon->Hint = tip;
@@ -886,7 +886,7 @@ bool __fastcall IsShortcutExist(int where)
   return FileExists(ShortcutFileName);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::mViewFileClick(TObject *Sender)
+void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
 {
   OpenDialog->Filter = "All files (*.*)|*.*";
   OpenDialog->FilterIndex = 1;
@@ -894,8 +894,8 @@ void __fastcall TMainForm::mViewFileClick(TObject *Sender)
   if( ! OpenDialog->Execute() )
     return;
 
-  String viewfile = OpenDialog->FileName;
-  TFile viewin(viewfile, GENERIC_READ,
+  ViewFileName = OpenDialog->FileName;
+  TFile viewin(ViewFileName, GENERIC_READ,
                          FILE_SHARE_READ | FILE_SHARE_WRITE,
                          OPEN_EXISTING,
                          FILE_ATTRIBUTE_NORMAL);
@@ -947,13 +947,13 @@ void __fastcall TMainForm::mViewFileClick(TObject *Sender)
 
   SetFile(TmpViewFileName);
   
-  CancelViewButton->Hint = String("Cancel view file ") + viewfile;
-  CancelViewButton->Visible = true;
+  aCancelViewFile->Hint = String("Cancel view file ") + ViewFileName;
+  SetViewFileMode(true);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::CancelViewButtonClick(TObject *Sender)
+void __fastcall TMainForm::aCancelViewFileExecute(TObject *Sender)
 {
-  CancelViewButton->Visible = false;
+  SetViewFileMode(false);
   SetFile(SyslogFile);
   DeleteFile(TmpViewFileName);
 }
@@ -961,6 +961,22 @@ void __fastcall TMainForm::CancelViewButtonClick(TObject *Sender)
 void PrintSB(int i, String s)
 {
   SB(i) = s;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aGotoNewLineExecute(TObject *Sender)
+{
+  aGotoNewLine->Checked = ! aGotoNewLine->Checked;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::SetViewFileMode(bool b)
+{
+  ViewFileMode = b;
+  aCancelViewFile->Visible = b;
+  aSetup->Visible = ! b;
+  aGotoNewLine->Visible = ! b;
+  mOpenFilesLoc->Visible = ! b;
+  aClear->Visible = ! b;
+  UpdateCaption();
 }
 //---------------------------------------------------------------------------
 

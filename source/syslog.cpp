@@ -17,11 +17,11 @@ CODE prioritynames[] =
     { "err", LOG_ERR },
     { "error", LOG_ERR },		/* DEPRECATED */
     { "info", LOG_INFO },
-    { "none", INTERNAL_NOPRI },		/* INTERNAL */
+    { "none", INTERNAL_NOPRI },	/* INTERNAL */
     { "notice", LOG_NOTICE },
     { "panic", LOG_EMERG },		/* DEPRECATED */
-    { "warn", LOG_WARNING },		/* DEPRECATED */
     { "warning", LOG_WARNING },
+    { "warn", LOG_WARNING },    /* DEPRECATED */
     { NULL, -1 }
   };
 

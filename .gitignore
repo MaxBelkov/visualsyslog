@@ -6,6 +6,7 @@
 [Rr]elease/
 __history/
 not for git/
+ico/
 
 *.obj
 *.local

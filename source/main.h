@@ -13,7 +13,9 @@
 #include <Dialogs.hpp>
 #include <ImgList.hpp>
 #include <ComCtrls.hpp>
-#include "gridcolumns.h" // Change TStringGrid columns width
+#include "gridcolumns.h"
+#include <ActnList.hpp>
+#include <ToolWin.hpp> // Change TStringGrid columns width
 
 //---------------------------------------------------------------------------
 class TMainForm : public TForm
@@ -24,25 +26,16 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox2;
     TLabel *Label1;
     TEdit *FilterEdit;
-    TCheckBox *GotoNewMessCB;
     TStringGrid *LogSG;
     TPopupMenu *ClipboardPM;
     TMenuItem *N30;
     TLabel *Label2;
     TComboBox *FilterByPriorityCB;
-    TSpeedButton *MoreButton;
     TFontDialog *FontDialog;
-    TMenuItem *mFont;
-    TMenuItem *mMoreMenu;
     TImageList *ImageList;
-    TMenuItem *mClear;
     TStatusBar *StatusBar;
     TTimer *NetTimer;
-    TMenuItem *mOpenFileFolder;
-    TMenuItem *mSetup;
-    TMenuItem *mAbout;
     TMenuItem *N1;
-    TSpeedButton *SpeedButton1;
     TLabel *Label3;
     TEdit *FilterIgnoreEdit;
     TSpeedButton *ClearFilterButton;
@@ -53,11 +46,43 @@ __published:	// IDE-managed Components
     TMenuItem *mExit;
     TTrayIcon *TrayIcon;
     TMenuItem *N2;
-    TMenuItem *mExit2;
     TOpenDialog *OpenDialog;
     TMenuItem *N3;
-    TMenuItem *mViewFile;
-    TSpeedButton *CancelViewButton;
+    TImageList *ImageList32;
+    TActionList *ActionList;
+    TAction *aSetup;
+    TMenuItem *Setup1;
+    TAction *aFont;
+    TMenuItem *Font1;
+    TAction *aAbout;
+    TMenuItem *About1;
+    TAction *aViewFile;
+    TMenuItem *Viewfile1;
+    TAction *aMoreLines;
+    TMenuItem *Readpreviouslines1;
+    TAction *mOpenFilesLoc;
+    TMenuItem *Openfileslocation1;
+    TAction *aClear;
+    TMenuItem *Clearscreen1;
+    TAction *aExit;
+    TMenuItem *erminate1;
+    TToolBar *ToolBar;
+    TToolButton *ToolButton1;
+    TToolButton *ToolButton2;
+    TToolButton *ToolButton3;
+    TToolButton *ToolButton4;
+    TToolButton *ToolButton5;
+    TToolButton *ToolButton6;
+    TToolButton *ToolButton7;
+    TToolButton *ToolButton8;
+    TToolButton *ToolButton9;
+    TToolButton *ToolButton10;
+    TAction *aGotoNewLine;
+    TMenuItem *Gotonewline1;
+    TToolButton *ToolButton11;
+    TAction *aCancelViewFile;
+    TToolButton *ToolButton12;
+    TMenuItem *Cancelviewfile1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -66,21 +91,22 @@ __published:	// IDE-managed Components
     void __fastcall FormDestroy(TObject *Sender);
     void __fastcall ClearFilterButtonClick(TObject *Sender);
     void __fastcall FilterByPriorityCBSelect(TObject *Sender);
-    void __fastcall MoreButtonClick(TObject *Sender);
-    void __fastcall FontButtonClick(TObject *Sender);
     void __fastcall FilterByPriorityCBDrawItem(TWinControl *Control, int Index,
           TRect &Rect, TOwnerDrawState State);
-    void __fastcall mClearClick(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall NetTimerTimer(TObject *Sender);
-    void __fastcall mOpenFileFolderClick(TObject *Sender);
-    void __fastcall mSetupClick(TObject *Sender);
-    void __fastcall mAboutClick(TObject *Sender);
     void __fastcall mOpenMainFormClick(TObject *Sender);
-    void __fastcall mExitClick(TObject *Sender);
     void __fastcall FormClose(TObject *Sender, TCloseAction &Action);
-    void __fastcall mViewFileClick(TObject *Sender);
-    void __fastcall CancelViewButtonClick(TObject *Sender);
+    void __fastcall aSetupExecute(TObject *Sender);
+    void __fastcall aFontExecute(TObject *Sender);
+    void __fastcall aAboutExecute(TObject *Sender);
+    void __fastcall aViewFileExecute(TObject *Sender);
+    void __fastcall aMoreLinesExecute(TObject *Sender);
+    void __fastcall mOpenFilesLocExecute(TObject *Sender);
+    void __fastcall aClearExecute(TObject *Sender);
+    void __fastcall aExitExecute(TObject *Sender);
+    void __fastcall aGotoNewLineExecute(TObject *Sender);
+    void __fastcall aCancelViewFileExecute(TObject *Sender);
 
 private:	// User declarations
   // Change TStringGrid columns width
@@ -105,6 +131,10 @@ private:	// User declarations
   AnsiString proto_line; // Used in Read() function
 
   DWORD LastBalloonShowTime;
+
+  // View file mode
+  bool ViewFileMode;
+  String ViewFileName;
   String TmpViewFileName;
 
 private:
@@ -137,6 +167,7 @@ public:		// User declarations
   // Change icons and hint (State: 0-ok 1-warning 2-error)
   void __fastcall TrayChangeIcon(int State);
   void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
+  void __fastcall SetViewFileMode(bool b);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;

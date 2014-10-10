@@ -336,7 +336,6 @@ object AboutBoxForm: TAboutBoxForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-    ExplicitTop = 198
   end
   object Memo: TMemo
     Left = 16
@@ -345,7 +344,7 @@ object AboutBoxForm: TAboutBoxForm
     Height = 157
     Anchors = [akLeft, akTop, akRight, akBottom]
     ReadOnly = True
+    ScrollBars = ssVertical
     TabOrder = 1
-    ExplicitHeight = 252
   end
 end
