@@ -4,6 +4,7 @@ Version history
 
 - Improved interface
 - TCP transport support
+- Increased speed of logging messages
 - View syslog messages from file
 - Write all internal error messages to a file: errors.txt
 - Write all received unprocessed messages to a file: raw

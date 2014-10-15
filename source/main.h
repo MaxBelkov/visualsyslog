@@ -18,6 +18,19 @@
 #include <ToolWin.hpp> // Change TStringGrid columns width
 
 //---------------------------------------------------------------------------
+// override standart component class for preventing flicker
+class TDrawGrid2 : public TDrawGrid
+{
+public:
+  bool bAllowUpdate;
+
+public:
+  #pragma option push -w-inl
+  __fastcall virtual TDrawGrid2(Classes::TComponent* AOwner);
+  #pragma option pop
+  virtual void __fastcall Update(void);
+};
+//---------------------------------------------------------------------------
 class TMainForm : public TForm
 {
 __published:	// IDE-managed Components
@@ -26,7 +39,6 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox2;
     TLabel *Label1;
     TEdit *FilterEdit;
-    TStringGrid *LogSG;
     TPopupMenu *ClipboardPM;
     TMenuItem *N30;
     TLabel *Label2;
@@ -109,12 +121,14 @@ __published:	// IDE-managed Components
     void __fastcall aCancelViewFileExecute(TObject *Sender);
 
 private:	// User declarations
-  // Change TStringGrid columns width
+  TDrawGrid2 * LogSG;
+  // Change LogSG columns width
   TStringGridLivingColumns * LogSG_LivingColumns;
+
+  TList * MessList;       // List of messages to dislpay
 
   TFile in;               // syslog file
   DWORD SizeToRead;       // size to read from syslog file
-  int AddStringGridLines; // how many rows to add to sting grid
 
   String fFile;     // Full file name
   bool bLive;       // Live view ? (yes by default)
@@ -125,8 +139,7 @@ private:	// User declarations
 
   DWORD FileSize;   // Size of fFile when open
   DWORD ReadedSize; // Bytes read from fFile
-  int TotalLines;   // Total lines
-  int VisibleLines; // Lines visible with filter working
+  int TotalLines;   // Total lines readed from file
 
   AnsiString proto_line; // Used in Read() function
 
@@ -149,8 +162,8 @@ private:
   void __fastcall GotoNewLine(void);
   // Clear string grig
   void __fastcall Clear(void);
-  // Read/Read new part of the text file
-  void __fastcall Read(void);
+  // [Read the tail | Read new part] of the syslog file
+  void __fastcall Read(bool bAllowAddVisibleLines);
   // Print captions of main form and string grig
   void __fastcall UpdateCaption(void);
   // Get line color by priority
@@ -163,11 +176,15 @@ private:
 
 public:		// User declarations
   __fastcall TMainForm(TComponent* Owner);
+  void __fastcall CreateGrid(void);
 
   // Change icons and hint (State: 0-ok 1-warning 2-error)
   void __fastcall TrayChangeIcon(int State);
   void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
   void __fastcall SetViewFileMode(bool b);
+
+  // Get display message by index
+  TSyslogMessage * __fastcall GetMessageByIndex(int i);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
@@ -180,11 +197,6 @@ bool WriteToLogError(String fmt, ...);
 void __fastcall CreateShortcut(int where);
 void __fastcall DeleteShortcut(int where);
 bool __fastcall IsShortcutExist(int where);
-
-//---------------------------------------------------------------------------
-void UdpServerStart(void);
-void UdpServerStop(void);
-void UdpReceiveMessage(void);
 //---------------------------------------------------------------------------
 #endif
 

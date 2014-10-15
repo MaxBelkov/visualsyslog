@@ -44,6 +44,7 @@ BYTE * TSyslogdTcpConn::GetBufferSize(int NeedFreeSize)
 //---------------------------------------------------------------------------
 
 extern TMainCfg MainCfg;
+extern TFile syslogout;
 extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
@@ -253,7 +254,7 @@ void TcpReceiveMessage(void)
 
             TSyslogMessage sm;
             sm.ProcessMessageFromSyslogd((char *)(c->Data + start), i - start, &c->Socket->destAddr);
-            sm.Save(SyslogFile);
+            sm.Save(SyslogFile, syslogout);
           }
           start = i + 1;
         }

@@ -1,7 +1,6 @@
 object MainForm: TMainForm
   Left = 0
   Top = 0
-  ActiveControl = LogSG
   Caption = 'Visual Syslog'
   ClientHeight = 481
   ClientWidth = 782
@@ -141,44 +140,6 @@ object MainForm: TMainForm
     Align = alClient
     Caption = #1042#1089#1077#1075#1086' 0 '#1089#1090#1088#1086#1082
     TabOrder = 1
-    ExplicitLeft = 11
-    ExplicitTop = 157
-    ExplicitWidth = 772
-    ExplicitHeight = 384
-    object LogSG: TStringGrid
-      AlignWithMargins = True
-      Left = 5
-      Top = 18
-      Width = 760
-      Height = 317
-      Align = alClient
-      ColCount = 7
-      DefaultColWidth = 50
-      DefaultRowHeight = 20
-      FixedCols = 0
-      RowCount = 2
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'Tahoma'
-      Font.Style = []
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goDrawFocusSelected, goColSizing, goRowSelect, goThumbTracking]
-      ParentFont = False
-      PopupMenu = ClipboardPM
-      TabOrder = 0
-      OnDblClick = LogSGDblClick
-      OnDrawCell = LogSGDrawCell
-      ExplicitWidth = 762
-      ExplicitHeight = 361
-      ColWidths = (
-        120
-        143
-        100
-        108
-        110
-        107
-        126)
-    end
   end
   object StatusBar: TStatusBar
     Left = 0
@@ -197,8 +158,6 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
-    ExplicitTop = 464
-    ExplicitWidth = 784
   end
   object ToolBar: TToolBar
     AlignWithMargins = True
@@ -218,6 +177,7 @@ object MainForm: TMainForm
     ShowCaptions = True
     ShowHint = True
     TabOrder = 3
+    Transparent = True
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -370,7 +330,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 192
     Bitmap = {
-      494C01010B002C012C0110001000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01010B002C01480110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000003000000001002000000000000030
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -770,7 +730,8 @@ object MainForm: TMainForm
       FC7F8101FFE0E3C7F87F81011F80C183F003C0830F00C003E003E0030F00C003
       C003F0030F00E0078003F0030780F00FC003F8030300F00FE003FC030004E007
       F003FC038007C003FC7FFE03C00FC003FE7FFE03E01FC183FF7FFF03FFFFE3C7
-      FFFFFF03FFFFFFFFFFFFFF83FFFFFFFF}
+      FFFFFF03FFFFFFFFFFFFFF83FFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object NetTimer: TTimer
     Enabled = False
@@ -783,7 +744,7 @@ object MainForm: TMainForm
     Left = 64
     Top = 288
     Bitmap = {
-      494C01010100D8011C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010100D801380210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -939,7 +900,6 @@ object MainForm: TMainForm
     end
   end
   object TrayIcon: TTrayIcon
-    BalloonTimeout = 10000
     Icons = TrayImageList
     PopupMenu = TrayPopupMenu
     Visible = True
@@ -958,7 +918,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 232
     Bitmap = {
-      494C01010A00E000E00020002000FFFFFFFFFF00FFFFFFFFFFFFFFFF424D3600
+      494C01010A00E000FC0020002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000008000000060000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -2546,7 +2506,8 @@ object MainForm: TMainForm
       FFFE7FFFFFFF003FC00180030000000FFFFF7FFFFFFF007FE003C0070000000F
       FFFFFFFFFFFF807FF007E00F0000000FFFFFFFFFFFFF807FF80FF01F0000000F
       FFFFFFFFFFFFC07FFC1FF83F0007FFFFFFFFFFFFFFFFC07FFE3FFC7F0007FFFF
-      FFFFFFFFFFFFFFFFFF7FFEFFFFFFFFFF}
+      FFFFFFFFFFFFFFFFFF7FFEFFFFFFFFFF00000000000000000000000000000000
+      000000000000}
   end
   object ActionList: TActionList
     Images = ImageList

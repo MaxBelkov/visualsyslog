@@ -12,6 +12,18 @@ TSyslogMessage::TSyslogMessage()
   PRI = -1; // not exist
 }
 //---------------------------------------------------------------------------
+void TSyslogMessage::Clear()
+{
+  SourceAddr = "";
+  PRI = -1;
+  Facility = "";
+  Priority = "";
+  DateStr = "";
+  HostName = "";
+  Tag = "";
+  Msg = "";
+}
+//---------------------------------------------------------------------------
 bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   sockaddr_in * from_addr)
 {
@@ -43,8 +55,9 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
 
   if( IsValidSyslogDate(p) )
   {
-    DateStr.SetLength(15);
-    lstrcpyn(DateStr.c_str(), p, 16);
+    DateStr = String(p, 15);
+    //DateStr.SetLength(15);
+    //lstrcpyn(DateStr.c_str(), p, 16);
     p += 16; // including space
   }
   else
@@ -61,8 +74,9 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
     if( p[i] == ' ' )
     {
       // found
-      HostName.SetLength(i);
-      lstrcpyn(HostName.c_str(), p, i+1);
+      HostName = String(p, i);
+      //HostName.SetLength(i);
+      //lstrcpyn(HostName.c_str(), p, i+1);
       p += i + 1;
       break;
     }
@@ -79,14 +93,15 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
     if( p[i] == ':' && p[i+1] == ' ' )
     {
       // found
-      Tag.SetLength(i);
-      lstrcpyn(Tag.c_str(), p, i+1);
+      Tag = String(p, i);
+      //Tag.SetLength(i);
+      //lstrcpyn(Tag.c_str(), p, i+1);
       p += i + 2;
       break;
     }
   }
 
-  // and now - text message 
+  // and now - text message
   // Replace all tabs by spaces
   // and cut line end
   for(int i=0; p[i]; i++)
@@ -104,6 +119,8 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
 //---------------------------------------------------------------------------
 void TSyslogMessage::ProcessMessageFromFile(char * p)
 {
+  Clear();
+
   for(; *p && *p!='\t'; p++)
     SourceAddr += *p;
 
@@ -124,18 +141,26 @@ void TSyslogMessage::ProcessMessageFromFile(char * p)
 
   for(p++; *p && *p!='\t'; p++)
     Msg += *p;
+
+  PRI = gettextcode(Priority.c_str(), prioritynames);
+  // now facility code is not used
+  // + gettextcode(Facility.c_str(), facilitynames);
 }
 //---------------------------------------------------------------------------
+/*
 bool TSyslogMessage::Save(const String & file)
 {
-  TFile out(file, GENERIC_WRITE, FILE_SHARE_READ | FILE_SHARE_WRITE,
-    OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL);
+  TFile out(file, GENERIC_WRITE,
+                  FILE_SHARE_READ | FILE_SHARE_WRITE,
+                  OPEN_ALWAYS,
+                  FILE_ATTRIBUTE_NORMAL);
   if( ! out )
     return false;
   out.SetPointer(0, FILE_END);
 
   return Save(out);
 }
+*/
 //---------------------------------------------------------------------------
 bool TSyslogMessage::Save(TFile & out)
 {
@@ -146,7 +171,22 @@ bool TSyslogMessage::Save(TFile & out)
   return ! out.GetError();  
 }
 //---------------------------------------------------------------------------
-//Sep  2 09:46:37
+bool TSyslogMessage::Save(const String & file, TFile & out)
+{
+  if( ! out.IsOpen() )
+  {
+    out.Open(file, GENERIC_WRITE,
+                   FILE_SHARE_READ | FILE_SHARE_WRITE,
+                   OPEN_ALWAYS,
+                   FILE_ATTRIBUTE_NORMAL);
+    if( ! out )
+      return false;
+    out.SetPointer(0, FILE_END);
+  }
+  return Save(out);
+}
+//---------------------------------------------------------------------------
+// sample: "Sep  2 09:46:37"
 bool IsValidSyslogDate(const char * p)
 {
   char * szMonths[] = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul",
@@ -161,22 +201,22 @@ bool IsValidSyslogDate(const char * p)
     return false;
   p += 3;
 
-  // пробел
+  // space
   if( *p++ != ' ' )
     return false;
 
-  // день
+  // day
   if( *p != ' ' && ! isdigit(*p) )
     return false;
   if( ! isdigit(*(p+1)) )
     return false;
   p += 2;
 
-  // пробел
+  // space
   if( *p++ != ' ' )
     return false;
 
-  // Час
+  // hour
   if( ! isdigit(*p) )
     return false;
   if( ! isdigit(*(p+1)) )
@@ -187,7 +227,7 @@ bool IsValidSyslogDate(const char * p)
   if( *p++ != ':' )
     return false;
 
-  // Мин
+  // min
   if( ! isdigit(*p) )
     return false;
   if( ! isdigit(*(p+1)) )
@@ -198,14 +238,14 @@ bool IsValidSyslogDate(const char * p)
   if( *p++ != ':' )
     return false;
 
-  // Сек
+  // sec
   if( ! isdigit(*p) )
     return false;
   if( ! isdigit(*(p+1)) )
     return false;
   p += 2;
 
-  // пробел
+  // space
   if( *p++ != ' ' )
     return false;
 

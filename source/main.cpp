@@ -3,8 +3,8 @@
 #include <vcl.h>
 #pragma hdrstop
 
-#include "udp.h"         // udp server
 #include "tcpcon.h"      // tcp server connections
+#include "udpcon.h"      // udp server connections
 #include "syslog.h"      // base syslog definitions
 #include "server.h"      // parse syslog packets to TSyslogMessage
 #include "utils.h"       // common functions
@@ -32,10 +32,8 @@
 
 // Start size in bytes, to read from text file
 #define StartSizeToRead (1024*1024)
-// Lines count to add to string grid
-#define StartProtoGridLines 200
-// Max lines count in the string grid
-#define MaxGridLines 200000
+// Max lines count in the string grid when receive messages
+#define MaxGridLinesReceive 10000
 
 // save StringGrid content to clipboard (defined in utils.cpp)
 void StringGridToClipboard(TStringGrid * p);
@@ -45,13 +43,14 @@ void StringGridToClipboard(TStringGrid * p);
 // save main form screen position and other params to .ini file
 TSaveParamsINI * AppParams = NULL;
 
-TUDP * udp = NULL;
-
 String ApplicationExeName;
 String WorkDir;
-String SyslogFile;
 String ErrorlogFile;
 String MainCfgFile;
+
+// syslog file
+TFile syslogout;
+String SyslogFile;
 
 // raw file
 TFile rawout;
@@ -66,6 +65,7 @@ bool bHideToTray;
 TMainCfg MainCfg;
 
 TMainForm * MainForm = NULL;
+
 //---------------------------------------------------------------------------
 __fastcall TMainForm::TMainForm(TComponent* Owner)
     : TForm(Owner)
@@ -74,6 +74,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormCreate(TObject * Sender)
 {
+  CreateGrid();
   ViewFileMode = false;
   LastBalloonShowTime = 0UL;
   ApplicationExeName = GetApplicationExeName();
@@ -113,14 +114,10 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   AppParams = new TSaveParamsINI(WorkDir + "params.ini");
   AppParams->MinimumColumnWidth = 10;
 
-  udp = new TUDP();
-  if( udp->GetError() )
-  {
-    String err = String("Error udp: ") + udp->GetErrorMessageEng();
-    WriteToLogError(String("ERROR\t") + err);
-    ReportError2(err);
-  }
-  else
+  MessList = new TList;
+  MessList->Capacity = 10000;
+
+  if( UdpServerCreate() )
   {
     UdpServerStart();
   }
@@ -146,15 +143,18 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   TcpServerDestroy();
 
   UdpServerStop();
-  
-  delete udp;
-  udp = NULL;
+  UdpServerDestroy();
 
   rawout.Close();
+  syslogout.Close();
+
+  Clear();
+  delete MessList;
+  MessList = NULL;
 
   delete LogSG_LivingColumns;
   // Save all
-  *AppParams << this << LogSG;
+  *AppParams << this << (TStringGrid *)LogSG;
   AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
   AppParams->Values["TextFilter"] = FilterEdit->Text;
   AppParams->Values["TextFilterIgnore"] = FilterIgnoreEdit->Text;
@@ -167,42 +167,11 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   AppParams = NULL;
 }
 //---------------------------------------------------------------------------
-void UdpServerStart(void)
-{
-  if( ! MainCfg.UdpEnable )
-  {
-    SB(0) = "UDP: server disabled";
-    return;
-  }
-
-  if( udp->Open(MainCfg.UdpInterface.c_str(), MainCfg.UdpPort, "0.0.0.0", 0) )
-  {
-    SB(0) = String("UDP ") + udp->GetLocalAddrPort();
-  }
-  else
-  {
-    String err = String("Error udp: ") + udp->GetErrorMessageEng() +
-      " [udp port " + IntToStr(MainCfg.UdpPort) + "]";
-    WriteToLogError(String("ERROR\t") + err);
-    ReportError2(err);
-  }
-}
-//---------------------------------------------------------------------------
-void UdpServerStop(void)
-{
-  if( udp->IsOpen() )
-  {
-    SB(0) = "UDP: server not started";
-    udp->Close();
-  }
-}
-//---------------------------------------------------------------------------
 void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
 {
   bLive = _bLive;
   ApplyFilter = 0;
   SizeToRead = StartSizeToRead;
-  AddStringGridLines = StartProtoGridLines;
 
   // For "non-life" protocol remove functions:
   //   "Goto new line"
@@ -212,15 +181,8 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
     aGotoNewLine->Visible = false;
     aClear->Visible = false;
   }
-  LogSG->Cells[0][0] = " Time";
-  LogSG->Cells[1][0] = " IP";
-  LogSG->Cells[2][0] = " Host";
-  LogSG->Cells[3][0] = " Facility";
-  LogSG->Cells[4][0] = " Priority";
-  LogSG->Cells[5][0] = " Tag";
-  LogSG->Cells[6][0] = " Message";
 
-  *AppParams >> this >> LogSG;
+  *AppParams >> this >> (TStringGrid *)LogSG;
 
   Variant v = AppParams->Values["GotoNewMess"];
   if( ! v.IsEmpty() )
@@ -251,7 +213,7 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
 
   SetLinesHeight();
 
-  LogSG_LivingColumns = new TStringGridLivingColumns(LogSG);
+  LogSG_LivingColumns = new TStringGridLivingColumns((TStringGrid *)LogSG);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::SetFile(String f)
@@ -284,7 +246,7 @@ void __fastcall TMainForm::SetFile(String f)
     aMoreLines->Enabled = false;
   }
 
-  Read();
+  Read(true);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::GotoNewLine(void)
@@ -301,8 +263,6 @@ void __fastcall TMainForm::aMoreLinesExecute(TObject *Sender)
 {
   // Increase the amount of reading from a file
   SizeToRead = ReadedSize + StartSizeToRead;
-  // Increase the number of lines added
-  AddStringGridLines += StartProtoGridLines;
   RedrawProto();
   ActiveControl = LogSG;
 }
@@ -333,7 +293,7 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
   // Check for new records, if the protocol is "live"
   if( bLive )
     if( in.IsOpen() )
-      Read();
+      Read(false);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::UpdateCaption(void)
@@ -348,7 +308,7 @@ void __fastcall TMainForm::UpdateCaption(void)
   if( Caption != s )
     Caption = s;
 
-  int lc = VisibleLines;
+  int lc = MessList->Count;
   if( TotalLines != lc )
     GroupBox2->Caption = "Displaying " + IntToStr(lc) + " lines of " +
       IntToStr(TotalLines);
@@ -358,19 +318,24 @@ void __fastcall TMainForm::UpdateCaption(void)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Clear(void)
 {
+  for(int i=0, l=MessList->Count; i<l; i++)
+    delete (TSyslogMessage *)MessList->Items[i];
+  MessList->Clear();
+
   LogSG->RowCount = 2;
-  for(int i=0; i<LogSG->ColCount; i++)
-    LogSG->Cells[i][1] = "";
 
   TotalLines = 0;
-  VisibleLines = 0;
   ReadedSize = 0;
 
   UpdateCaption();
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::Read(void)
+void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
 {
+  TSyslogMessage * sm;
+  bool bHaveNewMessagesToDysplay = false;
+  int DeletedMessagesCount = 0;
+
   BYTE * p = new BYTE[SizeToRead];
   in.Read(p, SizeToRead);
   if( in.Bytes > 0 )
@@ -381,6 +346,7 @@ void __fastcall TMainForm::Read(void)
     // proto_line var is global, to save cut line part
     bool TextFilterOn = fFilter.Length() > 0;
     bool TextFilterIgnoreOn = fFilterIgnore.Length() > 0;
+    bool PriorityFilterOn =  FilterByPriorityCB->ItemIndex > 0;
 
     for(DWORD i=0, c=in.Bytes; i<c; i++)
     {
@@ -409,43 +375,33 @@ void __fastcall TMainForm::Read(void)
               continue;
             }
 
-          TSyslogMessage sm;
-          sm.ProcessMessageFromFile(proto_line.c_str());
-
-          int priority = gettextcode(sm.Priority.c_str(), prioritynames);
-          /*
-          now sm.PRI is not used
-          int facility = gettextcode(sm.Facility.c_str(), facilitynames);
-          sm.PRI = priority + facility;
-          */
+          sm = new TSyslogMessage;
+          sm->ProcessMessageFromFile(proto_line.c_str());
 
           // Filter enabled
-          if( FilterByPriorityCB->ItemIndex > 0 )
-            if( FilterByPriorityCB->ItemIndex-1 != priority )
+          if( PriorityFilterOn )
+            if( FilterByPriorityCB->ItemIndex-1 != LOG_PRI(sm->PRI) )
             {
               // and the type does not match the required - continue
               proto_line.SetLength(0);
+              delete sm;
               continue;
             }
 
-          VisibleLines++;
-
-          // Add lines to string grid by AddStringGridLines lines: this faster !
-          if( LogSG->RowCount < VisibleLines + 1 ) // + 1 fixed line
-            LogSG->RowCount = LogSG->RowCount + AddStringGridLines;
-          // Add lines by one a very long !
-          //LogSG->RowCount = VisibleLines + 1; // + 1 fixed line
-
-          int index = VisibleLines;
-          LogSG->Cells[0][index] = sm.DateStr;
-          LogSG->Cells[1][index] = sm.SourceAddr;
-          LogSG->Cells[2][index] = sm.HostName;
-          LogSG->Cells[3][index] = sm.Facility;
-          LogSG->Cells[4][index] = sm.Priority;
-          LogSG->Cells[5][index] = sm.Tag;
-          LogSG->Cells[6][index] = sm.Msg;
-
-          LogSG->Objects[0][index] = (TObject *)priority;
+          if( ! bAllowAddVisibleLines )
+          {
+            // Increasing the number of lines is not allowed
+            if( MessList->Count >= MaxGridLinesReceive )
+            {
+              delete (TSyslogMessage *)MessList->Items[0];
+              MessList->Delete(0);
+              TotalLines--;
+              DeletedMessagesCount++;
+            }
+          }
+          
+          MessList->Add(sm);
+          bHaveNewMessagesToDysplay = true;
 
           proto_line.SetLength(0);
         }
@@ -454,24 +410,44 @@ void __fastcall TMainForm::Read(void)
 	  proto_line += (char)p[i];
 	} // End for by protocol characters
 
-    // Establish the actual number of lines (but not less than 2x)
-    LogSG->RowCount = MAX(2, VisibleLines + 1); // + 1 fixed line
+    // Establish the actual number of lines (but not less than 2)
+    LogSG->RowCount = MAX(2, MessList->Count + 1); // + 1 fixed line
+
+    if( bHaveNewMessagesToDysplay )
+    {
+      if( DeletedMessagesCount > 0 )
+        LogSG->Invalidate();
+
+      // Goto new message ?
+      if( aGotoNewLine->Checked )
+      {
+        // Yes
+        LogSG->Row = LogSG->RowCount - 1;
+      }
+      else
+      {
+        // No: save cursor position and first visible line in view
+        if( DeletedMessagesCount > 0 )
+        {
+          int r = LogSG->Row - DeletedMessagesCount;
+          if( r < 1 )
+            r = 1;
+          int tr = LogSG->TopRow - DeletedMessagesCount;
+          if( tr < 1 )
+            tr = 1;
+
+          LogSG->bAllowUpdate = false; // prevent flicker
+          LogSG->Row = r;
+          LogSG->TopRow = tr;
+          LogSG->bAllowUpdate = true;
+        }
+      }
+    }
 
     FileSize = in.GetSize();
     UpdateCaption();
-
-    // Moves to the last line if enabled
-    if( aGotoNewLine->Checked )
-      LogSG->Row = LogSG->RowCount - 1;
   }
   delete [] p;
-
-  if( LogSG->RowCount >= MaxGridLines )
-  {
-    ReportMess2("Maximum number of lines exceeded (%d)", MaxGridLines);
-    // Read protocol file again
-    RedrawProto();
-  }
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::N30Click(TObject *Sender)
@@ -481,33 +457,62 @@ void __fastcall TMainForm::N30Click(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::LogSGDblClick(TObject *Sender)
 {
-  ShowMessage2(this,
-               LogSG->Cells[6][LogSG->Row],
-	  		   "Message time " + LogSG->Cells[0][LogSG->Row],
-               true, // modal
-               false); // error
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( sm )
+    ShowMessage2(this,
+                 sm->Msg,
+                 "Message time " + sm->DateStr,
+                 true, // modal
+                 false); // error
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
       int ARow, TRect &Rect, TGridDrawState State)
 {
-  if( ARow<1 ) return; // Grid title
-
   TCanvas * c = ((TStringGrid *)Sender)->Canvas;
-  int x,y;
-
-  if( State.Contains(gdSelected) ) // Selected line
+  String s;
+  if( ARow==0 ) // Grid title
   {
+    switch( ACol )
+    {
+      case 0: s = " Time"; break;
+      case 1: s = " IP"; break;
+      case 2: s = " Host"; break;
+      case 3: s = " Facility"; break;
+      case 4: s = " Priority"; break;
+      case 5: s = " Tag"; break;
+      case 6: s = " Message"; break;
+    }
   }
   else
   {
-    c->Brush->Color = GetLogRecordColor((int)LogSG->Objects[0][ARow]);
-    c->FillRect(Rect);
-    x = Rect.Left + 2;
-    y = Rect.Top + ((Rect.Bottom - Rect.Top -
-        c->TextHeight(LogSG->Cells[ACol][ARow])) / 2);
-    c->TextRect(Rect, x, y, LogSG->Cells[ACol][ARow]);
+    TSyslogMessage * sm = GetMessageByIndex(ARow - 1);
+    if( sm )
+    {
+      switch( ACol )
+      {
+        case 0: s = sm->DateStr; break;
+        case 1: s = sm->SourceAddr; break;
+        case 2: s = sm->HostName; break;
+        case 3: s = sm->Facility; break;
+        case 4: s = sm->Priority; break;
+        case 5: s = sm->Tag; break;
+        case 6: s = sm->Msg; break;
+      }
+
+      if( State.Contains(gdSelected) ) // Selected line
+      {
+      }
+      else
+      {
+        c->Brush->Color = GetLogRecordColor(sm->PRI);
+        //c->FillRect(Rect);
+      }
+    }
   }
+  int x = Rect.Left + 2;
+  int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
+  c->TextRect(Rect, x, y, s);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::ClearFilterButtonClick(TObject *Sender)
@@ -609,43 +614,6 @@ void __fastcall TMainForm::NetTimerTimer(TObject *Sender)
   TcpReceiveMessage();
 }
 //---------------------------------------------------------------------------
-void UdpReceiveMessage(void)
-{
-  if( ! udp )
-    return;
-  if( ! udp->IsOpen() )
-    return;
-
-  struct sockaddr_in a;
-  DWORD rl;
-  while( (rl = udp->ReadLength()) > 0 )
-  {
-    BYTE * ReceiveBuffer = new BYTE[rl + 1];
-    if( ! udp->ReadFrom(ReceiveBuffer, rl, (struct sockaddr *)&a) )
-    {
-      if( udp->GetWSAError() == MYERROR_READCOUNT )
-        ; // Good error :) In the receive buffer still have UDP packets
-      else
-      {
-        WriteToLogError(String("ERROR\tudp: ") + udp->GetErrorMessageEng());
-      }
-    }
-
-    if( udp->bytes > 0 )
-    {
-      // NULL terminate syslog message
-      ReceiveBuffer[udp->bytes] = 0;
-
-      WriteToLogRawMessage((char *)ReceiveBuffer);
-
-      TSyslogMessage sm;
-      sm.ProcessMessageFromSyslogd((char *)ReceiveBuffer, udp->bytes, &a);
-      sm.Save(SyslogFile);
-    }
-    delete [] ReceiveBuffer;
-  }
-}
-//---------------------------------------------------------------------------
 bool WriteToLogRawMessage(char * p)
 {
   if( ! rawout.IsOpen() )
@@ -654,10 +622,10 @@ bool WriteToLogRawMessage(char * p)
                          FILE_SHARE_READ | FILE_SHARE_WRITE,
                          OPEN_ALWAYS,
                          FILE_ATTRIBUTE_NORMAL);
+    if( ! rawout )
+      return false;
     rawout.SetPointer(0, FILE_END);
   }
-  if( ! rawout )
-    return false;
 
   String s(p);
   s += CR;
@@ -977,6 +945,44 @@ void __fastcall TMainForm::SetViewFileMode(bool b)
   mOpenFilesLoc->Visible = ! b;
   aClear->Visible = ! b;
   UpdateCaption();
+}
+//---------------------------------------------------------------------------
+TSyslogMessage * __fastcall TMainForm::GetMessageByIndex(int i)
+{
+  if( i < 0 || i >= MessList->Count )
+    return NULL;
+  return (TSyslogMessage *)MessList->Items[i];
+}
+//---------------------------------------------------------------------------
+__fastcall TDrawGrid2::TDrawGrid2(Classes::TComponent* AOwner) :
+    TDrawGrid(AOwner)
+{
+  bAllowUpdate = true;
+}
+//---------------------------------------------------------------------------
+void __fastcall TDrawGrid2::Update(void)
+{
+  if( bAllowUpdate )
+    TDrawGrid::Update();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::CreateGrid(void)
+{
+  LogSG = new TDrawGrid2(MainForm);
+  LogSG->Options >> goRangeSelect << goDrawFocusSelected
+                 << goColSizing << goRowSelect << goThumbTracking;
+  LogSG->Name = "LogSG";
+  LogSG->AlignWithMargins = true;
+  LogSG->Align = alClient;
+  LogSG->ColCount = 7;
+  LogSG->DefaultRowHeight = 20;
+  LogSG->FixedCols = 0;
+  LogSG->ParentFont = false;
+  LogSG->PopupMenu = ClipboardPM;
+  LogSG->OnDblClick = LogSGDblClick;
+  LogSG->OnDrawCell = (TDrawCellEvent)&LogSGDrawCell;
+  LogSG->Parent = GroupBox2;
+  ActiveControl = LogSG;
 }
 //---------------------------------------------------------------------------
 

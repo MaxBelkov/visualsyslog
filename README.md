@@ -26,7 +26,7 @@ Features
 
 Download
 ===
-Visual Syslog Server for Windows download installer:
+Visual Syslog Server for Windows download installer:  
 [Download last developper snapshot](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
 [Download latest stable release](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 

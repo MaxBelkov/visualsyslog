@@ -33,7 +33,7 @@ object MessageForm: TMessageForm
     Width = 145
     Height = 41
     Anchors = [akBottom]
-    Caption = #1054#1050
+    Caption = 'OK'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -16
@@ -92,7 +92,7 @@ object MessageForm: TMessageForm
     Width = 145
     Height = 41
     Anchors = [akBottom]
-    Caption = #1047#1072#1082#1088#1099#1090#1100
+    Caption = 'Close'
     Glyph.Data = {
       36040000424D3604000000000000360000002800000010000000100000000100
       2000000000000004000000000000000000000000000000000000000000000000

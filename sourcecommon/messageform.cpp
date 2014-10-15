@@ -66,8 +66,16 @@ void __fastcall ShowMessage2(TComponent * OwnerForm,
                              bool Error,
                              TPosition Position)
 {
-  // ‘орму надо создавать всегда заново, чтобы правильно применить OwnerForm
-  // ј как тогда быть с повторным открытием окна ? «акрыть предудущее !
+  // ѕоследовательные сообщени€ из конструктора привод€т
+  // к тому, что предыдущий TMessageForm не успел удалитьс€ и
+  // следующий вызываетс€ с OwnerForm == MessageForm
+  // Ёто приводит к Access violation !
+  if( OwnerForm && OwnerForm == MessageForm )
+    OwnerForm = NULL;
+
+  // ‘орму надо создавать всегда заново по 2 причинам:
+  // - чтобы правильно применить OwnerForm
+  // - чтобы удалить предыдущую форму
   if( MessageForm )
     delete MessageForm;
 
