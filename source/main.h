@@ -95,6 +95,17 @@ __published:	// IDE-managed Components
     TAction *aCancelViewFile;
     TToolButton *ToolButton12;
     TMenuItem *Cancelviewfile1;
+    TAction *aRunIE;
+    TMenuItem *RunInternetExplorer1;
+    TAction *aPing;
+    TMenuItem *Ping1;
+    TAction *aFilterByIP;
+    TAction *aFilterByHost;
+    TAction *aFilterByFacility;
+    TMenuItem *N4;
+    TMenuItem *FilteringbyIP1;
+    TMenuItem *FilteringbyHost1;
+    TMenuItem *FilteringbyFacility1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -119,6 +130,11 @@ __published:	// IDE-managed Components
     void __fastcall aExitExecute(TObject *Sender);
     void __fastcall aGotoNewLineExecute(TObject *Sender);
     void __fastcall aCancelViewFileExecute(TObject *Sender);
+    void __fastcall aRunIEExecute(TObject *Sender);
+    void __fastcall aPingExecute(TObject *Sender);
+    void __fastcall aFilterByIPExecute(TObject *Sender);
+    void __fastcall aFilterByHostExecute(TObject *Sender);
+    void __fastcall aFilterByFacilityExecute(TObject *Sender);
 
 private:	// User declarations
   TDrawGrid2 * LogSG;

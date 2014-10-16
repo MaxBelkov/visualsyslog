@@ -1,13 +1,14 @@
-Version history
+Visual Syslog Server for Windows Version history
 
-1.3  2014-10-
+1.3  2014-10-16
 
 - Improved interface
 - TCP transport support
 - Increased speed of logging messages
 - View syslog messages from file
 - Write all internal error messages to a file: errors.txt
-- Write all received unprocessed messages to a file: raw
+- Write all received unprocessed messages to a temporary file: raw
+- fixed bugs
 
 1.2  2014-09-23
 

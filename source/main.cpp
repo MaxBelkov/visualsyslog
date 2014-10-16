@@ -106,6 +106,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 
   SyslogFile = WorkDir + "syslog";
   RawFile = WorkDir + "raw";
+  DeleteFile(RawFile);
   ErrorlogFile = WorkDir + "errors.txt";
   MainCfgFile = WorkDir + "cfg.ini";
 
@@ -983,6 +984,70 @@ void __fastcall TMainForm::CreateGrid(void)
   LogSG->OnDrawCell = (TDrawCellEvent)&LogSGDrawCell;
   LogSG->Parent = GroupBox2;
   ActiveControl = LogSG;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aRunIEExecute(TObject *Sender)
+{
+  String url;
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( sm )
+    url = String("http://") + sm->SourceAddr;
+
+  ShellExecute(GetDesktopWindow(), "open", url.c_str(), NULL, NULL, SW_SHOWNORMAL);
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aPingExecute(TObject *Sender)
+{
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( ! sm )
+    return;
+
+  if( sm->SourceAddr.Length() == 0 )
+    return;
+
+  char * szCurDir = NULL;
+  char szSysDir[MN];
+  if( GetSystemDirectory(szSysDir, sizeof(szSysDir)) > 0 )
+    szCurDir = szSysDir;
+
+  DWORD Error;
+  String s = String("ping.exe ") + sm->SourceAddr;
+  if( ! RunProg(s.c_str(), SW_NORMAL, false, &Error, szCurDir) )
+    ReportError2("Error in command \"%s\": %s [%d]",
+      s.c_str(), FormatLastError2(Error).c_str(), Error);
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aFilterByIPExecute(TObject *Sender)
+{
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( ! sm )
+    return;
+  if( sm->SourceAddr.Length() == 0 )
+    return;  
+  FilterEdit->Text = sm->SourceAddr;
+  ApplyFilter = 1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
+{
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( ! sm )
+    return;
+  if( sm->HostName.Length() == 0 )
+    return;
+  FilterEdit->Text = sm->HostName;
+  ApplyFilter = 1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aFilterByFacilityExecute(TObject *Sender)
+{
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( ! sm )
+    return;
+  if( sm->Facility.Length() == 0 )
+    return;
+  FilterEdit->Text = sm->Facility;
+  ApplyFilter = 1;
 }
 //---------------------------------------------------------------------------
 

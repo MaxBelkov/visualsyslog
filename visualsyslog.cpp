@@ -6,6 +6,7 @@ USEFORM("sourcecommon\messageform.cpp", MessageForm);
 USEFORM("source\main.cpp", MainForm);
 USEFORM("source\setup.cpp", SetupForm);
 USEFORM("source\aboutbox.cpp", AboutBoxForm);
+USEFORM("source\messmatchframe.cpp", MessMatchFr); /* TFrame: File Type */
 //---------------------------------------------------------------------------
 extern bool bHideToTray;
 //---------------------------------------------------------------------------

@@ -43,9 +43,9 @@ object AboutBoxForm: TAboutBoxForm
     Anchors = [akLeft, akTop, akRight]
     AutoSize = False
     Caption = 
-      'Visual Syslog Server is a program to receive syslog messages. Co' +
-      'mpliant to RFC 3164. Visual Syslog Server is a free Open Source ' +
-      'application. Licensed under the GPL V2.'
+      'Visual Syslog Server for Windows is a program to receive syslog ' +
+      'messages. Compliant to RFC 3164. Visual Syslog Server  for Windo' +
+      'ws is a free Open Source application. Licensed under the GPL V2.'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clBlack
     Font.Height = -13
@@ -235,10 +235,10 @@ object AboutBoxForm: TAboutBoxForm
       000000000000000000000000000000000000000000000000FFFF0000}
     Transparent = True
   end
-  object Comments: TLabel
+  object Label3: TLabel
     Tag = 1
     Left = 27
-    Top = 94
+    Top = 110
     Width = 227
     Height = 16
     Cursor = crHandPoint
@@ -257,7 +257,7 @@ object AboutBoxForm: TAboutBoxForm
   object Label1: TLabel
     Tag = 2
     Left = 27
-    Top = 150
+    Top = 152
     Width = 117
     Height = 16
     Cursor = crHandPoint
@@ -275,7 +275,7 @@ object AboutBoxForm: TAboutBoxForm
   end
   object Label2: TLabel
     Left = 27
-    Top = 128
+    Top = 132
     Width = 302
     Height = 16
     Caption = 'Reviews, comments and suggestions please send to:'
@@ -286,7 +286,6 @@ object AboutBoxForm: TAboutBoxForm
     Font.Style = []
     ParentFont = False
     Transparent = True
-    WordWrap = True
     IsControl = True
   end
   object Bevel1: TBevel
@@ -297,6 +296,21 @@ object AboutBoxForm: TAboutBoxForm
     Anchors = [akLeft, akTop, akRight, akBottom]
     Style = bsRaised
     ExplicitHeight = 269
+  end
+  object Label4: TLabel
+    Left = 27
+    Top = 90
+    Width = 244
+    Height = 16
+    Caption = 'Program website, download new versions:'
+    Font.Charset = DEFAULT_CHARSET
+    Font.Color = clBlack
+    Font.Height = -13
+    Font.Name = 'Tahoma'
+    Font.Style = []
+    ParentFont = False
+    Transparent = True
+    IsControl = True
   end
   object OKButton: TBitBtn
     Left = 216

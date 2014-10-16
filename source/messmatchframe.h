@@ -1,36 +1,31 @@
 //---------------------------------------------------------------------------
-#ifndef aboutboxH
-#define aboutboxH
+
+#ifndef messmatchframeH
+#define messmatchframeH
 //---------------------------------------------------------------------------
 #include <Classes.hpp>
 #include <Controls.hpp>
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
-#include <Buttons.hpp>
-#include <ComCtrls.hpp>
-#include <ExtCtrls.hpp>
-#include <Graphics.hpp>
 //---------------------------------------------------------------------------
-class TAboutBoxForm : public TForm
+class TMessMatchFr : public TFrame
 {
 __published:	// IDE-managed Components
-    TBevel *Bevel3;
-    TBevel *Bevel2;
-    TLabel *Label;
-    TImage *ProgramIcon;
-    TLabel *Label3;
-    TBitBtn *OKButton;
-        TLabel *Label1;
+    TGroupBox *GroupBox1;
     TLabel *Label2;
-    TBevel *Bevel1;
-    TMemo *Memo;
-    TLabel *Label4;
-        void __fastcall LabelClick(TObject *Sender);
+    TComboBox *FilterByPriorityCB;
+    TLabel *Label1;
+    TEdit *TextEdit1;
+    TComboBox *TextContainsCB1;
+    TCheckBox *MatchCaseCB;
+    TLabel *Label3;
+    TComboBox *TextContainsCB2;
+    TEdit *TextEdit2;
 private:	// User declarations
 public:		// User declarations
-    __fastcall TAboutBoxForm(TComponent* Owner);
+    __fastcall TMessMatchFr(TComponent* Owner);
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TAboutBoxForm *AboutBoxForm;
+extern PACKAGE TMessMatchFr *MessMatchFr;
 //---------------------------------------------------------------------------
 #endif
