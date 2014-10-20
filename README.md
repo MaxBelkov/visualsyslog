@@ -16,7 +16,7 @@ Features
 * Syslog messages are displayed in real-time
 * Filter displayed syslog messages based on priority or message contents
 * Color highlighting based on priority
-* Import historical syslog files after the start of the program
+* Import historical syslog messages after the start of the program
 * View and analyze syslog messages from the file
 * Run as a Windows application
 * Minimize to system tray
