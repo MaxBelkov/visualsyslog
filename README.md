@@ -1,4 +1,4 @@
-Visual Syslog Server for Windows
+![](https://raw.githubusercontent.com/MaxBelkov/visualsyslog/master/screens/ico.png) Visual Syslog Server for Windows
 ===
 Visual Syslog Server for Windows with a graphical user interface.
 
