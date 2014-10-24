@@ -14,6 +14,7 @@
 #include "setup.h"
 #include "aboutbox.h"
 #include "cfg.h"         // program config
+#include "messmatch.h"   // Message filtering
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -56,7 +57,7 @@ String SyslogFile;
 TFile rawout;
 String RawFile;
 
-BYTE HiVer=0, LoVer=0;
+BYTE HiVer=0, LoVer=0, RelVer=0;
 String GetVersionString(void);
 String GetFullAppName(void);
 
@@ -85,6 +86,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   {
     HiVer = (BYTE)Major;
     LoVer = (BYTE)Minor;
+    RelVer = (BYTE)Release;
   }
 
   if( bHideToTray )
@@ -157,8 +159,12 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   // Save all
   *AppParams << this << (TStringGrid *)LogSG;
   AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
+
   AppParams->Values["TextFilter"] = FilterEdit->Text;
-  AppParams->Values["TextFilterIgnore"] = FilterIgnoreEdit->Text;
+  AppParams->Values["TextContains"] = TextContainsCB1->ItemIndex;
+  AppParams->Values["TextFilter2"] = FilterEdit2->Text;
+  AppParams->Values["TextContains2"] = TextContainsCB2->ItemIndex;
+  AppParams->Values["PriorityFilter"] = FilterByPriorityCB->ItemIndex;
 
   AppParams->Values["FontName"] = LogSG->Font->Name;
   AppParams->Values["FontSize"] = LogSG->Font->Size;
@@ -171,7 +177,7 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
 void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
 {
   bLive = _bLive;
-  ApplyFilter = 0;
+  FilterTimer = 0;
   SizeToRead = StartSizeToRead;
 
   // For "non-life" protocol remove functions:
@@ -194,15 +200,17 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   {
 	FilterEdit->Text = v;
     fFilter = v;
-    ClearFilterButton->Visible = true;
+    TextContainsCB1->ItemIndex = AppParams->Values["TextContains"];
   }
-  v = AppParams->Values["TextFilterIgnore"];
+  v = AppParams->Values["TextFilter2"];
   if( ! v.IsEmpty() )
   {
-	FilterIgnoreEdit->Text = v;
-    fFilterIgnore = v;
-    ClearFilterButton->Visible = true;
+	FilterEdit2->Text = v;
+    fFilter2 = v;
+    TextContainsCB2->ItemIndex = AppParams->Values["TextContains2"];
   }
+  FilterByPriorityCB->ItemIndex = AppParams->Values["PriorityFilter"];
+  UpdateFilterButton();
 
   String FontName = AppParams->Values["FontName"];
   if( FontName.Length() > 0 )
@@ -273,20 +281,20 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
   if( fFilter != FilterEdit->Text )
   {
     fFilter = FilterEdit->Text;
-    ApplyFilter = 2;
+    FilterTimer = 2;
   }
-  if( fFilterIgnore != FilterIgnoreEdit->Text )
+  if( fFilter2 != FilterEdit2->Text )
   {
-    fFilterIgnore = FilterIgnoreEdit->Text;
-    ApplyFilter = 2;
+    fFilter2 = FilterEdit2->Text;
+    FilterTimer = 2;
   }
-  else if( ApplyFilter > 0 )
+  else if( FilterTimer > 0 )
   {
-    ApplyFilter--;
-    if( ApplyFilter == 0 )
+    FilterTimer--;
+    if( FilterTimer == 0 )
     {
-      ClearFilterButton->Visible = FilterEdit->Text.Length() > 0 ||
-                                   FilterIgnoreEdit->Text.Length() > 0;
+      UpdateFilterButton();
+      // Read protocol file again
       RedrawProto();
     }
   }
@@ -311,10 +319,10 @@ void __fastcall TMainForm::UpdateCaption(void)
 
   int lc = MessList->Count;
   if( TotalLines != lc )
-    GroupBox2->Caption = "Displaying " + IntToStr(lc) + " lines of " +
+    GroupBox2->Caption = "Displaying " + IntToStr(lc) + " messages of " +
       IntToStr(TotalLines);
   else
-    GroupBox2->Caption = "Displaying " + IntToStr(lc) + " lines";
+    GroupBox2->Caption = "Displaying " + IntToStr(lc) + " messages";
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Clear(void)
@@ -333,21 +341,27 @@ void __fastcall TMainForm::Clear(void)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
 {
-  TSyslogMessage * sm;
-  bool bHaveNewMessagesToDysplay = false;
-  int DeletedMessagesCount = 0;
-
   BYTE * p = new BYTE[SizeToRead];
   in.Read(p, SizeToRead);
   if( in.Bytes > 0 )
   {
+    TSyslogMessage * sm;
+    bool bHaveNewMessagesToDysplay = false;
+    int DeletedMessagesCount = 0;
+
+    TMessMatch MessMatch;
+    MessMatch.Priority = FilterByPriorityCB->ItemIndex - 1;
+    MessMatch.TextContains1 = TextContainsCB1->ItemIndex == 0;
+    MessMatch.Text1 = FilterEdit->Text;
+    MessMatch.TextContains2 = TextContainsCB2->ItemIndex == 0;
+    MessMatch.Text2 = FilterEdit2->Text;
+    MessMatch.MatchCase = true;
+
     ReadedSize += in.Bytes;
+
     // It is possible that the text file is filled so quickly that
     // he read to the end and not at the end of the array p [] is to truncate
     // proto_line var is global, to save cut line part
-    bool TextFilterOn = fFilter.Length() > 0;
-    bool TextFilterIgnoreOn = fFilterIgnore.Length() > 0;
-    bool PriorityFilterOn =  FilterByPriorityCB->ItemIndex > 0;
 
     for(DWORD i=0, c=in.Bytes; i<c; i++)
     {
@@ -358,36 +372,16 @@ void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
           // Now proto_line contains new line
           TotalLines++;
 
-          // Text to find enabled
-          if( TextFilterOn )
-            if( proto_line.Pos(fFilter) == 0 )
-            {
-              // and the desired substring is NOT found - continue
-              proto_line.SetLength(0);
-              continue;
-            }
-
-          // Text to ignore enabled
-          if( TextFilterIgnoreOn )
-            if( proto_line.Pos(fFilterIgnore) > 0 )
-            {
-              // and the desired substring is found - continue
-              proto_line.SetLength(0);
-              continue;
-            }
-
           sm = new TSyslogMessage;
           sm->ProcessMessageFromFile(proto_line.c_str());
 
-          // Filter enabled
-          if( PriorityFilterOn )
-            if( FilterByPriorityCB->ItemIndex-1 != LOG_PRI(sm->PRI) )
-            {
-              // and the type does not match the required - continue
-              proto_line.SetLength(0);
-              delete sm;
-              continue;
-            }
+          if( ! MessMatch.Match(sm) )
+          {
+            // and the type does not match the required - continue
+            proto_line.SetLength(0);
+            delete sm;
+            continue;
+          }
 
           if( ! bAllowAddVisibleLines )
           {
@@ -518,26 +512,25 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::ClearFilterButtonClick(TObject *Sender)
 {
+  TextContainsCB1->ItemIndex = 0;
   FilterEdit->Text = "";
   fFilter = "";
 
-  FilterIgnoreEdit->Text = "";
-  fFilterIgnore = "";
+  TextContainsCB2->ItemIndex = 0;
+  FilterEdit2->Text = "";
+  fFilter2 = "";
 
-  ApplyFilter = 0;
+  FilterTimer = 0;
 
   FilterByPriorityCB->ItemIndex = 0;
 
-  ClearFilterButton->Visible = false;
-  
-  // Read protocol file again
+  UpdateFilterButton();
   RedrawProto();
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::FilterByPriorityCBSelect(TObject *Sender)
+void __fastcall TMainForm::OnApplyFilter(TObject *Sender)
 {
-  ClearFilterButton->Visible = true;
-  // Read protocol file again
+  UpdateFilterButton();
   RedrawProto();
 }
 //---------------------------------------------------------------------------
@@ -592,9 +585,6 @@ void __fastcall TMainForm::aFontExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::SetLinesHeight(void)
 {
-  // This work always sometimes
-  //int rh = LogSG->Canvas->TextHeight("Qj");
-  // This work always
   int rh = LogSG->Font->Size + 6;
   LogSG->DefaultRowHeight = rh + rh / 2;
   FilterByPriorityCB->ItemHeight = 18;
@@ -708,7 +698,7 @@ void __fastcall TMainForm::aAboutExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 String GetVersionString(void)
 {
-  return IntToStr(HiVer) + "." + IntToStr(LoVer);
+  return IntToStr(HiVer) + "." + IntToStr(LoVer) + "." + IntToStr(RelVer);
 }
 //---------------------------------------------------------------------------
 String GetFullAppName(void)
@@ -1023,9 +1013,10 @@ void __fastcall TMainForm::aFilterByIPExecute(TObject *Sender)
   if( ! sm )
     return;
   if( sm->SourceAddr.Length() == 0 )
-    return;  
-  FilterEdit->Text = sm->SourceAddr;
-  ApplyFilter = 1;
+    return;
+  FilterEdit->Text = String("I:") + sm->SourceAddr;
+  TextContainsCB1->ItemIndex = 0;
+  FilterTimer = 1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
@@ -1035,8 +1026,9 @@ void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
     return;
   if( sm->HostName.Length() == 0 )
     return;
-  FilterEdit->Text = sm->HostName;
-  ApplyFilter = 1;
+  FilterEdit->Text = String("H:") + sm->HostName;
+  TextContainsCB1->ItemIndex = 0;
+  FilterTimer = 1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aFilterByFacilityExecute(TObject *Sender)
@@ -1046,8 +1038,16 @@ void __fastcall TMainForm::aFilterByFacilityExecute(TObject *Sender)
     return;
   if( sm->Facility.Length() == 0 )
     return;
-  FilterEdit->Text = sm->Facility;
-  ApplyFilter = 1;
+  FilterEdit->Text = String("F:") + sm->Facility;
+  TextContainsCB1->ItemIndex = 0;
+  FilterTimer = 1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::UpdateFilterButton(void)
+{
+  ClearFilterButton->Visible = FilterEdit->Text.Length() > 0 ||
+                               FilterEdit2->Text.Length() > 0 ||
+                               FilterByPriorityCB->ItemIndex > 0;
 }
 //---------------------------------------------------------------------------
 

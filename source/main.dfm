@@ -27,34 +27,18 @@ object MainForm: TMainForm
     Margins.Left = 6
     Margins.Right = 6
     Align = alTop
-    Caption = 'Filter'
+    Caption = 'Message filtering'
     TabOrder = 0
-    object Label1: TLabel
-      Left = 22
-      Top = 20
-      Width = 56
-      Height = 13
-      Alignment = taRightJustify
-      Caption = 'Text to find'
-    end
     object Label2: TLabel
-      Left = 478
-      Top = 19
+      Left = 491
+      Top = 22
       Width = 34
       Height = 13
       Alignment = taRightJustify
       Caption = 'Priority'
     end
-    object Label3: TLabel
-      Left = 241
-      Top = 20
-      Width = 68
-      Height = 13
-      Alignment = taRightJustify
-      Caption = 'Text to ignore'
-    end
     object ClearFilterButton: TSpeedButton
-      Left = 678
+      Left = 691
       Top = 20
       Width = 18
       Height = 18
@@ -93,23 +77,25 @@ object MainForm: TMainForm
       OnClick = ClearFilterButtonClick
     end
     object FilterEdit: TEdit
-      Left = 88
-      Top = 18
-      Width = 121
+      Left = 119
+      Top = 20
+      Width = 120
       Height = 21
-      TabOrder = 0
+      TabOrder = 1
     end
     object FilterByPriorityCB: TComboBox
-      Left = 520
-      Top = 17
+      Left = 533
+      Top = 18
       Width = 145
       Height = 19
       Style = csOwnerDrawFixed
       DropDownCount = 12
       ItemHeight = 13
-      TabOrder = 2
+      ItemIndex = 0
+      TabOrder = 4
+      Text = '<all>'
       OnDrawItem = FilterByPriorityCBDrawItem
-      OnSelect = FilterByPriorityCBSelect
+      OnSelect = OnApplyFilter
       Items.Strings = (
         '<all>'
         'emerg'
@@ -121,12 +107,42 @@ object MainForm: TMainForm
         'info'
         'debug')
     end
-    object FilterIgnoreEdit: TEdit
-      Left = 319
-      Top = 18
+    object FilterEdit2: TEdit
+      Left = 359
+      Top = 20
       Width = 121
       Height = 21
-      TabOrder = 1
+      TabOrder = 3
+    end
+    object TextContainsCB1: TComboBox
+      Left = 10
+      Top = 20
+      Width = 100
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 0
+      Text = 'Contains'
+      OnSelect = OnApplyFilter
+      Items.Strings = (
+        'Contains'
+        'NOT contains')
+    end
+    object TextContainsCB2: TComboBox
+      Left = 250
+      Top = 20
+      Width = 100
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 2
+      Text = 'Contains'
+      OnSelect = OnApplyFilter
+      Items.Strings = (
+        'Contains'
+        'NOT contains')
     end
   end
   object GroupBox2: TGroupBox
@@ -138,7 +154,6 @@ object MainForm: TMainForm
     Margins.Left = 6
     Margins.Right = 6
     Align = alClient
-    Caption = #1042#1089#1077#1075#1086' 0 '#1089#1090#1088#1086#1082
     TabOrder = 1
   end
   object StatusBar: TStatusBar
@@ -348,7 +363,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 192
     Bitmap = {
-      494C01010D005801600110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010D005801680110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -894,7 +909,7 @@ object MainForm: TMainForm
     Left = 64
     Top = 288
     Bitmap = {
-      494C01010100D801500210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010100D801580210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1068,7 +1083,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 232
     Bitmap = {
-      494C01010A00E000140120002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010A00E0001C0120002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000008000000060000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

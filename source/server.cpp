@@ -2,7 +2,6 @@
 #include <vcl.h>
 #pragma hdrstop
 
-#include "udp.h"
 #include "syslog.h"
 #include "server.h"
 
@@ -142,9 +141,14 @@ void TSyslogMessage::ProcessMessageFromFile(char * p)
   for(p++; *p && *p!='\t'; p++)
     Msg += *p;
 
+  // -1 if gettextcode nothing found
   PRI = gettextcode(Priority.c_str(), prioritynames);
-  // now facility code is not used
-  // + gettextcode(Facility.c_str(), facilitynames);
+  if( PRI >= 0 )
+  {
+    int i = gettextcode(Facility.c_str(), facilitynames);
+    if( i >= 0 )
+      PRI |= i;
+  }
 }
 //---------------------------------------------------------------------------
 /*

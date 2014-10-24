@@ -37,7 +37,6 @@ __published:	// IDE-managed Components
     TTimer *Timer;
     TGroupBox *GroupBox1;
     TGroupBox *GroupBox2;
-    TLabel *Label1;
     TEdit *FilterEdit;
     TPopupMenu *ClipboardPM;
     TMenuItem *N30;
@@ -48,8 +47,7 @@ __published:	// IDE-managed Components
     TStatusBar *StatusBar;
     TTimer *NetTimer;
     TMenuItem *N1;
-    TLabel *Label3;
-    TEdit *FilterIgnoreEdit;
+    TEdit *FilterEdit2;
     TSpeedButton *ClearFilterButton;
     TImageList *TrayImageList;
     TPopupMenu *TrayPopupMenu;
@@ -106,6 +104,8 @@ __published:	// IDE-managed Components
     TMenuItem *FilteringbyIP1;
     TMenuItem *FilteringbyHost1;
     TMenuItem *FilteringbyFacility1;
+    TComboBox *TextContainsCB1;
+    TComboBox *TextContainsCB2;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -113,7 +113,7 @@ __published:	// IDE-managed Components
           TRect &Rect, TGridDrawState State);
     void __fastcall FormDestroy(TObject *Sender);
     void __fastcall ClearFilterButtonClick(TObject *Sender);
-    void __fastcall FilterByPriorityCBSelect(TObject *Sender);
+    void __fastcall OnApplyFilter(TObject *Sender);
     void __fastcall FilterByPriorityCBDrawItem(TWinControl *Control, int Index,
           TRect &Rect, TOwnerDrawState State);
     void __fastcall FormCreate(TObject *Sender);
@@ -150,8 +150,8 @@ private:	// User declarations
   bool bLive;       // Live view ? (yes by default)
 
   String fFilter;   // Text filter string
-  String fFilterIgnore; // Text filter ignore string
-  int ApplyFilter;  // Text filter timer in seconds
+  String fFilter2;  // Text filter string2
+  int FilterTimer;  // Text filter timer in seconds
 
   DWORD FileSize;   // Size of fFile when open
   DWORD ReadedSize; // Bytes read from fFile
@@ -201,6 +201,8 @@ public:		// User declarations
 
   // Get display message by index
   TSyslogMessage * __fastcall GetMessageByIndex(int i);
+  
+  void __fastcall UpdateFilterButton(void);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;

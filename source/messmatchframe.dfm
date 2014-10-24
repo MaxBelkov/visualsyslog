@@ -12,8 +12,6 @@ object MessMatchFr: TMessMatchFr
     Align = alClient
     Caption = 'Match'
     TabOrder = 0
-    ExplicitWidth = 767
-    ExplicitHeight = 337
     object Label2: TLabel
       Left = 22
       Top = 28
@@ -23,27 +21,27 @@ object MessMatchFr: TMessMatchFr
       Caption = 'Priority'
     end
     object Label1: TLabel
-      Left = 34
+      Left = 14
       Top = 60
-      Width = 22
+      Width = 42
       Height = 13
       Alignment = taRightJustify
-      Caption = 'Text'
+      Caption = 'Message'
     end
     object Label3: TLabel
-      Left = 34
+      Left = 14
       Top = 95
-      Width = 22
+      Width = 42
       Height = 13
       Alignment = taRightJustify
-      Caption = 'Text'
+      Caption = 'Message'
     end
     object FilterByPriorityCB: TComboBox
       Left = 70
       Top = 25
       Width = 145
-      Height = 19
-      Style = csOwnerDrawFixed
+      Height = 21
+      Style = csDropDownList
       DropDownCount = 12
       ItemHeight = 13
       TabOrder = 0

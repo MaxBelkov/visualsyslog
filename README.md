@@ -27,8 +27,8 @@ Features
 Download
 ===
 Visual Syslog Server for Windows download installer:  
-[Download last developper snapshot](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
-[Download latest stable release](https://github.com/MaxBelkov/visualsyslog/releases/latest)
+[Download last developper snapshot 1.3.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Download latest stable release 1.3](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Installation
 ===
@@ -46,11 +46,11 @@ Installer project file _visualsyslog.iss_
 
 Is not supported yet
 ===
-* RFC 5424
-* Log file rotation
-* Files larger than 2 GB
 * Customizable color highlighting
 * Alarms
+* Files larger than 2 GB
+* Log file rotation
+* RFC 5424
 
 If you need these or other functions let me know.  
 Your questions and suggestions please send to ![ ](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)

@@ -2,15 +2,16 @@
 #ifndef serverH
 #define serverH
 
+#include "udp.h"
 #include "file.h"
 //---------------------------------------------------------------------------
 class TSyslogMessage
 {
 public:
-  String SourceAddr;
-  int PRI;
+  String SourceAddr; // IP
+  int PRI;           // -1: PRI not exist in message
   String Facility;
-  String Priority; // Severity
+  String Priority;   // also called Severity
   String DateStr;
   String HostName;
   String Tag;
