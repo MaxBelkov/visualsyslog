@@ -21,7 +21,10 @@ TSyslogdTcpConn::~TSyslogdTcpConn()
   if( Data )
     delete [] Data;
   if( Socket )
+  {
     Socket->Close();
+    delete Socket;
+  }
 }
 //---------------------------------------------------------------------------
 BYTE * TSyslogdTcpConn::GetBufferSize(int NeedFreeSize)

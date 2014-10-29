@@ -15,6 +15,8 @@
 #include "aboutbox.h"
 #include "cfg.h"         // program config
 #include "messmatch.h"   // Message filtering
+#include "messhl.h"      // Message highlighting profiles
+#include "formhl.h"      // Highlighting setup
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -48,6 +50,9 @@ String ApplicationExeName;
 String WorkDir;
 String ErrorlogFile;
 String MainCfgFile;
+String HighlightFile;
+
+THighlightProfileList * HP;
 
 // syslog file
 TFile syslogout;
@@ -64,6 +69,7 @@ String GetFullAppName(void);
 bool bHideToTray;
 
 TMainCfg MainCfg;
+static TMessStyle DefaultMessStyle;
 
 TMainForm * MainForm = NULL;
 
@@ -111,8 +117,12 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   DeleteFile(RawFile);
   ErrorlogFile = WorkDir + "errors.txt";
   MainCfgFile = WorkDir + "cfg.ini";
+  HighlightFile = WorkDir + "highlight.xml";
 
   MainCfg.Load();
+
+  HP = new THighlightProfileList;
+  HP->Load(HighlightFile);
 
   AppParams = new TSaveParamsINI(WorkDir + "params.ini");
   AppParams->MinimumColumnWidth = 10;
@@ -135,43 +145,6 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 
   Timer->Enabled = true;
   NetTimer->Enabled = true;
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::FormDestroy(TObject *Sender)
-{
-  NetTimer->Enabled = false;
-  Timer->Enabled = false;
-
-  TcpServerStop();
-  TcpServerDestroy();
-
-  UdpServerStop();
-  UdpServerDestroy();
-
-  rawout.Close();
-  syslogout.Close();
-
-  Clear();
-  delete MessList;
-  MessList = NULL;
-
-  delete LogSG_LivingColumns;
-  // Save all
-  *AppParams << this << (TStringGrid *)LogSG;
-  AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
-
-  AppParams->Values["TextFilter"] = FilterEdit->Text;
-  AppParams->Values["TextContains"] = TextContainsCB1->ItemIndex;
-  AppParams->Values["TextFilter2"] = FilterEdit2->Text;
-  AppParams->Values["TextContains2"] = TextContainsCB2->ItemIndex;
-  AppParams->Values["PriorityFilter"] = FilterByPriorityCB->ItemIndex;
-
-  AppParams->Values["FontName"] = LogSG->Font->Name;
-  AppParams->Values["FontSize"] = LogSG->Font->Size;
-  AppParams->Values["FontStyle"] = LogSG->Font->Style.ToInt();
-
-  delete AppParams;
-  AppParams = NULL;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
@@ -217,12 +190,82 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   {
     LogSG->Font->Name = FontName;
     LogSG->Font->Size = AppParams->Values["FontSize"];
-    LogSG->Font->Style = TFontStyles((int)AppParams->Values["FontStyle"]);
   }
+  HP->CurrentProfile = AppParams->Values["HighlighProfile"];
 
+  FillProfilePopupMenu();
   SetLinesHeight();
 
   LogSG_LivingColumns = new TStringGridLivingColumns((TStringGrid *)LogSG);
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::FormDestroy(TObject *Sender)
+{
+  // Save all
+  *AppParams << this << (TStringGrid *)LogSG;
+  AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
+
+  AppParams->Values["TextFilter"] = FilterEdit->Text;
+  AppParams->Values["TextContains"] = TextContainsCB1->ItemIndex;
+  AppParams->Values["TextFilter2"] = FilterEdit2->Text;
+  AppParams->Values["TextContains2"] = TextContainsCB2->ItemIndex;
+  AppParams->Values["PriorityFilter"] = FilterByPriorityCB->ItemIndex;
+
+  AppParams->Values["FontName"] = LogSG->Font->Name;
+  AppParams->Values["FontSize"] = LogSG->Font->Size;
+  AppParams->Values["HighlighProfile"] = HP->CurrentProfile;
+
+  NetTimer->Enabled = false;
+  Timer->Enabled = false;
+
+  TcpServerStop();
+  TcpServerDestroy();
+
+  UdpServerStop();
+  UdpServerDestroy();
+
+  rawout.Close();
+  syslogout.Close();
+
+  Clear();
+  delete MessList;
+  MessList = NULL;
+
+  delete HP;
+  HP = NULL;
+
+  delete LogSG_LivingColumns;
+
+  delete AppParams;
+  AppParams = NULL;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::CreateGrid(void)
+{
+  LogSG = new TDrawGrid2(MainForm);
+  LogSG->Options >> goRangeSelect << goDrawFocusSelected
+                 << goColSizing << goRowSelect << goThumbTracking;
+  LogSG->Name = "LogSG";
+  LogSG->AlignWithMargins = true;
+  LogSG->Align = alClient;
+  LogSG->ColCount = 7;
+  LogSG->DefaultRowHeight = 20;
+  LogSG->FixedCols = 0;
+  LogSG->ParentFont = false;
+  LogSG->PopupMenu = ClipboardPM;
+  LogSG->OnDblClick = LogSGDblClick;
+  LogSG->OnDrawCell = (TDrawCellEvent)&LogSGDrawCell;
+  LogSG->Parent = GroupBox2;
+  // set resonnable default column width for first run
+  LogSG->ColWidths[0] = 110;
+  LogSG->ColWidths[1] = 90;
+  LogSG->ColWidths[2] = 90;
+  LogSG->ColWidths[3] = 80;
+  LogSG->ColWidths[4] = 80;
+  LogSG->ColWidths[5] = 120;
+  LogSG->ColWidths[6] = 520;
+
+  ActiveControl = LogSG;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::SetFile(String f)
@@ -495,6 +538,27 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
         case 6: s = sm->Msg; break;
       }
 
+      TMessStyle * pMessStyle = &DefaultMessStyle;
+      TMessHighlightList * mhl = HP->GetCurrentProfile();
+      if( mhl )
+      {
+        TMessStyle * ms = mhl->FindStyleForMessage(sm);
+        if( ms )
+          pMessStyle = ms;
+      }
+
+      if( State.Contains(gdSelected) ) // Selected line
+      {
+      }
+      else
+      {
+        c->Brush->Color = pMessStyle->BackgroundColor;
+        c->Font->Color = pMessStyle->TextColor;
+      }
+
+      pMessStyle->SetFontStyle(c->Font);
+
+      /*
       if( State.Contains(gdSelected) ) // Selected line
       {
       }
@@ -503,6 +567,7 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
         c->Brush->Color = GetLogRecordColor(sm->PRI);
         //c->FillRect(Rect);
       }
+      */
     }
   }
   int x = Rect.Left + 2;
@@ -533,6 +598,7 @@ void __fastcall TMainForm::OnApplyFilter(TObject *Sender)
   UpdateFilterButton();
   RedrawProto();
 }
+/*
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FilterByPriorityCBDrawItem(TWinControl *Control,
       int Index, TRect &Rect, TOwnerDrawState State)
@@ -573,12 +639,15 @@ TColor TMainForm::GetLogRecordColor(int priority)
   }
   return cl_Green; // default :)
 }
+*/
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aFontExecute(TObject *Sender)
 {
   FontDialog->Font = LogSG->Font;
+  TFontStyles st = FontDialog->Font->Style; // save style
   if( ! FontDialog->Execute() )
     return;
+  FontDialog->Font->Style = st; // restore style
   LogSG->Font = FontDialog->Font;
   SetLinesHeight();
 }
@@ -957,25 +1026,6 @@ void __fastcall TDrawGrid2::Update(void)
     TDrawGrid::Update();
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::CreateGrid(void)
-{
-  LogSG = new TDrawGrid2(MainForm);
-  LogSG->Options >> goRangeSelect << goDrawFocusSelected
-                 << goColSizing << goRowSelect << goThumbTracking;
-  LogSG->Name = "LogSG";
-  LogSG->AlignWithMargins = true;
-  LogSG->Align = alClient;
-  LogSG->ColCount = 7;
-  LogSG->DefaultRowHeight = 20;
-  LogSG->FixedCols = 0;
-  LogSG->ParentFont = false;
-  LogSG->PopupMenu = ClipboardPM;
-  LogSG->OnDblClick = LogSGDblClick;
-  LogSG->OnDrawCell = (TDrawCellEvent)&LogSGDrawCell;
-  LogSG->Parent = GroupBox2;
-  ActiveControl = LogSG;
-}
-//---------------------------------------------------------------------------
 void __fastcall TMainForm::aRunIEExecute(TObject *Sender)
 {
   String url;
@@ -1048,6 +1098,42 @@ void __fastcall TMainForm::UpdateFilterButton(void)
   ClearFilterButton->Visible = FilterEdit->Text.Length() > 0 ||
                                FilterEdit2->Text.Length() > 0 ||
                                FilterByPriorityCB->ItemIndex > 0;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aHighlightingSetupExecute(TObject *Sender)
+{
+  HighlightForm = new THighlightForm(this, HP->CurrentProfile);
+  if( HighlightForm->ShowModal() == mrOk )
+  {
+    HP->Load(HighlightFile);
+    LogSG->Invalidate();
+  }
+  delete HighlightForm;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::FillProfilePopupMenu(void)
+{
+  for(int i=0; i<HP->Count; i++)
+  {
+    TMessHighlightList * mhl = (TMessHighlightList *)HP->Items[i];
+
+    TMenuItem * NewItem = new TMenuItem(HighlightingProfilesPM);
+    NewItem->Caption = mhl->ProfileName;
+    NewItem->Tag = i;
+    NewItem->OnClick = ChangeProfileClick;
+    NewItem->RadioItem = true;
+    if( i == HP->CurrentProfile )
+      NewItem->Checked = true;
+
+    HighlightingProfilesPM->Items->Add(NewItem);
+  }
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::ChangeProfileClick(TObject *Sender)
+{
+  HP->CurrentProfile = ((TMenuItem *)Sender)->Tag;
+  ((TMenuItem *)Sender)->Checked = true;
+  LogSG->Invalidate();
 }
 //---------------------------------------------------------------------------
 

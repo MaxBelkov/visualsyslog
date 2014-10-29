@@ -2,7 +2,6 @@
 #include <vcl.h>
 #pragma hdrstop
 
-//#include "inif.h"
 #include "syslog.h"
 #include "messmatch.h"
 
@@ -47,6 +46,8 @@ bool TMessMatch::MatchTextAllFilds(TSyslogMessage * p, String & Text, bool Conta
           return Contains == (Text.SubString(3, l-2) == p->HostName);
         if( c == 'f' || c == 'F' )
           return Contains == (Text.SubString(3, l-2) == p->Facility);
+        if( c == 't' || c == 'T' )
+          return Contains == (Text.SubString(3, l-2) == p->Tag);
       }
     }
 
@@ -76,47 +77,117 @@ bool TMessMatch::MatchText(String & Field, String & Text)
   return r > 0;
 }
 //---------------------------------------------------------------------------
+bool TMessMatch::IsIPFilter(String & Text)
+{
+  if( Text.Length() >= 3 )
+    if( Text[2] == ':' )
+      if( Text[1] == 'i' || Text[1] == 'I' )
+        return true;
+  return false;
+}
+//---------------------------------------------------------------------------
+bool TMessMatch::IsHostFilter(String & Text)
+{
+  if( Text.Length() >= 3 )
+    if( Text[2] == ':' )
+      if( Text[1] == 'h' || Text[1] == 'H' )
+        return true;
+  return false;
+}
+//---------------------------------------------------------------------------
+bool TMessMatch::IsFacilityFilter(String & Text)
+{
+  if( Text.Length() >= 3 )
+    if( Text[2] == ':' )
+      if( Text[1] == 'f' || Text[1] == 'F' )
+        return true;
+  return false;
+}
+//---------------------------------------------------------------------------
+bool TMessMatch::IsTagFilter(String & Text)
+{
+  if( Text.Length() >= 3 )
+    if( Text[2] == ':' )
+      if( Text[1] == 't' || Text[1] == 'T' )
+        return true;
+  return false;
+}
+//---------------------------------------------------------------------------
 String TMessMatch::GetDescription(void)
 {
   String rv;
+
   if( Priority != -1 ) // filter by priority enable
     rv = String("Priority = ") + getcodetext(LOG_PRI(Priority), prioritynames);
 
-  if( Text1.Length() > 0 )
+  int l = Text1.Length();
+  if( l > 0 )
   {
     if( rv.Length() > 0 ) rv += " AND ";
-    rv += String("Message ") + (TextContains1 ? "" : "NOT") +
-      " contains \"" + Text1 + "\"";
+
+    if( IsIPFilter(Text1) )
+      rv += String("IP")+ (TextContains1 ? " = " : " <> ") +
+        "\"" + Text1.SubString(3, l-2) + "\"";
+    else if( IsHostFilter(Text1) )
+      rv += String("Host")+ (TextContains1 ? " = " : " <> ") +
+        "\"" + Text1.SubString(3, l-2) + "\"";
+    else if( IsFacilityFilter(Text1) )
+      rv += String("Facility")+ (TextContains1 ? " = " : " <> ") +
+        "\"" + Text1.SubString(3, l-2) + "\"";
+    else if( IsTagFilter(Text1) )
+      rv += String("Tag")+ (TextContains1 ? " = " : " <> ") +
+        "\"" + Text1.SubString(3, l-2) + "\"";
+    else
+      rv += String("Text ") + (TextContains1 ? "" : "NOT ") +
+        "contains \"" + Text1 + "\"";
   }
 
-  if( Text2.Length() > 0 )
+  l = Text2.Length();
+  if( l > 0 )
   {
     if( rv.Length() > 0 ) rv += " AND ";
-    rv += String("Message ") + (TextContains2 ? "" : "NOT") +
-      " contains \"" + Text2 + "\"";
+
+    if( IsIPFilter(Text2) )
+      rv += String("IP")+ (TextContains2 ? " = " : " <> ") +
+        "\"" + Text2.SubString(3, l-2) + "\"";
+    else if( IsHostFilter(Text2) )
+      rv += String("Host")+ (TextContains2 ? " = " : " <> ") +
+        "\"" + Text2.SubString(3, l-2) + "\"";
+    else if( IsFacilityFilter(Text2) )
+      rv += String("Facility")+ (TextContains2 ? " = " : " <> ") +
+        "\"" + Text2.SubString(3, l-2) + "\"";
+    else if( IsTagFilter(Text2) )
+      rv += String("Tag")+ (TextContains2 ? " = " : " <> ") +
+        "\"" + Text2.SubString(3, l-2) + "\"";
+    else
+      rv += String("Text ") + (TextContains2 ? "" : "NOT ") +
+        "contains \"" + Text2 + "\"";
   }
+
+  if( rv.Length() == 0 )
+    rv = "All messages match";
 
   return rv;
 }
 //---------------------------------------------------------------------------
 void TMessMatch::Save(XMLElementEx * p)
 {
-  p->wi("Priority", Priority);
-  p->wb("MatchCase", MatchCase);
-  p->wb("Contains1", TextContains1);
-  p->ws("Text1", Text1);
-  p->wb("Contains2", TextContains2);
-  p->ws("Text2", Text2);
+  p->wi("priority", Priority);
+  p->wb("matchcase", MatchCase);
+  p->wb("contains1", TextContains1);
+  p->ws("text1", Text1);
+  p->wb("contains2", TextContains2);
+  p->ws("text2", Text2);
 }
 //---------------------------------------------------------------------------
 void TMessMatch::Load(XMLElementEx * p)
 {
-  Priority = p->ri("Priority", -1);
-  MatchCase = p->rb("MatchCase", true);
-  TextContains1 = p->rb("Contains1", true);
-  Text1 = p->rs("Text1");
-  TextContains2 = p->rb("Contains2", true);
-  Text2 = p->rs("Text2");
+  Priority = p->ri("priority", -1);
+  MatchCase = p->rb("matchcase", true);
+  TextContains1 = p->rb("contains1", true);
+  Text1 = p->rs("text1");
+  TextContains2 = p->rb("contains2", true);
+  Text2 = p->rs("text2");
 }
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

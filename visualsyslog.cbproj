@@ -19,10 +19,10 @@
     <CfgParent>Base</CfgParent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Base)'!=''">
-    <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
     <OutputExt>exe</OutputExt>
-    <Defines>NO_STRICT</Defines>
+    <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
     <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+    <Defines>NO_STRICT</Defines>
     <DynamicRTL>true</DynamicRTL>
     <ILINK_ObjectSearchPath>D:\WORK\visualsyslog;..\lmcommon;source;sourcecommon</ILINK_ObjectSearchPath>
     <ProjectType>CppVCLApplication</ProjectType>
@@ -34,13 +34,13 @@
     <Multithreaded>true</Multithreaded>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Cfg_1)'!=''">
-    <DCC_Optimize>false</DCC_Optimize>
     <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
-    <Defines>_DEBUG;$(Defines)</Defines>
-    <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+    <DCC_Optimize>false</DCC_Optimize>
     <BCC_wamb>true</BCC_wamb>
-    <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
+    <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+    <Defines>_DEBUG;$(Defines)</Defines>
     <DynamicRTL>false</DynamicRTL>
+    <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
     <ILINK_DisableIncrementalLinking>true</ILINK_DisableIncrementalLinking>
     <BCC_UseRegisterVariables>None</BCC_UseRegisterVariables>
     <DCC_Define>DEBUG</DCC_Define>
@@ -48,8 +48,8 @@
     <IntermediateOutputDir>Debug</IntermediateOutputDir>
     <TASM_DisplaySourceLines>true</TASM_DisplaySourceLines>
     <BCC_StackFrames>true</BCC_StackFrames>
-    <ILINK_LibraryPath>$(BDS)\lib\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
+    <ILINK_LibraryPath>$(BDS)\lib\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     <TASM_Debugging>Full</TASM_Debugging>
     <BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
   </PropertyGroup>
@@ -64,7 +64,31 @@
     <Borland.Personality>CPlusPlusBuilder.Personality</Borland.Personality>
     <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">3</VersionInfo><VersionInfo Name="Release">1</VersionInfo><VersionInfo Name="Build">24</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.3.1.24</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.3.1.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
+<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">3</VersionInfo><VersionInfo Name="Release">2</VersionInfo><VersionInfo Name="Build">28</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.3.2.28</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.3.2.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
       
       
@@ -148,10 +172,19 @@
       <DependentOn>source\cfg.h</DependentOn>
       <BuildOrder>19</BuildOrder>
     </CppCompile>
+    <CppCompile Include="source\formhl.cpp">
+      <Form>HighlightForm</Form>
+      <DependentOn>source\formhl.h</DependentOn>
+      <BuildOrder>27</BuildOrder>
+    </CppCompile>
     <CppCompile Include="source\main.cpp">
       <Form>MainForm</Form>
       <DependentOn>source\main.h</DependentOn>
       <BuildOrder>16</BuildOrder>
+    </CppCompile>
+    <CppCompile Include="source\messhl.cpp">
+      <DependentOn>source\messhl.h</DependentOn>
+      <BuildOrder>26</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messmatch.cpp">
       <DependentOn>source\messmatch.h</DependentOn>
@@ -168,7 +201,7 @@
       <BuildOrder>24</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messstyleframe.cpp">
-      <Form>Frame1</Form>
+      <Form>MessStyleFr</Form>
       <DesignClass>TFrame</DesignClass>
       <DependentOn>source\messstyleframe.h</DependentOn>
       <BuildOrder>25</BuildOrder>
@@ -199,6 +232,7 @@
     </CppCompile>
     <FormResources Include="sourcecommon\messageform.dfm" />
     <FormResources Include="source\aboutbox.dfm" />
+    <FormResources Include="source\formhl.dfm" />
     <FormResources Include="source\main.dfm" />
     <FormResources Include="source\messmatchframe.dfm" />
     <FormResources Include="source\messstyleframe.dfm" />

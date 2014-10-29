@@ -3,6 +3,7 @@ Visual Syslog Server for Windows Version history
 1.4.0  2014-11-
 
 - Improved messages filtering
+- Customizable color highlighting
 
 1.3  2014-10-16
 

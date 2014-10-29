@@ -7,7 +7,8 @@ USEFORM("source\main.cpp", MainForm);
 USEFORM("source\setup.cpp", SetupForm);
 USEFORM("source\aboutbox.cpp", AboutBoxForm);
 USEFORM("source\messmatchframe.cpp", MessMatchFr); /* TFrame: File Type */
-USEFORM("source\messstyleframe.cpp", Frame1); /* TFrame: File Type */
+USEFORM("source\messstyleframe.cpp", MessStyleFr); /* TFrame: File Type */
+USEFORM("source\formhl.cpp", HighlightForm);
 //---------------------------------------------------------------------------
 extern bool bHideToTray;
 //---------------------------------------------------------------------------

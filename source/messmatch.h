@@ -28,6 +28,11 @@ public:
 private:
   bool MatchTextAllFilds(TSyslogMessage * p, String & Text, bool Contains);
   bool MatchText(String & Field, String & Text);
+
+  bool IsIPFilter(String & Text);
+  bool IsHostFilter(String & Text);
+  bool IsFacilityFilter(String & Text);
+  bool IsTagFilter(String & Text);
 };
 //---------------------------------------------------------------------------
 #endif

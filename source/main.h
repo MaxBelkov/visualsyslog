@@ -13,9 +13,9 @@
 #include <Dialogs.hpp>
 #include <ImgList.hpp>
 #include <ComCtrls.hpp>
-#include "gridcolumns.h"
 #include <ActnList.hpp>
 #include <ToolWin.hpp> // Change TStringGrid columns width
+#include "gridcolumns.h"
 
 //---------------------------------------------------------------------------
 // override standart component class for preventing flicker
@@ -106,6 +106,10 @@ __published:	// IDE-managed Components
     TMenuItem *FilteringbyFacility1;
     TComboBox *TextContainsCB1;
     TComboBox *TextContainsCB2;
+    TAction *aHighlightingSetup;
+    TToolButton *ToolButton13;
+    TPopupMenu *HighlightingProfilesPM;
+    TMenuItem *HighlightingSetup1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -114,8 +118,6 @@ __published:	// IDE-managed Components
     void __fastcall FormDestroy(TObject *Sender);
     void __fastcall ClearFilterButtonClick(TObject *Sender);
     void __fastcall OnApplyFilter(TObject *Sender);
-    void __fastcall FilterByPriorityCBDrawItem(TWinControl *Control, int Index,
-          TRect &Rect, TOwnerDrawState State);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall NetTimerTimer(TObject *Sender);
     void __fastcall mOpenMainFormClick(TObject *Sender);
@@ -135,6 +137,7 @@ __published:	// IDE-managed Components
     void __fastcall aFilterByIPExecute(TObject *Sender);
     void __fastcall aFilterByHostExecute(TObject *Sender);
     void __fastcall aFilterByFacilityExecute(TObject *Sender);
+    void __fastcall aHighlightingSetupExecute(TObject *Sender);
 
 private:	// User declarations
   TDrawGrid2 * LogSG;
@@ -201,8 +204,11 @@ public:		// User declarations
 
   // Get display message by index
   TSyslogMessage * __fastcall GetMessageByIndex(int i);
-  
+
   void __fastcall UpdateFilterButton(void);
+
+  void __fastcall FillProfilePopupMenu(void);
+  void __fastcall ChangeProfileClick(TObject *Sender);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm *MainForm;
