@@ -2,6 +2,7 @@
 #include <vcl.h>
 #pragma hdrstop
 
+#include "messageform.h"
 #include "messhl.h"
 #include "formhl.h"
 //---------------------------------------------------------------------------
@@ -62,12 +63,13 @@ void __fastcall THighlightForm::FillRuleList(int SelectedIndex)
     DrawGrid->RowCount = 1 + p->Count;
     if( DrawGrid->RowCount > 1 )
     {
+      DrawGrid->FixedRows = 1;
       if( DrawGrid->RowCount > SelectedIndex + 1 )
         DrawGrid->Row = SelectedIndex + 1;
       else if( DrawGrid->RowCount >= 2 )
         DrawGrid->Row = 1;
-      DrawGrid->OnClick(this);
     }
+    DrawGrid->OnClick(this);
     DrawGrid->Invalidate();
   }
 }
@@ -87,24 +89,28 @@ void __fastcall THighlightForm::AddButtonClick(TObject *Sender)
     p->Add(mh);
     DrawGrid->RowCount = 1 + p->Count;
     DrawGrid->Row = DrawGrid->RowCount - 1;
-    if( DrawGrid->FixedRows < 1 )
-      DrawGrid->FixedRows = 1;
+    DrawGrid->FixedRows = 1;
   }
 }
 //---------------------------------------------------------------------------
 void __fastcall THighlightForm::DelButtonClick(TObject *Sender)
 {
+  if( DrawGrid->RowCount < 2 )
+    return;
   int ARow = DrawGrid->Row - 1;
   TMessHighlightList * p = localHPL->GetCurrentProfile();
   if( p )
   {
     p->Del(ARow);
     DrawGrid->RowCount = 1 + p->Count;
+    DrawGrid->OnClick(this);
   }
 }
 //---------------------------------------------------------------------------
 void __fastcall THighlightForm::UpButtonClick(TObject *Sender)
 {
+  if( DrawGrid->RowCount < 3 )
+    return;
   if( DrawGrid->Row == 1 )
     return;
   int ARow = DrawGrid->Row - 1;
@@ -119,6 +125,8 @@ void __fastcall THighlightForm::UpButtonClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall THighlightForm::DownButtonClick(TObject *Sender)
 {
+  if( DrawGrid->RowCount < 3 )
+    return;
   if( DrawGrid->Row == DrawGrid->RowCount-1 )
     return;
   int ARow = DrawGrid->Row - 1;
@@ -188,8 +196,23 @@ void __fastcall THighlightForm::DrawGridDrawCell(TObject *Sender, int ACol,
   }
 }
 //---------------------------------------------------------------------------
+// show params of current rule
 void __fastcall THighlightForm::DrawGridClick(TObject *Sender)
 {
+  if( DrawGrid->Row < 1 )
+  {
+    ActiveCB->Visible = false;
+    MessMatchFr->Visible = false;
+    MessStyleFr->Visible = false;
+    return;
+  }
+  else
+  {
+    ActiveCB->Visible = true;
+    MessMatchFr->Visible = true;
+    MessStyleFr->Visible = true;
+  }
+  
   int ARow = DrawGrid->Row - 1;
   TMessHighlightList * p = localHPL->GetCurrentProfile();
   if( p )
@@ -214,6 +237,8 @@ void __fastcall THighlightForm::DrawGridDblClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall THighlightForm::OnFrameValuesChange(TObject *Sender)
 {
+  if( DrawGrid->Row < 1 )
+    return;
   int ARow = DrawGrid->Row - 1;
   TMessHighlightList * p = localHPL->GetCurrentProfile();
   if( p )
@@ -227,6 +252,22 @@ void __fastcall THighlightForm::OnFrameValuesChange(TObject *Sender)
       DrawGrid->Invalidate();
     }
   }
+}
+//---------------------------------------------------------------------------
+void __fastcall THighlightForm::HelpButtonClick(TObject *Sender)
+{
+  ReportMess2(
+  "- Rules in the list are processed from top to bottom\n"
+  "- Text search is performed in all the fields of the message: "
+    "Time, IP, Host, Facility, Priority, Tag, Message"
+/*
+  "- All match conditions are combined by a logical AND\n"
+  "- To match by IP address, specify the prefix I:\n"
+  "- To match by Host, specify the prefix H:\n"
+  "- To match by Facility, specify the prefix F:\n"
+  "- To match by Tag, specify the prefix T:"
+*/
+  );
 }
 //---------------------------------------------------------------------------
 

@@ -130,7 +130,7 @@
         </highlight>
     </profile>
     <profile>
-        <name>User1</name>
+        <name>Dark</name>
         <highlight>
             <enable>1</enable>
             <match>
@@ -259,7 +259,7 @@
         </highlight>
     </profile>
     <profile>
-        <name>User2</name>
+        <name>Profile 3</name>
         <highlight>
             <enable>1</enable>
             <match>
@@ -280,7 +280,28 @@
         </highlight>
     </profile>
     <profile>
-        <name>User3</name>
+        <name>Profile 4</name>
+        <highlight>
+            <enable>1</enable>
+            <match>
+                <priority>-1</priority>
+                <matchcase>1</matchcase>
+                <contains1>1</contains1>
+                <text1></text1>
+                <contains2>1</contains2>
+                <text2></text2>
+            </match>
+            <style>
+                <textColor>0</textColor>
+                <backgroundColor>16777215</backgroundColor>
+                <bold>0</bold>
+                <italic>0</italic>
+                <underline>0</underline>
+            </style>
+        </highlight>
+    </profile>
+    <profile>
+        <name>Profile 5</name>
         <highlight>
             <enable>1</enable>
             <match>

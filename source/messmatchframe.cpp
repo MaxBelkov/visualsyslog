@@ -2,7 +2,6 @@
 #include <vcl.h>
 #pragma hdrstop
 
-#include "messageform.h"
 #include "messmatchframe.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -44,19 +43,6 @@ void __fastcall TMessMatchFr::MatchChange(TObject *Sender)
     if( OnValuesChange )
       OnValuesChange(this);
   }
-}
-//---------------------------------------------------------------------------
-void __fastcall TMessMatchFr::InfoButtonClick(TObject *Sender)
-{
-  ReportMess2(
-  "- All conditions are combined by a logical AND\n"
-  "- Text search is performed in all the fields of the message: "
-    "Time, IP, Host, Facility, Priority, Tag, Message\n"
-  "- To match by IP address, specify the prefix I:\n"
-  "- To match by Host, specify the prefix H:\n"
-  "- To match by Facility, specify the prefix F:\n"
-  "- To match by Tag, specify the prefix T:"
-  );
 }
 //---------------------------------------------------------------------------
 

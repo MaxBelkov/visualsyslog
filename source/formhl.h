@@ -26,16 +26,17 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox4;
     TBitBtn *OKButton;
     TBitBtn *CancelButton;
-    TSpeedButton *AddButton;
-    TSpeedButton *DelButton;
     TDrawGrid *DrawGrid;
     TImageList *ImageList;
     TPanel *Panel;
     TMessStyleFr *MessStyleFr;
     TCheckBox *ActiveCB;
+    TMessMatchFr *MessMatchFr;
+    TBitBtn *HelpButton;
+    TSpeedButton *AddButton;
+    TSpeedButton *DelButton;
     TSpeedButton *UpButton;
     TSpeedButton *DownButton;
-    TMessMatchFr *MessMatchFr;
     void __fastcall AddButtonClick(TObject *Sender);
     void __fastcall DelButtonClick(TObject *Sender);
     void __fastcall FormDestroy(TObject *Sender);
@@ -48,6 +49,7 @@ __published:	// IDE-managed Components
     void __fastcall OnFrameValuesChange(TObject *Sender);
     void __fastcall ProfileCBSelect(TObject *Sender);
     void __fastcall DrawGridDblClick(TObject *Sender);
+    void __fastcall HelpButtonClick(TObject *Sender);
 
 private:	// User declarations
     TStringGridLivingColumns * DrawGrid_LivingColumns;

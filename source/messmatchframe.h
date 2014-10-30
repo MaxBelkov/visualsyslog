@@ -23,9 +23,7 @@ __published:	// IDE-managed Components
     TLabel *Label3;
     TComboBox *TextContainsCB2;
     TEdit *TextEdit2;
-    TSpeedButton *InfoButton;
     void __fastcall MatchChange(TObject *Sender);
-    void __fastcall InfoButtonClick(TObject *Sender);
 private:	// User declarations
     bool bEnableValuesChange;
 public:

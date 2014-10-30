@@ -19,10 +19,10 @@
     <CfgParent>Base</CfgParent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Base)'!=''">
-    <OutputExt>exe</OutputExt>
     <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
-    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+    <OutputExt>exe</OutputExt>
     <Defines>NO_STRICT</Defines>
+    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
     <DynamicRTL>true</DynamicRTL>
     <ILINK_ObjectSearchPath>D:\WORK\visualsyslog;..\lmcommon;source;sourcecommon</ILINK_ObjectSearchPath>
     <ProjectType>CppVCLApplication</ProjectType>
@@ -34,13 +34,13 @@
     <Multithreaded>true</Multithreaded>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Cfg_1)'!=''">
-    <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
     <DCC_Optimize>false</DCC_Optimize>
-    <BCC_wamb>true</BCC_wamb>
-    <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+    <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
     <Defines>_DEBUG;$(Defines)</Defines>
-    <DynamicRTL>false</DynamicRTL>
+    <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+    <BCC_wamb>true</BCC_wamb>
     <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
+    <DynamicRTL>false</DynamicRTL>
     <ILINK_DisableIncrementalLinking>true</ILINK_DisableIncrementalLinking>
     <BCC_UseRegisterVariables>None</BCC_UseRegisterVariables>
     <DCC_Define>DEBUG</DCC_Define>
@@ -48,8 +48,8 @@
     <IntermediateOutputDir>Debug</IntermediateOutputDir>
     <TASM_DisplaySourceLines>true</TASM_DisplaySourceLines>
     <BCC_StackFrames>true</BCC_StackFrames>
-    <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
     <ILINK_LibraryPath>$(BDS)\lib\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+    <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
     <TASM_Debugging>Full</TASM_Debugging>
     <BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
   </PropertyGroup>
@@ -64,31 +64,7 @@
     <Borland.Personality>CPlusPlusBuilder.Personality</Borland.Personality>
     <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">3</VersionInfo><VersionInfo Name="Release">2</VersionInfo><VersionInfo Name="Build">28</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.3.2.28</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.3.2.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">3</VersionInfo><VersionInfo Name="Release">3</VersionInfo><VersionInfo Name="Build">30</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.3.3.30</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.3.3.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
       
       
       
@@ -113,7 +89,7 @@
       <Excluded_Packages Name="$(BDS)\bin\bcbofficexp100.bpl">CodeGear C++Builder Office XP Servers Package</Excluded_Packages>
       <Excluded_Packages Name="$(BDS)\bin\dcloffice2k100.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
       <Excluded_Packages Name="$(BDS)\bin\dclofficexp100.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
-    </Excluded_Packages><Linker><Linker Name="LibPrefix"></Linker><Linker Name="LibSuffix"></Linker><Linker Name="LibVersion"></Linker></Linker><ProjectProperties><ProjectProperties Name="AutoShowDeps">False</ProjectProperties><ProjectProperties Name="ManagePaths">True</ProjectProperties><ProjectProperties Name="VerifyPackages">True</ProjectProperties></ProjectProperties><HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Count">3</HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Item0">$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;..\visualsyslog;source;sourcecommon</HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Item1">$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;D:\WORK\visualsyslog;..\lmcommon</HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Item2">$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;D:\WORK\visualsyslog</HistoryLists_hlIncludePath></HistoryLists_hlIncludePath><HistoryLists_hlILINK_LibraryPath><HistoryLists_hlILINK_LibraryPath Name="Count">1</HistoryLists_hlILINK_LibraryPath><HistoryLists_hlILINK_LibraryPath Name="Item0">$(BDS)\lib\debug;$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;..\visualsyslog;source;sourcecommon</HistoryLists_hlILINK_LibraryPath><HistoryLists_hlILINK_LibraryPath Name="Item1">$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;..\visualsyslog;source;sourcecommon</HistoryLists_hlILINK_LibraryPath></HistoryLists_hlILINK_LibraryPath><HistoryLists_hlDefines><HistoryLists_hlDefines Name="Count">1</HistoryLists_hlDefines><HistoryLists_hlDefines Name="Item0">_DEBUG;NO_STRICT</HistoryLists_hlDefines><HistoryLists_hlDefines Name="Item1">NO_STRICT</HistoryLists_hlDefines></HistoryLists_hlDefines><HistoryLists_hlILINK_MaxErrors><HistoryLists_hlILINK_MaxErrors Name="Count">1</HistoryLists_hlILINK_MaxErrors><HistoryLists_hlILINK_MaxErrors Name="Item0">0</HistoryLists_hlILINK_MaxErrors></HistoryLists_hlILINK_MaxErrors><HistoryLists_hlILINK_FileAlignment><HistoryLists_hlILINK_FileAlignment Name="Count">1</HistoryLists_hlILINK_FileAlignment><HistoryLists_hlILINK_FileAlignment Name="Item0">0x200</HistoryLists_hlILINK_FileAlignment></HistoryLists_hlILINK_FileAlignment><HistoryLists_hlILINK_ObjectAlignment><HistoryLists_hlILINK_ObjectAlignment Name="Count">1</HistoryLists_hlILINK_ObjectAlignment><HistoryLists_hlILINK_ObjectAlignment Name="Item0">4096</HistoryLists_hlILINK_ObjectAlignment></HistoryLists_hlILINK_ObjectAlignment><HistoryLists_hlBCC_MaxIdentifierLength><HistoryLists_hlBCC_MaxIdentifierLength Name="Count">1</HistoryLists_hlBCC_MaxIdentifierLength><HistoryLists_hlBCC_MaxIdentifierLength Name="Item0">250</HistoryLists_hlBCC_MaxIdentifierLength></HistoryLists_hlBCC_MaxIdentifierLength><HistoryLists_hlIntermediateOutputDir><HistoryLists_hlIntermediateOutputDir Name="Count">1</HistoryLists_hlIntermediateOutputDir><HistoryLists_hlIntermediateOutputDir Name="Item0">Debug</HistoryLists_hlIntermediateOutputDir></HistoryLists_hlIntermediateOutputDir></CPlusPlusBuilder.Personality></BorlandProject></BorlandProject>
+    </Excluded_Packages><Linker><Linker Name="LibPrefix"></Linker><Linker Name="LibSuffix"></Linker><Linker Name="LibVersion"></Linker></Linker><ProjectProperties><ProjectProperties Name="AutoShowDeps">False</ProjectProperties><ProjectProperties Name="ManagePaths">True</ProjectProperties><ProjectProperties Name="VerifyPackages">True</ProjectProperties></ProjectProperties><HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Count">3</HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Item0">$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;..\visualsyslog;source;sourcecommon</HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Item1">$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;D:\WORK\visualsyslog;..\lmcommon</HistoryLists_hlIncludePath><HistoryLists_hlIncludePath Name="Item2">$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;D:\WORK\visualsyslog</HistoryLists_hlIncludePath></HistoryLists_hlIncludePath><HistoryLists_hlILINK_LibraryPath><HistoryLists_hlILINK_LibraryPath Name="Count">1</HistoryLists_hlILINK_LibraryPath><HistoryLists_hlILINK_LibraryPath Name="Item0">$(BDS)\lib\release;$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;..\visualsyslog;source;sourcecommon</HistoryLists_hlILINK_LibraryPath><HistoryLists_hlILINK_LibraryPath Name="Item1">$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;..\visualsyslog;source;sourcecommon</HistoryLists_hlILINK_LibraryPath></HistoryLists_hlILINK_LibraryPath><HistoryLists_hlDefines><HistoryLists_hlDefines Name="Count">1</HistoryLists_hlDefines><HistoryLists_hlDefines Name="Item0">NDEBUG;NO_STRICT</HistoryLists_hlDefines><HistoryLists_hlDefines Name="Item1">NO_STRICT</HistoryLists_hlDefines></HistoryLists_hlDefines><HistoryLists_hlILINK_MaxErrors><HistoryLists_hlILINK_MaxErrors Name="Count">1</HistoryLists_hlILINK_MaxErrors><HistoryLists_hlILINK_MaxErrors Name="Item0">0</HistoryLists_hlILINK_MaxErrors></HistoryLists_hlILINK_MaxErrors><HistoryLists_hlILINK_FileAlignment><HistoryLists_hlILINK_FileAlignment Name="Count">1</HistoryLists_hlILINK_FileAlignment><HistoryLists_hlILINK_FileAlignment Name="Item0">0x200</HistoryLists_hlILINK_FileAlignment></HistoryLists_hlILINK_FileAlignment><HistoryLists_hlILINK_ObjectAlignment><HistoryLists_hlILINK_ObjectAlignment Name="Count">1</HistoryLists_hlILINK_ObjectAlignment><HistoryLists_hlILINK_ObjectAlignment Name="Item0">4096</HistoryLists_hlILINK_ObjectAlignment></HistoryLists_hlILINK_ObjectAlignment><HistoryLists_hlBCC_MaxIdentifierLength><HistoryLists_hlBCC_MaxIdentifierLength Name="Count">1</HistoryLists_hlBCC_MaxIdentifierLength><HistoryLists_hlBCC_MaxIdentifierLength Name="Item0">250</HistoryLists_hlBCC_MaxIdentifierLength></HistoryLists_hlBCC_MaxIdentifierLength><HistoryLists_hlIntermediateOutputDir><HistoryLists_hlIntermediateOutputDir Name="Count">1</HistoryLists_hlIntermediateOutputDir><HistoryLists_hlIntermediateOutputDir Name="Item0">Release</HistoryLists_hlIntermediateOutputDir></HistoryLists_hlIntermediateOutputDir></CPlusPlusBuilder.Personality></BorlandProject></BorlandProject>
   </ProjectExtensions>
   <Import Project="$(MSBuildBinPath)\Borland.Cpp.Targets" />
   <ItemGroup>
