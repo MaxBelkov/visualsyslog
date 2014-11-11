@@ -27,8 +27,8 @@ Features
 Download
 ===
 Visual Syslog Server for Windows download installer:  
-[Download last developper snapshot 1.3.2](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
-[Download latest stable release 1.3](https://github.com/MaxBelkov/visualsyslog/releases/latest)
+[Download last developper snapshot 1.4.0](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Download latest stable release 1.4.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Installation
 ===
@@ -47,7 +47,6 @@ Installer project file _visualsyslog.iss_
 Is not supported yet
 ===
 * Alarms
-* Files larger than 2 GB
 * Log file rotation
 * RFC 5424
 

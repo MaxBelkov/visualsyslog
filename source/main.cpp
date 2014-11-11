@@ -22,17 +22,6 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 
-// Cool colors
-#define cl_Yellow ((TColor)RGB(255,255,130))
-#define cl_Red    ((TColor)RGB(255,130,130))
-#define cl_LightGray   ((TColor)RGB(220,220,220))
-#define cl_Green  ((TColor)RGB(128,255,128))
-
-#define cl_Olive  ((TColor)RGB(180,180,100))
-#define cl_Gray   ((TColor)RGB(130,130,130))
-#define cl_Blue   ((TColor)RGB(89,222,255))
-#define cl_Rose   ((TColor)RGB(255,151,203))
-
 // Start size in bytes, to read from text file
 #define StartSizeToRead (1024*1024)
 // Max lines count in the string grid when receive messages
@@ -171,16 +160,16 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   v = AppParams->Values["TextFilter"];
   if( ! v.IsEmpty() )
   {
-	FilterEdit->Text = v;
+	FilterEdit1->Text = v;
     fFilter = v;
-    TextContainsCB1->ItemIndex = AppParams->Values["TextContains"];
+    FieldCB1->ItemIndex = AppParams->Values["Field1"];
   }
   v = AppParams->Values["TextFilter2"];
   if( ! v.IsEmpty() )
   {
 	FilterEdit2->Text = v;
     fFilter2 = v;
-    TextContainsCB2->ItemIndex = AppParams->Values["TextContains2"];
+    FieldCB2->ItemIndex = AppParams->Values["Field2"];
   }
   FilterByPriorityCB->ItemIndex = AppParams->Values["PriorityFilter"];
   UpdateFilterButton();
@@ -205,10 +194,10 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   *AppParams << this << (TStringGrid *)LogSG;
   AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
 
-  AppParams->Values["TextFilter"] = FilterEdit->Text;
-  AppParams->Values["TextContains"] = TextContainsCB1->ItemIndex;
+  AppParams->Values["TextFilter"] = FilterEdit1->Text;
+  AppParams->Values["Field1"] = FieldCB1->ItemIndex;
   AppParams->Values["TextFilter2"] = FilterEdit2->Text;
-  AppParams->Values["TextContains2"] = TextContainsCB2->ItemIndex;
+  AppParams->Values["Field2"] = FieldCB2->ItemIndex;
   AppParams->Values["PriorityFilter"] = FilterByPriorityCB->ItemIndex;
 
   AppParams->Values["FontName"] = LogSG->Font->Name;
@@ -321,9 +310,9 @@ void __fastcall TMainForm::aMoreLinesExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::TimerTimer(TObject *Sender)
 {
-  if( fFilter != FilterEdit->Text )
+  if( fFilter != FilterEdit1->Text )
   {
-    fFilter = FilterEdit->Text;
+    fFilter = FilterEdit1->Text;
     FilterTimer = 2;
   }
   if( fFilter2 != FilterEdit2->Text )
@@ -393,10 +382,13 @@ void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
     int DeletedMessagesCount = 0;
 
     TMessMatch MessMatch;
+    MessMatch.OperationP = 0; // =
     MessMatch.Priority = FilterByPriorityCB->ItemIndex - 1;
-    MessMatch.TextContains1 = TextContainsCB1->ItemIndex == 0;
-    MessMatch.Text1 = FilterEdit->Text;
-    MessMatch.TextContains2 = TextContainsCB2->ItemIndex == 0;
+    MessMatch.Field1 = FieldCB1->ItemIndex / 2;
+    MessMatch.Contains1 = (FieldCB1->ItemIndex & 1) == 0;
+    MessMatch.Text1 = FilterEdit1->Text;
+    MessMatch.Field2 = FieldCB2->ItemIndex / 2;
+    MessMatch.Contains2 = (FieldCB2->ItemIndex & 1) == 0;
     MessMatch.Text2 = FilterEdit2->Text;
     MessMatch.MatchCase = true;
 
@@ -557,17 +549,6 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
       }
 
       pMessStyle->SetFontStyle(c->Font);
-
-      /*
-      if( State.Contains(gdSelected) ) // Selected line
-      {
-      }
-      else
-      {
-        c->Brush->Color = GetLogRecordColor(sm->PRI);
-        //c->FillRect(Rect);
-      }
-      */
     }
   }
   int x = Rect.Left + 2;
@@ -577,11 +558,9 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::ClearFilterButtonClick(TObject *Sender)
 {
-  TextContainsCB1->ItemIndex = 0;
-  FilterEdit->Text = "";
+  FilterEdit1->Text = "";
   fFilter = "";
 
-  TextContainsCB2->ItemIndex = 0;
   FilterEdit2->Text = "";
   fFilter2 = "";
 
@@ -598,48 +577,6 @@ void __fastcall TMainForm::OnApplyFilter(TObject *Sender)
   UpdateFilterButton();
   RedrawProto();
 }
-/*
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::FilterByPriorityCBDrawItem(TWinControl *Control,
-      int Index, TRect &Rect, TOwnerDrawState State)
-{
-  TCanvas * c = FilterByPriorityCB->Canvas;
-  TStrings * items = FilterByPriorityCB->Items;
-
-  int priority = LOG_INFO;
-  if( Index > 0 )
-    priority = Index - 1;
-  c->Brush->Color = GetLogRecordColor(priority);
-  c->FillRect(Rect);
-
-  int VertInc = ((Rect.Bottom - Rect.Top) - c->TextHeight(items->Strings[Index]))/2;
-  c->Font->Color = clBlack;
-  c->TextRect(Rect, Rect.Left + 4, Rect.Top + VertInc, items->Strings[Index]);
-}
-//---------------------------------------------------------------------------
-TColor TMainForm::GetLogRecordColor(int priority)
-{
-  // priority not defined (not received from syslog client)
-  if( priority < 0 )
-    return clWindow;
-  switch( LOG_PRI(priority) )
-  {
-    case LOG_EMERG:
-    case LOG_ALERT:
-    case LOG_CRIT:
-    case LOG_ERR:
-      return cl_Red;
-    case LOG_WARNING:
-      return cl_Yellow;
-    case LOG_NOTICE:
-    case LOG_INFO:
-      return clWindow;
-    case LOG_DEBUG:
-      return cl_LightGray;
-  }
-  return cl_Green; // default :)
-}
-*/
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aFontExecute(TObject *Sender)
 {
@@ -684,7 +621,7 @@ bool WriteToLogRawMessage(char * p)
                          FILE_ATTRIBUTE_NORMAL);
     if( ! rawout )
       return false;
-    rawout.SetPointer(0, FILE_END);
+    rawout.ToEnd();
   }
 
   String s(p);
@@ -699,7 +636,7 @@ bool WriteToLogError(String fmt, ...)
     OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL);
   if( ! out )
     return false;
-  out.SetPointer(0, FILE_END);
+  out.ToEnd();
 
   va_list argptr;
   va_start(argptr, fmt);
@@ -938,7 +875,7 @@ void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
                              FILE_ATTRIBUTE_NORMAL);
   if( ! out )
     return;
-  out.SetPointer(0, FILE_END);
+  out.ToEnd();
 
   TWaitCursor wait;
 
@@ -1064,8 +1001,8 @@ void __fastcall TMainForm::aFilterByIPExecute(TObject *Sender)
     return;
   if( sm->SourceAddr.Length() == 0 )
     return;
-  FilterEdit->Text = String("I:") + sm->SourceAddr;
-  TextContainsCB1->ItemIndex = 0;
+  FilterEdit1->Text = sm->SourceAddr;
+  FieldCB1->ItemIndex = 4;
   FilterTimer = 1;
 }
 //---------------------------------------------------------------------------
@@ -1076,8 +1013,8 @@ void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
     return;
   if( sm->HostName.Length() == 0 )
     return;
-  FilterEdit->Text = String("H:") + sm->HostName;
-  TextContainsCB1->ItemIndex = 0;
+  FilterEdit1->Text = sm->HostName;
+  FieldCB1->ItemIndex = 6;
   FilterTimer = 1;
 }
 //---------------------------------------------------------------------------
@@ -1088,14 +1025,14 @@ void __fastcall TMainForm::aFilterByFacilityExecute(TObject *Sender)
     return;
   if( sm->Facility.Length() == 0 )
     return;
-  FilterEdit->Text = String("F:") + sm->Facility;
-  TextContainsCB1->ItemIndex = 0;
+  FilterEdit1->Text = sm->Facility;
+  FieldCB1->ItemIndex = 8;
   FilterTimer = 1;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::UpdateFilterButton(void)
 {
-  ClearFilterButton->Visible = FilterEdit->Text.Length() > 0 ||
+  ClearFilterButton->Visible = FilterEdit1->Text.Length() > 0 ||
                                FilterEdit2->Text.Length() > 0 ||
                                FilterByPriorityCB->ItemIndex > 0;
 }

@@ -8,12 +8,18 @@
 class TMessMatch
 {
 public:
-  int Priority;       // 0-7: syslog const LOG_, -1: all Priority
-  bool MatchCase;     // default true
-  bool TextContains1; // true-Contains Text1 false-NOT Contains Text1
-  String Text1;       // text to find in message i:<ip column> h:<host column>
-                      // f:<facility column>
-  bool TextContains2;
+  int OperationP; // 0 =, 1 <= (to emerg), 2 >= (to debug)
+  int Priority;   // 0-7: syslog const LOG_, -1: any Priority (match all)
+
+  bool MatchCase; // default true
+
+  int Field1;     // 0-Text, 1-Message, 2-IP, 3-Host, 4-Facility, 5-Tag
+  bool Contains1; // true(1) -  Contains or = Text1
+                  // false(0) - NOT Contains or <> Text1
+  String Text1;   // text to find in message i:<ip column> h:<host column>
+                  // f:<facility column>
+  int Field2;
+  bool Contains2;
   String Text2;
 
 public:
@@ -26,13 +32,8 @@ public:
   void Load(XMLElementEx * p);
 
 private:
-  bool MatchTextAllFilds(TSyslogMessage * p, String & Text, bool Contains);
-  bool MatchText(String & Field, String & Text);
-
-  bool IsIPFilter(String & Text);
-  bool IsHostFilter(String & Text);
-  bool IsFacilityFilter(String & Text);
-  bool IsTagFilter(String & Text);
+  bool MatchAllFilds(TSyslogMessage * p, int Field, bool Contains, String & Text);
+  bool FieldContains(String & FieldText, String & Text);
 };
 //---------------------------------------------------------------------------
 #endif

@@ -17,10 +17,11 @@ __fastcall TMessMatchFr::TMessMatchFr(TComponent* Owner)
 void TMessMatchFr::ToDialog(TMessMatch * p)
 {
   bEnableValuesChange = false;
-  FilterByPriorityCB->ItemIndex = p->Priority + 1;
-  TextContainsCB1->ItemIndex = p->TextContains1 ? 0 : 1;
+  PriorityOperationCB->ItemIndex = p->OperationP;
+  PriorityCB->ItemIndex = p->Priority + 1;
+  FieldCB1->ItemIndex = p->Field1 * 2 + (p->Contains1 ? 0 : 1);
   TextEdit1->Text = p->Text1;
-  TextContainsCB2->ItemIndex = p->TextContains2 ? 0 : 1;
+  FieldCB2->ItemIndex = p->Field2 * 2 + (p->Contains2 ? 0 : 1);
   TextEdit2->Text = p->Text2;
   MatchCaseCB->Checked = p->MatchCase;
   bEnableValuesChange = true;
@@ -28,10 +29,13 @@ void TMessMatchFr::ToDialog(TMessMatch * p)
 //---------------------------------------------------------------------------
 void TMessMatchFr::FromDialog(TMessMatch * p)
 {
-  p->Priority = FilterByPriorityCB->ItemIndex - 1;
-  p->TextContains1 = TextContainsCB1->ItemIndex == 0;
+  p->OperationP = PriorityOperationCB->ItemIndex;
+  p->Priority = PriorityCB->ItemIndex - 1;
+  p->Field1 = FieldCB1->ItemIndex / 2;
+  p->Contains1 = (FieldCB1->ItemIndex & 1) == 0;
   p->Text1 = TextEdit1->Text;
-  p->TextContains2 = TextContainsCB2->ItemIndex == 0;
+  p->Field2 = FieldCB2->ItemIndex / 2;
+  p->Contains2 = (FieldCB2->ItemIndex & 1) == 0;
   p->Text2 = TextEdit2->Text;
   p->MatchCase = MatchCaseCB->Checked;
 }

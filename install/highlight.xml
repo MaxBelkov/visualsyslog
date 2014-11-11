@@ -5,10 +5,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>0</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -23,10 +26,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -41,10 +47,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>2</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -59,10 +68,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>3</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -77,10 +89,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>4</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -95,10 +110,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>7</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -113,10 +131,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>-1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -134,10 +155,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>0</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -152,10 +176,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -170,10 +197,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>2</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -188,10 +218,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>3</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -206,10 +239,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>4</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -224,10 +260,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>7</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -242,10 +281,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>-1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -263,10 +305,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>-1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -284,10 +329,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>-1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>
@@ -305,10 +353,13 @@
         <highlight>
             <enable>1</enable>
             <match>
+                <operationp>0</operationp>
                 <priority>-1</priority>
                 <matchcase>1</matchcase>
+                <field1>0</field1>
                 <contains1>1</contains1>
                 <text1></text1>
+                <field2>0</field2>
                 <contains2>1</contains2>
                 <text2></text2>
             </match>

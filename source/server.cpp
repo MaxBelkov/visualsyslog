@@ -160,7 +160,7 @@ bool TSyslogMessage::Save(const String & file)
                   FILE_ATTRIBUTE_NORMAL);
   if( ! out )
     return false;
-  out.SetPointer(0, FILE_END);
+  out.ToEnd();
 
   return Save(out);
 }
@@ -185,7 +185,7 @@ bool TSyslogMessage::Save(const String & file, TFile & out)
                    FILE_ATTRIBUTE_NORMAL);
     if( ! out )
       return false;
-    out.SetPointer(0, FILE_END);
+    out.ToEnd();
   }
   return Save(out);
 }

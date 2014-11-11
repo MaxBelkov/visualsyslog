@@ -29,10 +29,8 @@ object MainForm: TMainForm
     Align = alTop
     Caption = 'Message filtering'
     TabOrder = 0
-    ExplicitTop = 61
-    ExplicitWidth = 796
     object Label2: TLabel
-      Left = 491
+      Left = 563
       Top = 22
       Width = 34
       Height = 13
@@ -40,7 +38,7 @@ object MainForm: TMainForm
       Caption = 'Priority'
     end
     object ClearFilterButton: TSpeedButton
-      Left = 691
+      Left = 763
       Top = 20
       Width = 18
       Height = 18
@@ -78,15 +76,15 @@ object MainForm: TMainForm
       Visible = False
       OnClick = ClearFilterButtonClick
     end
-    object FilterEdit: TEdit
-      Left = 119
+    object FilterEdit1: TEdit
+      Left = 155
       Top = 20
       Width = 120
       Height = 21
       TabOrder = 1
     end
     object FilterByPriorityCB: TComboBox
-      Left = 533
+      Left = 605
       Top = 18
       Width = 145
       Height = 21
@@ -109,41 +107,63 @@ object MainForm: TMainForm
         'debug')
     end
     object FilterEdit2: TEdit
-      Left = 359
+      Left = 431
       Top = 20
       Width = 121
       Height = 21
       TabOrder = 3
     end
-    object TextContainsCB1: TComboBox
+    object FieldCB1: TComboBox
       Left = 10
       Top = 20
-      Width = 100
+      Width = 139
       Height = 21
       Style = csDropDownList
+      DropDownCount = 16
       ItemHeight = 13
       ItemIndex = 0
       TabOrder = 0
-      Text = 'Contains'
+      Text = 'Text contains'
       OnSelect = OnApplyFilter
       Items.Strings = (
-        'Contains'
-        'NOT contains')
+        'Text contains'
+        'Text NOT contains'
+        'Message contains'
+        'Message NOT contains'
+        'IP ='
+        'IP <>'
+        'Host ='
+        'Host <>'
+        'Facility ='
+        'Facility <>'
+        'Tag ='
+        'Tag <>')
     end
-    object TextContainsCB2: TComboBox
-      Left = 250
+    object FieldCB2: TComboBox
+      Left = 286
       Top = 20
-      Width = 100
+      Width = 139
       Height = 21
       Style = csDropDownList
+      DropDownCount = 16
       ItemHeight = 13
       ItemIndex = 0
       TabOrder = 2
-      Text = 'Contains'
+      Text = 'Text contains'
       OnSelect = OnApplyFilter
       Items.Strings = (
-        'Contains'
-        'NOT contains')
+        'Text contains'
+        'Text NOT contains'
+        'Message contains'
+        'Message NOT contains'
+        'IP ='
+        'IP <>'
+        'Host ='
+        'Host <>'
+        'Facility ='
+        'Facility <>'
+        'Tag ='
+        'Tag <>')
     end
   end
   object GroupBox2: TGroupBox
@@ -156,9 +176,6 @@ object MainForm: TMainForm
     Margins.Right = 6
     Align = alClient
     TabOrder = 1
-    ExplicitTop = 119
-    ExplicitWidth = 796
-    ExplicitHeight = 340
   end
   object StatusBar: TStatusBar
     Left = 0
@@ -177,7 +194,6 @@ object MainForm: TMainForm
       item
         Width = 50
       end>
-    ExplicitWidth = 808
   end
   object ToolBar: TToolBar
     AlignWithMargins = True
@@ -198,8 +214,6 @@ object MainForm: TMainForm
     ShowHint = True
     TabOrder = 3
     Transparent = True
-    ExplicitWidth = 796
-    ExplicitHeight = 128
     object ToolButton1: TToolButton
       Left = 0
       Top = 0
@@ -383,7 +397,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 192
     Bitmap = {
-      494C01010E0074017C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010E0074018C0110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000004000000001002000000000000040
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -929,7 +943,7 @@ object MainForm: TMainForm
     Left = 64
     Top = 288
     Bitmap = {
-      494C01010100D8016C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010100D8017C0210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1103,7 +1117,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 232
     Bitmap = {
-      494C01010B002801300120002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010B002801400120002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       00000000000036000000280000008000000060000000010020000000000000C0
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

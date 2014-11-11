@@ -14,15 +14,15 @@ class TMessMatchFr : public TFrame
 {
 __published:	// IDE-managed Components
     TGroupBox *GroupBox1;
-    TLabel *Label2;
-    TComboBox *FilterByPriorityCB;
+    TComboBox *PriorityCB;
     TLabel *Label1;
     TEdit *TextEdit1;
-    TComboBox *TextContainsCB1;
     TCheckBox *MatchCaseCB;
     TLabel *Label3;
-    TComboBox *TextContainsCB2;
     TEdit *TextEdit2;
+    TComboBox *PriorityOperationCB;
+    TComboBox *FieldCB1;
+    TComboBox *FieldCB2;
     void __fastcall MatchChange(TObject *Sender);
 private:	// User declarations
     bool bEnableValuesChange;

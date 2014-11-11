@@ -129,8 +129,7 @@ bool __fastcall TFile::SetPointer(LONG Dist, DWORD MoveMethod)
     return false;
   }
   LastError = 0;
-  DWORD result = SetFilePointer(handle, Dist, NULL, MoveMethod);
-  Error = result == 0xFFFFFFFF;
+  Error = SetFilePointer(handle, Dist, NULL, MoveMethod) == INVALID_SET_FILE_POINTER;
   if( Error ) LastError = GetLastError();
   if( Exceptions && Error ) throw 0;
   return ! Error;
@@ -138,17 +137,7 @@ bool __fastcall TFile::SetPointer(LONG Dist, DWORD MoveMethod)
 //---------------------------------------------------------------------------
 bool __fastcall TFile::SetPointer(LONG Dist)
 {
-  if( ! handle )
-  {
-    Error = true;
-    if( Exceptions && Error ) throw 0;
-    return false;
-  }
-  LastError = 0;
-  Error = (SetFilePointer(handle, Dist, NULL, FILE_BEGIN) == 0xFFFFFFFF );
-  if( Error ) LastError = GetLastError();
-  if( Exceptions && Error ) throw 0;
-  return ! Error;
+  return SetPointer(Dist, FILE_BEGIN);
 }
 //---------------------------------------------------------------------------
 LONG __fastcall TFile::GetPointer(void)
@@ -166,20 +155,83 @@ DWORD __fastcall TFile::GetSize(void)
 {
   if( ! handle ) return NULL;
   LastError = 0;
-  DWORD i = GetFileSize (handle, NULL);
-
-  //Error = (i == 0xFFFFFFFF);
+  Error = false;
+  DWORD i = GetFileSize(handle, NULL);
   if( i == INVALID_FILE_SIZE )
   {
     Error = true;
     i = 0;
   }
-  else
-    Error = false;
-
   if( Error ) LastError = GetLastError();
   if( Exceptions && Error ) throw 0;
   return i;
+}
+//---------------------------------------------------------------------------
+bool __fastcall TFile::SetPointer64(LONGLONG Dist, DWORD MoveMethod)
+{
+  if( ! handle )
+  {
+    Error = true;
+    if( Exceptions && Error ) throw 0;
+    return false;
+  }
+  LastError = 0;
+  LARGE_INTEGER li;
+  li.QuadPart = Dist;
+  Error = SetFilePointer(handle, li.LowPart, &li.HighPart, MoveMethod) ==
+    INVALID_SET_FILE_POINTER;
+  if( Error ) LastError = GetLastError();
+  if( Exceptions && Error ) throw 0;
+  return ! Error;
+}
+//---------------------------------------------------------------------------
+bool __fastcall TFile::SetPointer64(LONGLONG Dist)
+{
+  return SetPointer64(Dist, FILE_BEGIN);
+}
+//---------------------------------------------------------------------------
+LONGLONG __fastcall TFile::GetPointer64(void)
+{
+  if( ! handle )
+  {
+    Error = true;
+    if( Exceptions && Error ) throw 0;
+    return false;
+  }
+  LastError = 0;
+  LARGE_INTEGER li;
+  li.LowPart = SetFilePointer(handle, 0, &li.HighPart, FILE_CURRENT);
+  Error = li.LowPart == INVALID_SET_FILE_POINTER;
+  if( Error ) LastError = GetLastError();
+  if( Exceptions && Error ) throw 0;
+  return li.QuadPart;
+}
+//---------------------------------------------------------------------------
+ULONGLONG __fastcall TFile::GetSize64(void)
+{
+  if( ! handle ) return NULL;
+  LastError = 0;
+  Error = false;
+  ULARGE_INTEGER li;
+  li.LowPart = GetFileSize(handle, &li.HighPart);
+  if( li.LowPart == INVALID_FILE_SIZE )
+  {
+    Error = true;
+    li.QuadPart = 0ui64;
+  }
+  if( Error ) LastError = GetLastError();
+  if( Exceptions && Error ) throw 0;
+  return li.QuadPart;
+}
+//---------------------------------------------------------------------------
+bool __fastcall TFile::ToStart(void)
+{
+  return SetPointer64(0i64, FILE_BEGIN);
+}
+//---------------------------------------------------------------------------
+bool __fastcall TFile::ToEnd(void)
+{
+  return SetPointer64(0i64, FILE_END);
 }
 //---------------------------------------------------------------------------
 bool __fastcall TFile::SetEnd(void)

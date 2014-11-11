@@ -37,7 +37,7 @@ __published:	// IDE-managed Components
     TTimer *Timer;
     TGroupBox *GroupBox1;
     TGroupBox *GroupBox2;
-    TEdit *FilterEdit;
+    TEdit *FilterEdit1;
     TPopupMenu *ClipboardPM;
     TMenuItem *N30;
     TLabel *Label2;
@@ -104,12 +104,12 @@ __published:	// IDE-managed Components
     TMenuItem *FilteringbyIP1;
     TMenuItem *FilteringbyHost1;
     TMenuItem *FilteringbyFacility1;
-    TComboBox *TextContainsCB1;
-    TComboBox *TextContainsCB2;
     TAction *aHighlightingSetup;
     TToolButton *ToolButton13;
     TPopupMenu *HighlightingProfilesPM;
     TMenuItem *HighlightingSetup1;
+    TComboBox *FieldCB1;
+    TComboBox *FieldCB2;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall N30Click(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -185,8 +185,6 @@ private:
   void __fastcall Read(bool bAllowAddVisibleLines);
   // Print captions of main form and string grig
   void __fastcall UpdateCaption(void);
-  // Get line color by priority
-  TColor GetLogRecordColor(int priority);
   // Set lines height when change font
   void __fastcall SetLinesHeight(void);
   // Initialization code

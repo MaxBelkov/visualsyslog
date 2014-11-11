@@ -86,7 +86,7 @@ object HighlightForm: THighlightForm
     AlignWithMargins = True
     Left = 3
     Top = 47
-    Width = 433
+    Width = 418
     Height = 336
     Margins.Top = 0
     Align = alClient
@@ -284,7 +284,7 @@ object HighlightForm: THighlightForm
       AlignWithMargins = True
       Left = 5
       Top = 51
-      Width = 423
+      Width = 408
       Height = 280
       Margins.Top = 36
       Align = alClient
@@ -303,8 +303,6 @@ object HighlightForm: THighlightForm
       OnClick = DrawGridClick
       OnDblClick = DrawGridDblClick
       OnDrawCell = DrawGridDrawCell
-      ExplicitTop = 18
-      ExplicitHeight = 313
       ColWidths = (
         50
         343)
@@ -452,9 +450,9 @@ object HighlightForm: THighlightForm
     end
   end
   object Panel: TPanel
-    Left = 439
+    Left = 424
     Top = 47
-    Width = 339
+    Width = 354
     Height = 339
     Align = alRight
     BevelOuter = bvNone
@@ -462,11 +460,17 @@ object HighlightForm: THighlightForm
     inline MessStyleFr: TMessStyleFr
       Left = 2
       Top = 195
-      Width = 333
+      Width = 346
       Height = 132
       TabOrder = 1
       ExplicitLeft = 2
       ExplicitTop = 195
+      ExplicitWidth = 346
+      inherited GroupBox1: TGroupBox
+        Width = 346
+        ExplicitWidth = 346
+        ExplicitHeight = 132
+      end
     end
     object ActiveCB: TCheckBox
       Left = 4
@@ -479,18 +483,22 @@ object HighlightForm: THighlightForm
     inline MessMatchFr: TMessMatchFr
       Left = 2
       Top = 35
-      Width = 333
+      Width = 346
       Height = 156
       TabOrder = 2
       ExplicitLeft = 2
       ExplicitTop = 35
+      inherited GroupBox1: TGroupBox
+        ExplicitLeft = 0
+        ExplicitWidth = 346
+      end
     end
   end
   object ImageList: TImageList
     Left = 624
     Top = 8
     Bitmap = {
-      494C0101020008001C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800240010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

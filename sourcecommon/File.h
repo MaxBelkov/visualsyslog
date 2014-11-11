@@ -1,11 +1,9 @@
 //---------------------------------------------------------------------------
-// Класс для работы с файлами в WIN32.
-// Автор: Бельков М.
+// Work with files in windows
+// Version 3 2014-11-11
 //---------------------------------------------------------------------------
 #ifndef SaturnFileH
 #define SaturnFileH
-//#include <windows.h> 
-//#include <vcl.h>
 
 /*
 -------------------------- Описание параметров ------------------------------
@@ -27,6 +25,7 @@ DWORD CreationDistribution (как открывать файл):
 CREATE_NEW        - Creates a new file. The function fails if the specified file
                     already exists.
 CREATE_ALWAYS     - Creates a new file. The function overwrites the file if it exists.
+                    Existing file truncated to zero bytes.
 OPEN_EXISTING     - Opens the file. The function fails if the file does not exist.
 OPEN_ALWAYS       - Opens the file, if it exists. If the file does not exist,
                     the function creates the file as if dwCreationDistribution
@@ -95,15 +94,29 @@ public:
 
   bool __fastcall Flush(void);
 
+  // Установить положение указателя в файле
+  //   MoveMethod (от чего перемещать указатель файла):
+  //   FILE_BEGIN   - от начала
+  //   FILE_CURRENT - от текущей позиции указателя
+  //   FILE_END     - от конца
+  bool __fastcall SetPointer(LONG Dist, DWORD MoveMethod);
   // Установить положение указателя в файле относительно его начала
   bool __fastcall SetPointer(LONG Dist);
-  // Установить положение указателя в файле
-  bool __fastcall SetPointer(LONG Dist, DWORD MoveMethod);
   // Получить положение указателя в файле
   LONG __fastcall GetPointer(void);
-
   // Получить размер файла
   DWORD __fastcall GetSize(void);
+
+  bool __fastcall SetPointer64(LONGLONG Dist, DWORD MoveMethod);
+  bool __fastcall SetPointer64(LONGLONG Dist);
+  LONGLONG __fastcall GetPointer64(void);
+  ULONGLONG __fastcall GetSize64(void);
+
+  // set pointer to file begin
+  bool __fastcall ToStart(void);
+  // set pointer to file end
+  bool __fastcall ToEnd(void);
+
   // Установить конец файла на текущей позиции указателя
   // (можно увеличивать и уменьшать файлы)
   // Файл должен быть открыт как GENERIC_WRITE
@@ -137,6 +150,7 @@ public:
 
 public:
   __property LONG Pointer = {read=GetPointer, write=SetPointer };
+  __property LONGLONG Pointer64 = {read=GetPointer64, write=SetPointer64 };
   __property DWORD Bytes = {read=bytes};
 
   __property DWORD ErrorCode = {read=LastError};
@@ -159,11 +173,8 @@ public:
 // szName является длинным именем файла ?
 bool IsPath(char * szName);
 // Получить в out время последнего изменения файла name
-// ULONGLONG==__int64==FILETIME
-// Перевод в TDateTime: TDateTime  TFileTimeToDateTime((ULONGLONG *));
 bool GetFileModificationTime(AnsiString name, ULONGLONG & out);
 //---------------------------------------------------------------------------
 extern char CR[];
 //---------------------------------------------------------------------------
 #endif
-
