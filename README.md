@@ -6,7 +6,8 @@ Visual Syslog for Windows is a free open source program to receive and view sysl
 
 Visual Syslog for Windows has a live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.
 
-![Visual Syslog Server Screen](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
+![Visual Syslog Server Screen 1](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
+![Visual Syslog Server Screen 2](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen2.png?raw=true)
 
 Features
 ===
