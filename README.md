@@ -11,17 +11,16 @@ Visual Syslog for Windows has a live messages view: switches to a new received m
 Features
 ===
 * Receive messages from various devices via UDP or TCP protocol (compliant to RFC 3164)
-* View and analyze syslog messages from the file
+* Syslog messages are displayed in real-time
 * Customizable color highlighting
+* Filter displayed syslog messages based on facility, priority, host, source address or message contents
+* Import historical syslog messages after the start of the program
+* Minimize to system tray
+* View and analyze syslog messages from the file
+* Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012
 * Lightweight and fast
 * Easy to install: adjustment is not required
-* Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012
-* Syslog messages are displayed in real-time
-* Filter displayed syslog messages based on priority or message contents
-* Color highlighting based on priority
-* Import historical syslog messages after the start of the program
 * Run as a Windows application
-* Minimize to system tray
 * Free open source software, licensed under the GPL V2
 
 Download
