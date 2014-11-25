@@ -39,7 +39,7 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox2;
     TEdit *FilterEdit1;
     TPopupMenu *ClipboardPM;
-    TMenuItem *N30;
+    TMenuItem *mCopyToClipboard;
     TLabel *Label2;
     TComboBox *FilterByPriorityCB;
     TFontDialog *FontDialog;
@@ -111,7 +111,7 @@ __published:	// IDE-managed Components
     TComboBox *FieldCB1;
     TComboBox *FieldCB2;
     void __fastcall TimerTimer(TObject *Sender);
-    void __fastcall N30Click(TObject *Sender);
+    void __fastcall mCopyToClipboardClick(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
     void __fastcall LogSGDrawCell(TObject *Sender, int ACol, int ARow,
           TRect &Rect, TGridDrawState State);
@@ -156,7 +156,7 @@ private:	// User declarations
   String fFilter2;  // Text filter string2
   int FilterTimer;  // Text filter timer in seconds
 
-  DWORD FileSize;   // Size of fFile when open
+  ULONGLONG FileSize;   // Size of fFile when open
   DWORD ReadedSize; // Bytes read from fFile
   int TotalLines;   // Total lines readed from file
 
@@ -197,7 +197,8 @@ public:		// User declarations
 
   // Change icons and hint (State: 0-ok 1-warning 2-error)
   void __fastcall TrayChangeIcon(int State);
-  void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
+  // not used yet
+  //void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
   void __fastcall SetViewFileMode(bool b);
 
   // Get display message by index

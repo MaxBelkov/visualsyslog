@@ -18,6 +18,10 @@
 #define MyOneSec  (1.0/86400.0)
 #define MyOneMSec (1.0/86400000.0)
 
+#define ONE_KB 1024
+#define ONE_MB (1024*1024)
+#define ONE_GB (1024*1024*1024)
+
 /* __BORLANDC__
  0x0550	- C++Builder 5.0 Enterprise
  0x0560	- C++Builder 6.0 Enterprise
@@ -165,7 +169,7 @@ String GetHoursName(DWORD hours);
 
 // Преобразовать кол-во байт в строку для вывода на экран
 AnsiString GetBytesString(DWORD count);
-String GetBytesStringEng(DWORD count);
+String GetBytesStringEng(ULONGLONG count);
 // Преобразовать интервал времени interval в строку для вывода на экран
 // в формате: "Д ЧЧ:ММ:СС"
 AnsiString TimeIntervalToString(TDateTime interval);
@@ -302,7 +306,7 @@ String DateTimeIntellektFormat(TDateTime dt, String _TimeFormat=LongTimeFormat);
 //---------------------------------------------------------------------------
 // Корректное копирование однобайтовой строки в буфер обмена Windows
 // Корректное в отличие от Clipboard()->SetTextBuf()
-bool setClipboard(AnsiString lines);
+bool setClipboard(AnsiString & lines);
 String __fastcall GetRecommendedPath(bool common, String folder, String def);
 // Замена SameText, неработающей по умолчанию в Builder 2007
 bool __fastcall MySameText(String s1, String s2);

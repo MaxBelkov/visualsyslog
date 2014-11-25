@@ -27,6 +27,7 @@ public:
   //bool Save(const String & file);
   bool Save(TFile & out);
   bool Save(const String & file, TFile & out);
+  String ClipboardString(void);
 };
 //---------------------------------------------------------------------------
 bool IsValidSyslogDate(const char * p);

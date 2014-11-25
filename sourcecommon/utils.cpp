@@ -559,19 +559,22 @@ AnsiString GetBytesString(DWORD count)
   return AnsiString(buf);
 }
 //---------------------------------------------------------------------------
-String GetBytesStringEng(DWORD count)
+String GetBytesStringEng(ULONGLONG count)
 {
-  char buf[100];
-  // Mb >= 2
-  if( count >= 1048576 )
-    wsprintf(buf, "%lu.%u Mb", count/1048576, (WORD)((float)(count%1048576)/104857.60));
+  String rv;
+  // Gb >= 1
+  if( count >= ONE_GB )
+    rv.printf("%lu.%u Gb", count/ONE_GB, (WORD)((double)(count%ONE_GB)/(ONE_GB/10.0)));
+  // Mb >= 1
+  else if( count >= ONE_MB )
+    rv.printf("%lu.%u Mb", count/ONE_MB, (WORD)((double)(count%ONE_MB)/(ONE_MB/10.0)));
   // Kb >= 2
   else if( count >= 2048 )
-    wsprintf(buf, "%lu.%u Kb", count/1024, (WORD)((float)(count%1024)/102.40));
+    rv.printf("%lu.%u Kb", count/ONE_KB, (WORD)((double)(count%ONE_KB)/(ONE_KB/10.0)));
   // b >= 2
   else
-    wsprintf(buf, "%lu bytes", count);
-  return AnsiString(buf);
+    rv.printf("%lu bytes", count);
+  return rv;
 }
 //---------------------------------------------------------------------------
 AnsiString TimeIntervalToString(TDateTime interval)
@@ -1499,7 +1502,7 @@ void StringGridToClipboard(TStringGrid * p)
       str += (i==p->ColCount-1) ? "\r\n" : "\t";
     }
   }
-  //Clipboard()->SetTextBuf(str.c_str()); глючит в CodeGear
+  //Clipboard()->SetTextBuf(str.c_str()); don't work in CodeGear 2007
   setClipboard(str);
 }
 //---------------------------------------------------------------------------
@@ -1514,7 +1517,7 @@ void TreeToClipboard(TTreeView * p)
       str += "\t";
     str += n->Text + "\r\n";
   }
-  //Clipboard()->SetTextBuf(str.c_str()); глючит в CodeGear
+  //Clipboard()->SetTextBuf(str.c_str()); don't work in CodeGear 2007
   setClipboard(str);
 }
 //---------------------------------------------------------------------------
@@ -1525,7 +1528,7 @@ void StringsToClipboard(TStrings * p)
   {
     str += p->Strings[i] + "\r\n";
   }
-  //Clipboard()->SetTextBuf(str.c_str()); глючит в CodeGear
+  //Clipboard()->SetTextBuf(str.c_str()); don't work in CodeGear 2007
   setClipboard(str);
 }
 //---------------------------------------------------------------------------
@@ -1667,23 +1670,24 @@ String DateTimeIntellektFormat(TDateTime dt, String _TimeFormat)
 	}
 }
 //---------------------------------------------------------------------------
-bool setClipboard(AnsiString lines){
+bool setClipboard(AnsiString & lines){
 	HGLOBAL handle;
 	LPTSTR linesCopy;
-	
+	int lines_length = lines.Length();
+
 	if (!OpenClipboard(NULL))
 		return false;
 	
 	EmptyClipboard();
 
-	if((handle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, lines.Length() + 1))==NULL)
+	if((handle = GlobalAlloc(GMEM_MOVEABLE|GMEM_DDESHARE, lines_length + 1))==NULL)
 		goto closeclip;
 
 	if((linesCopy = (LPTSTR)GlobalLock(handle))==NULL)
 		goto freemem;
 
-	memcpy(linesCopy, lines.data(), lines.Length());
-	linesCopy[lines.Length()] = '\0';
+	memcpy(linesCopy, lines.data(), lines_length);
+	linesCopy[lines_length] = '\0';
 
 	GlobalUnlock(handle);
 

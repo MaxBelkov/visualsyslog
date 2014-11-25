@@ -166,13 +166,21 @@ bool TSyslogMessage::Save(const String & file)
 }
 */
 //---------------------------------------------------------------------------
+String TSyslogMessage::ClipboardString(void)
+{
+  return
+  DateStr + '\t' + SourceAddr + '\t' + HostName + '\t' +
+  ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
+  Tag + '\t' + Msg + CR;
+}
+//---------------------------------------------------------------------------
 bool TSyslogMessage::Save(TFile & out)
 {
   out <<
     SourceAddr + '\t' + DateStr + '\t' + HostName + '\t' +
     ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
     Tag + '\t' + Msg + CR;
-  return ! out.GetError();  
+  return ! out.GetError();
 }
 //---------------------------------------------------------------------------
 bool TSyslogMessage::Save(const String & file, TFile & out)

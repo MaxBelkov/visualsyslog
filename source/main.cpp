@@ -27,9 +27,6 @@
 // Max lines count in the string grid when receive messages
 #define MaxGridLinesReceive 10000
 
-// save StringGrid content to clipboard (defined in utils.cpp)
-void StringGridToClipboard(TStringGrid * p);
-
 #define SB(n) MainForm->StatusBar->Panels->Items[n]->Text
 
 // save main form screen position and other params to .ini file
@@ -87,8 +84,6 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   if( bHideToTray )
     Application->ShowMainForm = false;
 
-  TrayChangeIcon(0);
-
   char str[MAX_PATH];
   // CSIDL_COMMON_APPDATA   C:\Documents and Settings\All Users\Application Data
   // CSIDL_LOCAL_APPDATA    C:\Documents and Settings\username\Local Settings\Application Data (nonroaming)
@@ -134,6 +129,8 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 
   Timer->Enabled = true;
   NetTimer->Enabled = true;
+
+  TrayChangeIcon(0);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
@@ -272,13 +269,13 @@ void __fastcall TMainForm::SetFile(String f)
   if( !in )
     return;
 
-  FileSize = in.GetSize();
+  FileSize = in.GetSize64();
   // Since the beginning of the file, look at the size limit
-  if( FileSize > SizeToRead )
+  if( FileSize > (ULONGLONG)SizeToRead )
   {
     aMoreLines->Enabled = true;
 
-    in.Pointer = FileSize - SizeToRead;
+    in.Pointer64 = FileSize - SizeToRead;
     // Positioning at the beginning of a new line in the file
     GotoNewLine();
   }
@@ -474,15 +471,22 @@ void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
       }
     }
 
-    FileSize = in.GetSize();
+    FileSize = in.GetSize64();
     UpdateCaption();
   }
   delete [] p;
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::N30Click(TObject *Sender)
+void __fastcall TMainForm::mCopyToClipboardClick(TObject *Sender)
 {
-  StringGridToClipboard((TStringGrid *)ClipboardPM->PopupComponent);
+  String str;
+  TSyslogMessage * p;
+  for(int i=0, l=MessList->Count; i<l; i++)
+  {
+    p = (TSyslogMessage *)MessList->Items[i];
+    str += p->ClipboardString();
+  }
+  setClipboard(str);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::LogSGDblClick(TObject *Sender)
@@ -735,6 +739,13 @@ void __fastcall TMainForm::aExitExecute(TObject *Sender)
 // State: 0-ok 1-warning 2-error
 void __fastcall TMainForm::TrayChangeIcon(int State)
 {
+  if( ! TrayIcon->Visible )
+  {
+    // Without start & stop Animate show application icon in the tray !
+    TrayIcon->Animate = false;
+    TrayIcon->Visible = true;
+  }
+
   if( TrayIcon->IconIndex != State )
     TrayIcon->IconIndex = State;
 
@@ -744,13 +755,20 @@ void __fastcall TMainForm::TrayChangeIcon(int State)
     TrayIcon->Hint = tip;
 }
 //---------------------------------------------------------------------------
-// State: 0-ok 1-warning 2-error
+/* State: 0-ok 1-warning 2-error
 void __fastcall TMainForm::TrayShowBallon(AnsiString Title, AnsiString Text, int State)
 {
   // That messages are not received, not more than once every 1000 ms
   DWORD tc = GetTickCount();
   if( tc - LastBalloonShowTime <= 1000UL )
     return;
+
+  if( ! TrayIcon->Visible )
+  {
+    TrayIcon->Animate = false;
+    TrayIcon->Visible = true;
+  }
+
   LastBalloonShowTime = tc;
   TrayIcon->BalloonTitle = Title;
   TrayIcon->BalloonHint = Text;
@@ -763,6 +781,7 @@ void __fastcall TMainForm::TrayShowBallon(AnsiString Title, AnsiString Text, int
   }
   TrayIcon->ShowBalloonHint();
 }
+*/
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
@@ -881,7 +900,7 @@ void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
 
   AnsiString file_line;
   DWORD rsize = 1024*1024;
-  DWORD fsize = viewin.GetSize();
+  ULONGLONG fsize = viewin.GetSize64();
   BYTE * p = new BYTE[rsize];
 
   while( fsize > 0 )

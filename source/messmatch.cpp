@@ -93,10 +93,17 @@ bool TMessMatch::MatchAllFilds(TSyslogMessage * p, int Field, bool Contains,
         else
           return Contains == SameText(Text, p->Facility, loUserLocale);
       case 5: // Tag =
+      {
+        // Compare without [PID]
+        String _tag = p->Tag;
+        int i = _tag.Pos('[');
+        if( i > 0 )
+          _tag.Delete(i, _tag.Length()-i+1);
         if( MatchCase )
-          return Contains == (Text == p->Tag);
+          return Contains == (Text == _tag);
         else
-          return Contains == SameText(Text, p->Tag, loUserLocale);
+          return Contains == SameText(Text, _tag, loUserLocale);
+      }
     }
   }
   return true;

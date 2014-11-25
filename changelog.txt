@@ -1,5 +1,9 @@
 Visual Syslog Server for Windows Version history
 
+1.4.1  2014-11-25
+
+- Fixed bugs
+
 1.4.0  2014-11-11
 
 - Improved messages filtering
