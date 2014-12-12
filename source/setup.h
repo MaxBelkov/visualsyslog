@@ -7,29 +7,83 @@
 #include <StdCtrls.hpp>
 #include <Forms.hpp>
 #include <Buttons.hpp>
+#include <ComCtrls.hpp>
+#include <Menus.hpp>
 //---------------------------------------------------------------------------
 class TSetupForm : public TForm
 {
 __published:	// IDE-managed Components
     TBitBtn *OKButton;
     TBitBtn *CancelButton;
+    TPageControl *PageControl;
+    TTabSheet *TabSheet1;
+    TTabSheet *TabSheet2;
     TGroupBox *GroupBox1;
-    TLabel *Label1;
-    TEdit *UdpPortEdit;
     TCheckBox *AutoStartCB;
-    TComboBox *UdpInterfaceCB;
+    TGroupBox *GroupBox2;
+    TLabel *Label3;
+    TEdit *serverEdit;
+    TLabel *Label4;
+    TEdit *portEdit;
+    TLabel *Label5;
+    TEdit *usernameEdit;
+    TLabel *Label6;
+    TEdit *passwordEdit;
+    TComboBox *sslComboBox;
+    TLabel *Label7;
+    TGroupBox *GroupBox3;
+    TLabel *Label8;
+    TEdit *senderEdit;
+    TEdit *sender_nameEdit;
+    TLabel *Label9;
+    TLabel *Label10;
+    TEdit *recipientEdit;
+    TLabel *Label11;
+    TEdit *subjectEdit;
+    TMemo *messageMemo;
+    TLabel *Label12;
+    TLabel *Label13;
+    TSpeedButton *SpeedButton1;
+    TSpeedButton *SpeedButton2;
+    TSpeedButton *SpeedButton3;
+    TSpeedButton *SpeedButton4;
+    TSpeedButton *InsertMemoButton;
+    TPopupMenu *InsertPopupMenu;
+    TMenuItem *time1;
+    TMenuItem *ip1;
+    TMenuItem *host1;
+    TMenuItem *facility1;
+    TMenuItem *priority1;
+    TMenuItem *tag1;
+    TMenuItem *message1;
+    TSpeedButton *TestButton;
+    TSpeedButton *InsertSubjectButton;
+    TGroupBox *UdpGroupBox;
     TCheckBox *EnableUdpCB;
+    TLabel *Label1;
+    TComboBox *UdpInterfaceCB;
+    TEdit *UdpPortEdit;
+    TGroupBox *TcpGroupBox;
     TCheckBox *EnableTcpCB;
     TLabel *Label2;
     TComboBox *TcpInterfaceCB;
     TEdit *TcpPortEdit;
     void __fastcall OKButtonClick(TObject *Sender);
+    void __fastcall SmtpSelClick(TObject *Sender);
+    void __fastcall pmInsertClick(TObject *Sender);
+    void __fastcall InsertToMessageButtonClick(TObject *Sender);
+    void __fastcall TestButtonClick(TObject *Sender);
+    void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
+    void __fastcall InsertSubjectButtonClick(TObject *Sender);
 private:	// User declarations
+  //TCursor oldc;
 public:
   bool bUdpRestart;
   bool bTcpRestart;
 public:		// User declarations
     __fastcall TSetupForm(TComponent* Owner);
+    bool FromInterface(TLetter * p);
+    void ToInterface(TLetter * p);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TSetupForm *SetupForm;

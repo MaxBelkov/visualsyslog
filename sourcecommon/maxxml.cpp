@@ -5,14 +5,53 @@
 #include "maxxml.h"
 
 //---------------------------------------------------------------------------
-String XMLElementEx::rs(const String & name, String defval)
+AnsiString XMLElementEx::ConvertToSave(const String s)
+{
+  String rv;
+  for(int i=1, l=s.Length(); i<=l; i++)
+  {
+    if( s[i] != '\r' )
+      rv += s[i];
+  }
+  return UTF8Encode(rv);
+}
+//---------------------------------------------------------------------------
+String XMLElementEx::ConvertAfterLoad(const AnsiString s)
+{
+  String rv = UTF8Decode(s);
+  // add carriage return to all line feed
+  String rv2;
+  for(int i=1, l=rv.Length(); i<=l; i++)
+  {
+    if( rv[i]=='\n' )
+      rv2 += '\r';
+    rv2 += rv[i];
+  }
+  return rv2;
+}
+//---------------------------------------------------------------------------
+String XMLElementEx::rs(const String name, String defval)
 {
   XMLElement * p = FirstChildElement(name.c_str());
-  if( p ) return String(p->GetText());
+  if( p )
+  {
+    return ConvertAfterLoad(AnsiString(p->GetText()));
+  }
   return defval;
 }
 //---------------------------------------------------------------------------
-int XMLElementEx::ri(const String & name, int defval)
+void XMLElementEx::rs(const String name, TStrings * val)
+{
+  val->Clear();
+  for(XMLElement * p = FirstChildElement(name.c_str());
+      p;
+      p = p->NextSiblingElement(name.c_str()))
+  {
+    val->Add( ConvertAfterLoad(AnsiString(p->GetText())) );
+  }
+}
+//---------------------------------------------------------------------------
+int XMLElementEx::ri(const String name, int defval)
 {
   int rv;
   XMLElement * p = FirstChildElement(name.c_str());
@@ -20,7 +59,7 @@ int XMLElementEx::ri(const String & name, int defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-double XMLElementEx::rd(const String & name, double defval)
+double XMLElementEx::rd(const String name, double defval)
 {
   double rv;
   XMLElement * p = FirstChildElement(name.c_str());
@@ -28,7 +67,7 @@ double XMLElementEx::rd(const String & name, double defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-bool XMLElementEx::rb(const String & name, bool defval)
+bool XMLElementEx::rb(const String name, bool defval)
 {
   bool rv;
   XMLElement * p = FirstChildElement(name.c_str());
@@ -36,22 +75,32 @@ bool XMLElementEx::rb(const String & name, bool defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::ws(const String & name, String val)
+void XMLElementEx::ws(const String name, String val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )
   {
-    XMLElement * e = GetDocument()->NewElement(name.c_str());
-    InsertEndChild(e);
-    e->SetText(val.c_str());
+    p = GetDocument()->NewElement(name.c_str());
+    InsertEndChild(p);
   }
-  else
+  p->SetText( ConvertToSave(val).c_str() );
+}
+//---------------------------------------------------------------------------
+void XMLElementEx::ws(const String name, TStrings * val)
+{
+  XMLElement * p;
+  while( (p = FirstChildElement(name.c_str())) != NULL )
+    DeleteChild(p);
+
+  for(int i=0, l=val->Count; i<l; i++)
   {
-    p->SetText(val.c_str());
+    p = GetDocument()->NewElement(name.c_str());
+    InsertEndChild(p);
+    p->SetText( ConvertToSave(val->Strings[i]).c_str() );
   }
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::wi(const String & name, int val)
+void XMLElementEx::wi(const String name, int val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )
@@ -66,7 +115,7 @@ void XMLElementEx::wi(const String & name, int val)
   }
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::wd(const String & name, double val)
+void XMLElementEx::wd(const String name, double val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )
@@ -81,7 +130,7 @@ void XMLElementEx::wd(const String & name, double val)
   }
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::wb(const String & name, bool val)
+void XMLElementEx::wb(const String name, bool val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )

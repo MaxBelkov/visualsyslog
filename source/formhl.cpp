@@ -4,6 +4,7 @@
 
 #include "messageform.h"
 #include "messhl.h"
+#include "saveini.h"     // TSaveParamsINI
 #include "formhl.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -11,6 +12,7 @@
 #pragma link "messstyleframe"
 #pragma resource "*.dfm"
 
+extern TSaveParamsINI * AppParams;
 extern String HighlightFile;
 int THighlightForm::LastRuleIndex = 0;
 THighlightForm * HighlightForm;
@@ -34,6 +36,7 @@ __fastcall THighlightForm::THighlightForm(TComponent* Owner, int CurrentProfile,
 
   FillRuleList(LastRuleIndex);
 
+  *AppParams >> this;
   DrawGrid_LivingColumns = new TStringGridLivingColumns((TStringGrid *)DrawGrid);
 
   MessMatchFr->OnValuesChange = OnFrameValuesChange;
@@ -42,6 +45,7 @@ __fastcall THighlightForm::THighlightForm(TComponent* Owner, int CurrentProfile,
 //---------------------------------------------------------------------------
 void __fastcall THighlightForm::FormDestroy(TObject *Sender)
 {
+  *AppParams << this;
   if( DrawGrid->Row > 0 )
     LastRuleIndex = DrawGrid->Row - 1;
   delete DrawGrid_LivingColumns;

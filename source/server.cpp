@@ -55,8 +55,6 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   if( IsValidSyslogDate(p) )
   {
     DateStr = String(p, 15);
-    //DateStr.SetLength(15);
-    //lstrcpyn(DateStr.c_str(), p, 16);
     p += 16; // including space
   }
   else
@@ -74,8 +72,6 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
     {
       // found
       HostName = String(p, i);
-      //HostName.SetLength(i);
-      //lstrcpyn(HostName.c_str(), p, i+1);
       p += i + 1;
       break;
     }
@@ -93,13 +89,28 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
     {
       // found
       Tag = String(p, i);
-      //Tag.SetLength(i);
-      //lstrcpyn(Tag.c_str(), p, i+1);
       p += i + 2;
       break;
     }
   }
 
+  // and now - process message
+  // Replace all tabs by spaces,
+  // cut all carriage returns and line feeds,
+  // replace all chars < 32 by '.'
+  Msg = "";
+  for(int i=0; p[i]; i++)
+  {
+    if( p[i] == '\t' || p[i] == '\n' )
+      Msg += ' ';
+    else if( p[i] == '\r' )
+      ;
+    else if( p[i] < 32 )
+      Msg += '.';
+    else
+      Msg += p[i];
+  }
+  /*
   // and now - text message
   // Replace all tabs by spaces
   // and cut line end
@@ -110,9 +121,8 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
     else if( p[i] == '\n' )
       p[i] = 0;
   }
-
   Msg = p;
-
+  */
   return true;
 }
 //---------------------------------------------------------------------------
@@ -151,7 +161,6 @@ void TSyslogMessage::ProcessMessageFromFile(char * p)
   }
 }
 //---------------------------------------------------------------------------
-/*
 bool TSyslogMessage::Save(const String & file)
 {
   TFile out(file, GENERIC_WRITE,
@@ -164,22 +173,13 @@ bool TSyslogMessage::Save(const String & file)
 
   return Save(out);
 }
-*/
-//---------------------------------------------------------------------------
-String TSyslogMessage::ClipboardString(void)
-{
-  return
-  DateStr + '\t' + SourceAddr + '\t' + HostName + '\t' +
-  ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
-  Tag + '\t' + Msg + CR;
-}
 //---------------------------------------------------------------------------
 bool TSyslogMessage::Save(TFile & out)
 {
   out <<
     SourceAddr + '\t' + DateStr + '\t' + HostName + '\t' +
     ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
-    Tag + '\t' + Msg + CR;
+    Tag + '\t' + Msg + szCR;
   return ! out.GetError();
 }
 //---------------------------------------------------------------------------
@@ -196,6 +196,56 @@ bool TSyslogMessage::Save(const String & file, TFile & out)
     out.ToEnd();
   }
   return Save(out);
+}
+//---------------------------------------------------------------------------
+String TSyslogMessage::ClipboardString(void)
+{
+  return
+  DateStr + '\t' + SourceAddr + '\t' + HostName + '\t' +
+  ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
+  Tag + '\t' + Msg + szCR;
+}
+//---------------------------------------------------------------------------
+// {time} {ip} {host} {facility} {priority} {tag} {message}
+String TSyslogMessage::Format(String fmt)
+{
+  int i;
+  if( (i = fmt.Pos("{time}")) > 0 )
+  {
+    fmt.Delete(i, 6);
+    fmt.Insert(DateStr, i);
+  }
+  if( (i = fmt.Pos("{ip}")) > 0 )
+  {
+    fmt.Delete(i, 4);
+    fmt.Insert(SourceAddr, i);
+  }
+  if( (i = fmt.Pos("{host}")) > 0 )
+  {
+    fmt.Delete(i, 6);
+    fmt.Insert(HostName, i);
+  }
+  if( (i = fmt.Pos("{facility}")) > 0 )
+  {
+    fmt.Delete(i, 10);
+    fmt.Insert(Facility, i);
+  }
+  if( (i = fmt.Pos("{priority}")) > 0 )
+  {
+    fmt.Delete(i, 10);
+    fmt.Insert(Priority, i);
+  }
+  if( (i = fmt.Pos("{tag}")) > 0 )
+  {
+    fmt.Delete(i, 5);
+    fmt.Insert(Tag, i);
+  }
+  if( (i = fmt.Pos("{message}")) > 0 )
+  {
+    fmt.Delete(i, 9);
+    fmt.Insert(Msg, i);
+  }
+  return fmt;
 }
 //---------------------------------------------------------------------------
 // sample: "Sep  2 09:46:37"

@@ -341,4 +341,7 @@ TDateTime DateTimeFromISO8601(String s);
 bool StringStartWith(String Str, String StartStr);
 String GetTemporaryFileName(void);
 //---------------------------------------------------------------------------
+AnsiString SecurePassword(AnsiString password);
+AnsiString UnsecurePassword(AnsiString secure_password);
+//---------------------------------------------------------------------------
 #endif

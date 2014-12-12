@@ -52,6 +52,7 @@ extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
 void PrintSB(int i, String s);
+bool ProcessMessageRules(TSyslogMessage * p);
 
 MTCPServer * tcp = NULL;
 TList * tcp_cons = NULL;
@@ -257,7 +258,8 @@ void TcpReceiveMessage(void)
 
             TSyslogMessage sm;
             sm.ProcessMessageFromSyslogd((char *)(c->Data + start), i - start, &c->Socket->destAddr);
-            sm.Save(SyslogFile, syslogout);
+            if( ProcessMessageRules(&sm) )
+              sm.Save(SyslogFile, syslogout);
           }
           start = i + 1;
         }

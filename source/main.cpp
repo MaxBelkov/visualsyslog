@@ -3,6 +3,7 @@
 #include <vcl.h>
 #pragma hdrstop
 
+#include "sendmail.h"
 #include "tcpcon.h"      // tcp server connections
 #include "udpcon.h"      // udp server connections
 #include "syslog.h"      // base syslog definitions
@@ -16,7 +17,11 @@
 #include "cfg.h"         // program config
 #include "messmatch.h"   // Message filtering
 #include "messhl.h"      // Message highlighting profiles
+#include "messprocessing.h" // Message processing
 #include "formhl.h"      // Highlighting setup
+#include "formprocess.h" // Process messages setup
+#include "sound.h"       // play sound thread
+#include "AlarmForm.h"   // show alarm message
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -37,8 +42,10 @@ String WorkDir;
 String ErrorlogFile;
 String MainCfgFile;
 String HighlightFile;
+String ProcessFile;
 
-THighlightProfileList * HP;
+THighlightProfileList * HP = NULL;
+TMessProcessRuleList * ProcessRules = NULL;
 
 // syslog file
 TFile syslogout;
@@ -100,19 +107,27 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   RawFile = WorkDir + "raw";
   DeleteFile(RawFile);
   ErrorlogFile = WorkDir + "errors.txt";
-  MainCfgFile = WorkDir + "cfg.ini";
+  //MainCfgFile = WorkDir + "cfg.ini";
+  MainCfgFile = WorkDir + "cfg.xml";
   HighlightFile = WorkDir + "highlight.xml";
+  ProcessFile = WorkDir + "process.xml";
 
-  MainCfg.Load();
+  MainCfg.Load(MainCfgFile);
 
   HP = new THighlightProfileList;
   HP->Load(HighlightFile);
+
+  ProcessRules = new TMessProcessRuleList;
+  ProcessRules->Load(ProcessFile);
 
   AppParams = new TSaveParamsINI(WorkDir + "params.ini");
   AppParams->MinimumColumnWidth = 10;
 
   MessList = new TList;
   MessList->Capacity = 10000;
+
+  TalkingThread = new TSound(true);
+  TalkingThread->Resume();
 
   if( UdpServerCreate() )
   {
@@ -213,9 +228,27 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   rawout.Close();
   syslogout.Close();
 
+  if( TalkingThread )
+  {
+    TalkingThread->Stop();
+    TalkingThread->Terminate();
+    TalkingThread->WaitFor();
+    delete TalkingThread;
+    TalkingThread = NULL;
+  }
+
+  if( ShowAlarmForm )
+  {
+    delete ShowAlarmForm;
+    ShowAlarmForm = NULL;
+  }
+
   Clear();
   delete MessList;
   MessList = NULL;
+
+  delete ProcessRules;
+  ProcessRules = NULL;
 
   delete HP;
   HP = NULL;
@@ -224,6 +257,8 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
 
   delete AppParams;
   AppParams = NULL;
+
+  TSendmailThread::Exit();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::CreateGrid(void)
@@ -383,10 +418,10 @@ void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
     MessMatch.Priority = FilterByPriorityCB->ItemIndex - 1;
     MessMatch.Field1 = FieldCB1->ItemIndex / 2;
     MessMatch.Contains1 = (FieldCB1->ItemIndex & 1) == 0;
-    MessMatch.Text1 = FilterEdit1->Text;
+    MessMatch.Text1->Text = FilterEdit1->Text;
     MessMatch.Field2 = FieldCB2->ItemIndex / 2;
     MessMatch.Contains2 = (FieldCB2->ItemIndex & 1) == 0;
-    MessMatch.Text2 = FilterEdit2->Text;
+    MessMatch.Text2->Text = FilterEdit2->Text;
     MessMatch.MatchCase = true;
 
     ReadedSize += in.Bytes;
@@ -494,8 +529,14 @@ void __fastcall TMainForm::LogSGDblClick(TObject *Sender)
   TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
   if( sm )
     ShowMessage2(this,
-                 sm->Msg,
-                 "Message time " + sm->DateStr,
+                 AnsiString("Time: ") + sm->DateStr +
+                 "\nIP: " + sm->SourceAddr +
+                 "\nHost: " + sm->HostName +
+                 "\nFacility: " + sm->Facility +
+                 "\nPriority: " + sm->Priority +
+                 "\nTag: " + sm->Tag +
+                 "\nMessage: " + sm->Msg,
+                 "Message content",
                  true, // modal
                  false); // error
 }
@@ -629,7 +670,7 @@ bool WriteToLogRawMessage(char * p)
   }
 
   String s(p);
-  s += CR;
+  s += szCR;
   rawout << s;
   return true;
 }
@@ -651,7 +692,7 @@ bool WriteToLogError(String fmt, ...)
   if( s.Pos("ERROR\t") > 0 )
     SB(2) = s.SubString(7, s.Length()-6);
 
-  s = Now().DateTimeString() + '\t' + s + CR;
+  s = Now().DateTimeString() + '\t' + s + szCR;
   out << s;
   va_end(argptr);
   return true;
@@ -689,9 +730,10 @@ void __fastcall TMainForm::aSetupExecute(TObject *Sender)
       else
         CreateShortcut(CSIDL_STARTUP);
     }
-    MainCfg.Save();
+    MainCfg.Save(MainCfgFile);
   }
   delete SetupForm;
+  SetupForm = NULL;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::RedrawProto(void)
@@ -957,6 +999,7 @@ void __fastcall TMainForm::SetViewFileMode(bool b)
   ViewFileMode = b;
   aCancelViewFile->Visible = b;
   aSetup->Visible = ! b;
+  aProcessSetup->Visible = ! b;
   aGotoNewLine->Visible = ! b;
   mOpenFilesLoc->Visible = ! b;
   aClear->Visible = ! b;
@@ -1090,6 +1133,117 @@ void __fastcall TMainForm::ChangeProfileClick(TObject *Sender)
   HP->CurrentProfile = ((TMenuItem *)Sender)->Tag;
   ((TMenuItem *)Sender)->Checked = true;
   LogSG->Invalidate();
+}
+//---------------------------------------------------------------------------
+static void OnReceiveMail(TLetter * l)
+{
+  if( ! l->result )
+    WriteToLogError(String("ERROR\tSent e-mail:") + l->error);
+}
+//---------------------------------------------------------------------------
+// return false if message p should be ignored
+bool ProcessMessageRules(TSyslogMessage * p)
+{
+  // test:
+  //AlarmShow(p->Format("{time} {message}"));
+
+  bool rv = true;
+  TMessProcessRule * pr;
+  for(int i=0; i<ProcessRules->Count; i++)
+  {
+    pr = ProcessRules->Get(i);
+    if( ! pr->bEnable )
+      continue;
+    if( ! pr->Match.Match(p) )
+      continue;
+
+    if( pr->Process.bIgnore )
+    {
+      rv = false;
+    }
+    if( pr->Process.bAlarm )
+    {
+      AlarmShow(p->Format(pr->Process.AlarmMess));
+    }
+    if( pr->Process.bSound )
+    {
+      TalkingThread->Play(pr->Process.SoundFile, pr->Process.PlayCount);
+    }
+    if( pr->Process.bSendMail )
+    {
+      TLetter l;
+      l = MainCfg.Letter;
+      if( pr->Process.Recipient.Length() > 0 )
+        l.recipient = pr->Process.Recipient;
+      l.subject = p->Format(l.subject);
+      l.message = p->Format(l.message);
+      l.callback = OnReceiveMail;
+      TSendmailThread::Send(&l);
+    }
+    if( pr->Process.bRunProg )
+    {
+      DWORD LastError;
+      String cmd = p->Format(pr->Process.ProgFile);
+      if( ! RunProg(cmd.c_str(),
+                    pr->Process.bProgHide ? SW_HIDE : SW_SHOWNORMAL,
+                    false, &LastError) )
+        WriteToLogError("ERROR\tRun program %s: %s",
+          cmd.c_str(), FormatLastError2(LastError).c_str());
+    }
+    if( pr->Process.bSaveToFile )
+    {
+      String f = pr->Process.SaveFile;
+      if( ExtractFilePath(f).Length() == 0 )
+        f = WorkDir + f;
+      if( ! p->Save(f) )
+        WriteToLogError("ERROR\tSave message to file: %s", f.c_str());
+    }
+  }
+  return rv;
+}
+//---------------------------------------------------------------------------
+void AlarmShow(String s)
+{
+  if( ! ShowAlarmForm )
+    ShowAlarmForm = new TShowAlarmForm(MainForm);
+
+  if( ShowAlarmForm->ListBox->Font->Name != MainForm->LogSG->Font->Name ||
+      ShowAlarmForm->ListBox->Font->Size != MainForm->LogSG->Font->Size )
+    ShowAlarmForm->ListBox->Font = MainForm->LogSG->Font;
+
+  if( s.Length() > 0 )
+  {
+    ShowAlarmForm->ListBox->Items->Add(s);
+    int c = ShowAlarmForm->ListBox->Items->Count;
+    ShowAlarmForm->ListBox->ItemIndex = c - 1;
+    if( c > 10000 )
+      ShowAlarmForm->ListBox->Items->Delete(0);
+  }
+
+  if( ShowAlarmForm->WindowState==wsMinimized )
+    ShowAlarmForm->WindowState = wsNormal;
+  else if( MainForm->WindowState==wsMinimized )
+    MainForm->WindowState = wsNormal;
+  else
+    ShowAlarmForm->Show();
+
+  ShowAlarmForm->FormStyle = fsNormal;
+  ShowAlarmForm->FormStyle = fsStayOnTop;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aShowAlarmsExecute(TObject *Sender)
+{
+  AlarmShow("");
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aProcessSetupExecute(TObject *Sender)
+{
+  ProcessForm = new TProcessForm(this);
+  if( ProcessForm->ShowModal() == mrOk )
+  {
+    ProcessRules->Load(ProcessFile);
+  }
+  delete ProcessForm;
 }
 //---------------------------------------------------------------------------
 

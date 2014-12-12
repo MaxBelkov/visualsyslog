@@ -4,7 +4,7 @@
 
 #include "File.h"
 
-char CR[] = "\r\n\x0";
+char szCR[] = "\r\n\x0";
 //---------------------------------------------------------------------------
 __fastcall TFile::TFile(bool enableExceptions) :
   handle(NULL), Error(false), Exceptions( enableExceptions ), LastError(0), bytes(0)
@@ -246,7 +246,7 @@ bool __fastcall TFile::SetEnd(void)
 //---------------------------------------------------------------------------
 bool __fastcall TFile::WriteString(char * string)
 {
-  Error = ! (Write((BYTE *)string, lstrlen(string)) && Write((BYTE *)CR, lstrlen(CR)));
+  Error = ! (Write((BYTE *)string, lstrlen(string)) && Write((BYTE *)szCR, lstrlen(szCR)));
   return ! Error;
 }
 //---------------------------------------------------------------------------

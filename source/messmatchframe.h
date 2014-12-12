@@ -16,13 +16,13 @@ __published:	// IDE-managed Components
     TGroupBox *GroupBox1;
     TComboBox *PriorityCB;
     TLabel *Label1;
-    TEdit *TextEdit1;
     TCheckBox *MatchCaseCB;
     TLabel *Label3;
-    TEdit *TextEdit2;
     TComboBox *PriorityOperationCB;
     TComboBox *FieldCB1;
     TComboBox *FieldCB2;
+    TMemo *Memo1;
+    TMemo *Memo2;
     void __fastcall MatchChange(TObject *Sender);
 private:	// User declarations
     bool bEnableValuesChange;

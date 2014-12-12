@@ -865,40 +865,6 @@ bool RunProg(char * CmdLine, WORD wShowWindow, bool bWait,
              DWORD * pExitCode, char * szCurDir, DWORD * pdwProcessId)
 {
   bool RetVal;
-/*
-  char szCurrentDirectory[MN];
-
-  if( szCurDir )
-  {
-    // Текущая директория задана
-    lstrcpyn(szCurrentDirectory, szCurDir, sizeof(szCurrentDirectory));
-  }
-  else
-  {
-    // Текущая директория не задана
-    // Отделим имя файла от аргументов командной строки
-    // Для определения текущей директории
-    char szFile[MN], szParam[300];
-    for(int i=0; i<MN && CmdLine[i]; i++)
-    {
-      szFile[i] = CmdLine[i];
-      if( szFile[i]==' ' )
-      {
-        szFile[i] = 0;
-        if( ::GetFileAttributes(szFile)==0xFFFFFFFF )
-        {
-          szFile[i] = ' ';
-        }
-        else
-        {
-          lstrcpyn(szParam, &CmdLine[i+1], sizeof(szParam));
-          break;
-        }
-      }
-    }
-	lstrcpyn(szCurrentDirectory, AnsiString(ExtractFilePath(szFile)).c_str(), sizeof(szCurrentDirectory));
-  }
-*/
   STARTUPINFO si;
   PROCESS_INFORMATION pi;
   GetStartupInfo(&si);
@@ -2000,6 +1966,51 @@ String GetTemporaryFileName(void)
   GetTempFileName(path,"TMP",0,name);
 
   return String(name);
+}
+//---------------------------------------------------------------------------
+char * szSecurePassword = "Y_6IZ!h7IYb4QgE";
+AnsiString SecurePassword(AnsiString password)
+{
+  WORD l = password.Length();
+  int size = MAX(25, l+2);
+  BYTE * data = new BYTE[size];
+
+  Randomize();
+  for(int i=2; i<size; i++)
+    data[i] = (BYTE)(Random()*256.0);
+
+  *(WORD *)data = l;
+  strcpy(data+2, password.c_str());
+
+  for(int i=0, j=0; i<size; i++)
+  {
+    data[i] ^= (BYTE)szSecurePassword[j++];
+    if( ! szSecurePassword[j] )
+      j = 0;
+  }
+  AnsiString rv = ToHexMas(data, size);
+  delete [] data;
+  return rv;
+}
+//---------------------------------------------------------------------------
+AnsiString UnsecurePassword(AnsiString secure_password)
+{
+  WORD size = secure_password.Length() / 2;
+  BYTE * data = new BYTE[size];
+  AnsiString rv;
+  if( FromHexMas(secure_password, data, size) )
+  {
+    for(int i=0, j=0; i<size; i++)
+    {
+      data[i] ^= (BYTE)szSecurePassword[j++];
+      if( ! szSecurePassword[j] )
+        j = 0;
+    }
+    WORD l = *(WORD *)data;
+    rv = AnsiString((char *)(data+2), l);
+  }
+  delete [] data;
+  return rv;
 }
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

@@ -83,7 +83,6 @@ __published:	// IDE-managed Components
     TToolButton *ToolButton4;
     TToolButton *ToolButton5;
     TToolButton *ToolButton6;
-    TToolButton *ToolButton7;
     TToolButton *ToolButton8;
     TToolButton *ToolButton9;
     TToolButton *ToolButton10;
@@ -110,6 +109,11 @@ __published:	// IDE-managed Components
     TMenuItem *HighlightingSetup1;
     TComboBox *FieldCB1;
     TComboBox *FieldCB2;
+    TAction *aShowAlarms;
+    TMenuItem *Showalarmswindow1;
+    TAction *aProcessSetup;
+    TToolButton *ToolButton14;
+    TMenuItem *Messageprocessingsetup1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall mCopyToClipboardClick(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -138,9 +142,14 @@ __published:	// IDE-managed Components
     void __fastcall aFilterByHostExecute(TObject *Sender);
     void __fastcall aFilterByFacilityExecute(TObject *Sender);
     void __fastcall aHighlightingSetupExecute(TObject *Sender);
+    void __fastcall aShowAlarmsExecute(TObject *Sender);
+    void __fastcall aProcessSetupExecute(TObject *Sender);
+
+public:
+  // Main grid
+  TDrawGrid2 * LogSG;
 
 private:	// User declarations
-  TDrawGrid2 * LogSG;
   // Change LogSG columns width
   TStringGridLivingColumns * LogSG_LivingColumns;
 
@@ -210,7 +219,9 @@ public:		// User declarations
   void __fastcall ChangeProfileClick(TObject *Sender);
 };
 //---------------------------------------------------------------------------
-extern PACKAGE TMainForm *MainForm;
+extern PACKAGE TMainForm * MainForm;
+
+void AlarmShow(String s);
 
 bool WriteToLogRawMessage(char * p);
 // Write message to errors.txt & Print in the status bar

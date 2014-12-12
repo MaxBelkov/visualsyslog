@@ -5,11 +5,11 @@
 #include "messageform.h"
 #include "messhl.h"
 
-const char * szProfileNode = "profile";
 const char * szHighlightsNode = "highlights";
-const char * szHighlightNode = "highlight";
-const char * szMatchNode = "match";
-const char * szStyleNode = "style";
+  const char * szProfileNode = "profile";
+    const char * szHighlightNode = "highlight";
+      const char * szMatchNode = "match";
+      const char * szStyleNode = "style";
 //---------------------------------------------------------------------------
 TMessHighlight::TMessHighlight()
 {
@@ -167,8 +167,6 @@ TMessHighlightList * THighlightProfileList::GetCurrentProfile(void)
 //---------------------------------------------------------------------------
 void THighlightProfileList::Save(String file)
 {
-  TMessHighlight ml;
-
   tinyxml2::XMLDocument doc;
   doc.InsertEndChild( doc.NewDeclaration() );
 

@@ -16,6 +16,7 @@ extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
 void PrintSB(int i, String s);
+bool ProcessMessageRules(TSyslogMessage * p);
 
 //---------------------------------------------------------------------------
 bool UdpServerCreate(void)
@@ -99,7 +100,9 @@ void UdpReceiveMessage(void)
 
       TSyslogMessage sm;
       sm.ProcessMessageFromSyslogd((char *)ReceiveBuffer, udp->bytes, &a);
-      sm.Save(SyslogFile, syslogout);
+
+      if( ProcessMessageRules(&sm) )
+        sm.Save(SyslogFile, syslogout);
     }
     delete [] ReceiveBuffer;
   }

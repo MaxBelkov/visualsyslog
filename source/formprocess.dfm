@@ -1,12 +1,12 @@
-object HighlightForm: THighlightForm
+object ProcessForm: TProcessForm
   Left = 0
   Top = 0
   BorderIcons = [biSystemMenu, biMaximize]
-  Caption = 'Highlighting setup'
-  ClientHeight = 472
-  ClientWidth = 853
+  Caption = 'Message processing setup'
+  ClientHeight = 680
+  ClientWidth = 873
   Color = clBtnFace
-  Constraints.MinHeight = 490
+  Constraints.MinHeight = 400
   Constraints.MinWidth = 700
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -55,43 +55,18 @@ object HighlightForm: THighlightForm
   OnDestroy = FormDestroy
   PixelsPerInch = 96
   TextHeight = 13
-  object GroupBox1: TGroupBox
-    AlignWithMargins = True
-    Left = 3
-    Top = 3
-    Width = 847
-    Height = 41
-    Align = alTop
-    TabOrder = 0
-    object Label1: TLabel
-      Left = 24
-      Top = 13
-      Width = 30
-      Height = 13
-      Alignment = taRightJustify
-      Caption = 'Profile'
-    end
-    object ProfileCB: TComboBox
-      Left = 64
-      Top = 10
-      Width = 145
-      Height = 21
-      Style = csDropDownList
-      ItemHeight = 13
-      TabOrder = 0
-      OnSelect = ProfileCBSelect
-    end
-  end
   object GroupBox2: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 47
-    Width = 475
-    Height = 368
-    Margins.Top = 0
+    Top = 3
+    Width = 469
+    Height = 620
     Align = alClient
     Caption = 'List of rules'
-    TabOrder = 1
+    TabOrder = 0
+    ExplicitTop = 0
+    ExplicitWidth = 475
+    ExplicitHeight = 623
     object AddButton: TSpeedButton
       Left = 9
       Top = 16
@@ -284,8 +259,8 @@ object HighlightForm: THighlightForm
       AlignWithMargins = True
       Left = 5
       Top = 51
-      Width = 465
-      Height = 312
+      Width = 459
+      Height = 564
       Margins.Top = 36
       Align = alClient
       ColCount = 2
@@ -303,6 +278,8 @@ object HighlightForm: THighlightForm
       OnClick = DrawGridClick
       OnDblClick = DrawGridDblClick
       OnDrawCell = DrawGridDrawCell
+      ExplicitWidth = 465
+      ExplicitHeight = 567
       ColWidths = (
         50
         343)
@@ -311,16 +288,16 @@ object HighlightForm: THighlightForm
   object GroupBox4: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 421
-    Width = 847
+    Top = 629
+    Width = 867
     Height = 48
     Align = alBottom
-    TabOrder = 3
+    TabOrder = 2
     DesignSize = (
-      847
+      867
       48)
     object OKButton: TBitBtn
-      Left = 196
+      Left = 202
       Top = 12
       Width = 113
       Height = 28
@@ -358,7 +335,7 @@ object HighlightForm: THighlightForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     end
     object CancelButton: TBitBtn
-      Left = 370
+      Left = 380
       Top = 12
       Width = 113
       Height = 28
@@ -396,7 +373,7 @@ object HighlightForm: THighlightForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     end
     object HelpButton: TBitBtn
-      Left = 536
+      Left = 551
       Top = 12
       Width = 113
       Height = 28
@@ -449,29 +426,17 @@ object HighlightForm: THighlightForm
         0A0C09090800001F1F1F1F1F1F1F1F0000000000001F1F1F1F1F}
     end
   end
-  object Panel: TPanel
-    Left = 481
-    Top = 47
-    Width = 372
-    Height = 371
+  object ScrollBox1: TScrollBox
+    AlignWithMargins = True
+    Left = 478
+    Top = 3
+    Width = 392
+    Height = 620
+    HorzScrollBar.Tracking = True
+    VertScrollBar.Tracking = True
     Align = alRight
-    BevelOuter = bvNone
-    TabOrder = 2
-    inline MessStyleFr: TMessStyleFr
-      Left = 2
-      Top = 224
-      Width = 366
-      Height = 132
-      TabOrder = 1
-      ExplicitLeft = 2
-      ExplicitTop = 224
-      ExplicitWidth = 366
-      inherited GroupBox1: TGroupBox
-        Width = 366
-        ExplicitWidth = 366
-        ExplicitHeight = 132
-      end
-    end
+    BorderStyle = bsNone
+    TabOrder = 1
     object ActiveCB: TCheckBox
       Left = 4
       Top = 10
@@ -485,16 +450,30 @@ object HighlightForm: THighlightForm
       Top = 35
       Width = 366
       Height = 184
-      TabOrder = 2
+      TabOrder = 1
       ExplicitLeft = 2
       ExplicitTop = 35
+      inherited GroupBox1: TGroupBox
+        ExplicitTop = 0
+        ExplicitWidth = 366
+        ExplicitHeight = 184
+      end
+    end
+    inline MessProcessFr: TMessProcessFr
+      Left = 2
+      Top = 226
+      Width = 366
+      Height = 388
+      TabOrder = 2
+      ExplicitLeft = 2
+      ExplicitTop = 226
     end
   end
   object ImageList: TImageList
-    Left = 624
-    Top = 8
+    Left = 232
+    Top = 144
     Bitmap = {
-      494C0101020008002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020008003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
