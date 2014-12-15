@@ -23,8 +23,7 @@ void TSyslogMessage::Clear()
   Msg = "";
 }
 //---------------------------------------------------------------------------
-bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
-  sockaddr_in * from_addr)
+bool TSyslogMessage::FromStringSyslogd(char * p, int size, sockaddr_in * from_addr)
 {
   if( from_addr )
     SourceAddr = inet_ntoa(from_addr->sin_addr);
@@ -126,7 +125,14 @@ bool TSyslogMessage::ProcessMessageFromSyslogd(char * p, int size,
   return true;
 }
 //---------------------------------------------------------------------------
-void TSyslogMessage::ProcessMessageFromFile(char * p)
+AnsiString TSyslogMessage::ToString(void)
+{
+  return SourceAddr + '\t' + DateStr + '\t' + HostName + '\t' +
+  ((PRI >= 0) ? (Facility + '\t' + Priority) : AnsiString('\t')) + '\t' +
+  Tag + '\t' + Msg + szCR;
+}
+//---------------------------------------------------------------------------
+void TSyslogMessage::FromString(char * p)
 {
   Clear();
 
@@ -161,7 +167,8 @@ void TSyslogMessage::ProcessMessageFromFile(char * p)
   }
 }
 //---------------------------------------------------------------------------
-bool TSyslogMessage::Save(const String & file)
+/*
+bool TSyslogMessage::SaveToFile(const String & file)
 {
   TFile out(file, GENERIC_WRITE,
                   FILE_SHARE_READ | FILE_SHARE_WRITE,
@@ -173,17 +180,18 @@ bool TSyslogMessage::Save(const String & file)
 
   return Save(out);
 }
+*/
+/*
 //---------------------------------------------------------------------------
-bool TSyslogMessage::Save(TFile & out)
+bool TSyslogMessage::SaveToFile(TFile & out)
 {
-  out <<
-    SourceAddr + '\t' + DateStr + '\t' + HostName + '\t' +
-    ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
-    Tag + '\t' + Msg + szCR;
+  out << ToString();
   return ! out.GetError();
 }
+*/
+/*
 //---------------------------------------------------------------------------
-bool TSyslogMessage::Save(const String & file, TFile & out)
+bool TSyslogMessage::SaveToFile(const String & file, TFile & out)
 {
   if( ! out.IsOpen() )
   {
@@ -197,8 +205,9 @@ bool TSyslogMessage::Save(const String & file, TFile & out)
   }
   return Save(out);
 }
+*/
 //---------------------------------------------------------------------------
-String TSyslogMessage::ClipboardString(void)
+String TSyslogMessage::ToStringClipboard(void)
 {
   return
   DateStr + '\t' + SourceAddr + '\t' + HostName + '\t' +

@@ -282,11 +282,14 @@ object HighlightForm: THighlightForm
     end
     object DrawGrid: TDrawGrid
       AlignWithMargins = True
-      Left = 5
+      Left = 8
       Top = 51
-      Width = 465
-      Height = 312
+      Width = 459
+      Height = 309
+      Margins.Left = 6
       Margins.Top = 36
+      Margins.Right = 6
+      Margins.Bottom = 6
       Align = alClient
       ColCount = 2
       DefaultColWidth = 400
@@ -303,6 +306,9 @@ object HighlightForm: THighlightForm
       OnClick = DrawGridClick
       OnDblClick = DrawGridDblClick
       OnDrawCell = DrawGridDrawCell
+      ExplicitLeft = 5
+      ExplicitWidth = 465
+      ExplicitHeight = 312
       ColWidths = (
         50
         343)
@@ -494,7 +500,7 @@ object HighlightForm: THighlightForm
     Left = 624
     Top = 8
     Bitmap = {
-      494C0101020008002C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

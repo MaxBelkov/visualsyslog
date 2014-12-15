@@ -21,7 +21,7 @@ public:
     String ProgFile;  //
     bool bProgHide;   //
   bool bSaveToFile;   //
-    String SaveFile;  //
+    int SaveFile;     // link to TStorageFile::number (-1 file not selected)
 
 public:
   TMessProcess();

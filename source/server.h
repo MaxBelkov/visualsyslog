@@ -20,17 +20,28 @@ public:
 public:
   TSyslogMessage();
   void Clear();
+
+  // Read message from string p (string must be in syslog RFC 3164 format),
   // p must be null terminated
-  bool ProcessMessageFromSyslogd(char * p, int size, sockaddr_in * from_addr);
-  void ProcessMessageFromFile(char * p);
-  // Write to file
-  bool Save(const String & file);
-  bool Save(TFile & out);
-  bool Save(const String & file, TFile & out);
-  // Convert to text string clipboard format
-  String ClipboardString(void);
+  bool FromStringSyslogd(char * p, int size, sockaddr_in * from_addr);
+
+  // Format message to string (for saving to file)
+  AnsiString ToString(void);
+  // Read message from string p,
+  // p must be null terminated
+  void FromString(char * p);
+
+  // Convert message to text string in clipboard format
+  String ToStringClipboard(void);
+
+  // Convert message to text string in custom format
   // fmt may contains: {time} {ip} {host} {facility} {priority} {tag} {message}
   String Format(String fmt);
+
+  // Write to file
+  //bool SaveToFile(const String & file);
+  //bool SaveToFile(TFile & out);
+  //bool SaveToFile(const String & file, TFile & out);
 };
 //---------------------------------------------------------------------------
 bool IsValidSyslogDate(const char * p);

@@ -64,9 +64,6 @@ object ProcessForm: TProcessForm
     Align = alClient
     Caption = 'List of rules'
     TabOrder = 0
-    ExplicitTop = 0
-    ExplicitWidth = 475
-    ExplicitHeight = 623
     object AddButton: TSpeedButton
       Left = 9
       Top = 16
@@ -257,11 +254,14 @@ object ProcessForm: TProcessForm
     end
     object DrawGrid: TDrawGrid
       AlignWithMargins = True
-      Left = 5
+      Left = 8
       Top = 51
-      Width = 459
-      Height = 564
+      Width = 453
+      Height = 561
+      Margins.Left = 6
       Margins.Top = 36
+      Margins.Right = 6
+      Margins.Bottom = 6
       Align = alClient
       ColCount = 2
       DefaultColWidth = 400
@@ -278,8 +278,9 @@ object ProcessForm: TProcessForm
       OnClick = DrawGridClick
       OnDblClick = DrawGridDblClick
       OnDrawCell = DrawGridDrawCell
-      ExplicitWidth = 465
-      ExplicitHeight = 567
+      ExplicitLeft = 5
+      ExplicitWidth = 459
+      ExplicitHeight = 564
       ColWidths = (
         50
         343)
@@ -473,7 +474,7 @@ object ProcessForm: TProcessForm
     Left = 232
     Top = 144
     Bitmap = {
-      494C0101020008003C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

@@ -147,6 +147,16 @@
       <DependentOn>source\cfg.h</DependentOn>
       <BuildOrder>22</BuildOrder>
     </CppCompile>
+    <CppCompile Include="source\fdb.cpp">
+      <DependentOn>source\fdb.h</DependentOn>
+      <BuildOrder>36</BuildOrder>
+    </CppCompile>
+    <CppCompile Include="source\fileframe.cpp">
+      <Form>FileFr</Form>
+      <DesignClass>TFrame</DesignClass>
+      <DependentOn>source\fileframe.h</DependentOn>
+      <BuildOrder>37</BuildOrder>
+    </CppCompile>
     <CppCompile Include="source\formhl.cpp">
       <Form>HighlightForm</Form>
       <DependentOn>source\formhl.h</DependentOn>
@@ -226,6 +236,7 @@
     <FormResources Include="sourcecommon\messageform.dfm" />
     <FormResources Include="source\aboutbox.dfm" />
     <FormResources Include="source\AlarmForm.dfm" />
+    <FormResources Include="source\fileframe.dfm" />
     <FormResources Include="source\formhl.dfm" />
     <FormResources Include="source\formprocess.dfm" />
     <FormResources Include="source\main.dfm" />

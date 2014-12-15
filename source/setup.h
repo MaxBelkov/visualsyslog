@@ -9,6 +9,8 @@
 #include <Buttons.hpp>
 #include <ComCtrls.hpp>
 #include <Menus.hpp>
+#include <Grids.hpp>
+#include "fileframe.h"
 //---------------------------------------------------------------------------
 class TSetupForm : public TForm
 {
@@ -68,6 +70,12 @@ __published:	// IDE-managed Components
     TLabel *Label2;
     TComboBox *TcpInterfaceCB;
     TEdit *TcpPortEdit;
+    TTabSheet *TabSheet3;
+    TGroupBox *FilesGB;
+    TSpeedButton *AddFileButton;
+    TSpeedButton *DelFileButton;
+    TDrawGrid *DrawGrid;
+    TFileFr *FileFr;
     void __fastcall OKButtonClick(TObject *Sender);
     void __fastcall SmtpSelClick(TObject *Sender);
     void __fastcall pmInsertClick(TObject *Sender);
@@ -75,15 +83,27 @@ __published:	// IDE-managed Components
     void __fastcall TestButtonClick(TObject *Sender);
     void __fastcall FormCloseQuery(TObject *Sender, bool &CanClose);
     void __fastcall InsertSubjectButtonClick(TObject *Sender);
+    void __fastcall AddFileButtonClick(TObject *Sender);
+    void __fastcall DelFileButtonClick(TObject *Sender);
+    void __fastcall DrawGridClick(TObject *Sender);
+    void __fastcall DrawGridDrawCell(TObject *Sender, int ACol, int ARow,
+          TRect &Rect, TGridDrawState State);
+    void __fastcall FormDestroy(TObject *Sender);
 private:	// User declarations
-  //TCursor oldc;
+  TStorageFileList * localSFL;
+  static int LastTabIndex;
+  static int LastFileIndex;
+
 public:
   bool bUdpRestart;
   bool bTcpRestart;
+  
 public:		// User declarations
     __fastcall TSetupForm(TComponent* Owner);
     bool FromInterface(TLetter * p);
     void ToInterface(TLetter * p);
+    void __fastcall FillRuleList(int SelectedIndex);
+    void __fastcall OnFrameValuesChange(TObject *Sender);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TSetupForm *SetupForm;

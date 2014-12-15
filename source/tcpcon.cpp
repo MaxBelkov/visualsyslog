@@ -6,6 +6,7 @@
 #include "cfg.h"
 #include "messageform.h"
 #include "server.h"
+#include "fdb.h"
 
 //---------------------------------------------------------------------------
 TSyslogdTcpConn::TSyslogdTcpConn(MSocket * p)
@@ -46,9 +47,10 @@ BYTE * TSyslogdTcpConn::GetBufferSize(int NeedFreeSize)
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------
 
+extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
-extern TFile syslogout;
-extern String SyslogFile;
+//extern TFile syslogout;
+//extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
 void PrintSB(int i, String s);
@@ -257,9 +259,14 @@ void TcpReceiveMessage(void)
             WriteToLogRawMessage((char *)(c->Data + start));
 
             TSyslogMessage sm;
-            sm.ProcessMessageFromSyslogd((char *)(c->Data + start), i - start, &c->Socket->destAddr);
+            sm.FromStringSyslogd((char *)(c->Data + start), i - start, &c->Socket->destAddr);
             if( ProcessMessageRules(&sm) )
-              sm.Save(SyslogFile, syslogout);
+            {
+              TStorageFile * sf = fdb->Get(0);
+              if( sf )
+                if( ! sf->Save( sm.ToString() ) )
+                  WriteToLogError("ERROR\tSave message to file: %s", sf->GetFileName().c_str());
+            }
           }
           start = i + 1;
         }

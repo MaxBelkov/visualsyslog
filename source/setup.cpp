@@ -11,10 +11,13 @@
 #include "setup.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
+#pragma link "fileframe"
 #pragma resource "*.dfm"
 
+extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
-
+int TSetupForm::LastTabIndex = 0;
+int TSetupForm::LastFileIndex = 0;
 TSetupForm * SetupForm = NULL;
 //---------------------------------------------------------------------------
 __fastcall TSetupForm::TSetupForm(TComponent* Owner)
@@ -52,8 +55,40 @@ __fastcall TSetupForm::TSetupForm(TComponent* Owner)
   TcpInterfaceCB->Text = MainCfg.TcpInterface;
   TcpPortEdit->Text = MainCfg.TcpPort;
 
+  // files
+  localSFL = new TStorageFileList;
+  *localSFL = fdb; 
+  FillRuleList(LastFileIndex);
+  FileFr->OnValuesChange = OnFrameValuesChange;
+
   // mail
   ToInterface(&MainCfg.Letter);
+
+  PageControl->TabIndex = LastTabIndex;
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::FormDestroy(TObject *Sender)
+{
+  LastTabIndex = PageControl->TabIndex;
+  if( DrawGrid->Row > 0 )
+    LastFileIndex = DrawGrid->Row - 1;
+  delete localSFL;
+  localSFL = NULL;
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::FillRuleList(int SelectedIndex)
+{
+  DrawGrid->RowCount = 1 + localSFL->Count;
+  if( DrawGrid->RowCount > 1 )
+  {
+    DrawGrid->FixedRows = 1;
+    if( DrawGrid->RowCount > SelectedIndex + 1 )
+      DrawGrid->Row = SelectedIndex + 1;
+    else if( DrawGrid->RowCount >= 2 )
+      DrawGrid->Row = 1;
+  }
+  DrawGrid->OnClick(this);
+  DrawGrid->Invalidate();
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::OKButtonClick(TObject *Sender)
@@ -110,6 +145,9 @@ void __fastcall TSetupForm::OKButtonClick(TObject *Sender)
   MainCfg.TcpEnable = EnableTcpCB->Checked;
   MainCfg.TcpInterface = TcpInterfaceCB->Text;
   MainCfg.TcpPort = port;
+
+  // files
+  *fdb = localSFL;
 
   // mail
   if( ! FromInterface(&MainCfg.Letter) )
@@ -271,6 +309,94 @@ void __fastcall TSetupForm::TestButtonClick(TObject *Sender)
 void __fastcall TSetupForm::FormCloseQuery(TObject *Sender, bool &CanClose)
 {
   CanClose = CancelButton->Enabled;
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::AddFileButtonClick(TObject *Sender)
+{
+  TStorageFile * p = new TStorageFile;
+  p->number = localSFL->GetNewNumber();
+  localSFL->Add(p);
+  DrawGrid->RowCount = 1 + localSFL->Count;
+  DrawGrid->Row = DrawGrid->RowCount - 1;
+  DrawGrid->FixedRows = 1;
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::DelFileButtonClick(TObject *Sender)
+{
+  if( DrawGrid->RowCount < 2 )
+    return;
+  int ARow = DrawGrid->Row - 1;
+  // Deleting default file "syslog" not allowed
+  if( ARow == 0 )
+    return;
+  localSFL->Del(ARow);
+  DrawGrid->RowCount = 1 + localSFL->Count;
+  DrawGrid->OnClick(this);
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::DrawGridClick(TObject *Sender)
+{
+  if( DrawGrid->Row < 1 )
+  {
+    FileFr->Visible = false;
+    return;
+  }
+  else
+  {
+    FileFr->Visible = true;
+  }
+  //FileFr->Enabled = DrawGrid->Row != 1;
+  FileFr->CanEdit(DrawGrid->Row != 1);
+
+  int ARow = DrawGrid->Row - 1;
+  TStorageFile * p = localSFL->Get(ARow);
+  if( p )
+    FileFr->ToDialog(p);
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::DrawGridDrawCell(TObject *Sender, int ACol,
+      int ARow, TRect &Rect, TGridDrawState State)
+{
+  TCanvas * c = ((TStringGrid *)Sender)->Canvas;
+  String s;
+
+  if( ARow==0 ) // Grid title
+  {
+    switch( ACol )
+    {
+      case 0: s = " File"; break;
+    }
+    int x = Rect.Left + 2;
+    int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
+    c->TextRect(Rect, x, y, s);
+  }
+  else
+  {
+    TStorageFile * p = localSFL->Get(ARow-1);
+    if( p )
+    {
+      if( ACol == 0 )
+      {
+        s = String(" ") + p->GetDescription();
+        int x = Rect.Left + 2;
+        int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
+        c->TextRect(Rect, x, y, s);
+      }
+    }
+  }
+}
+//---------------------------------------------------------------------------
+void __fastcall TSetupForm::OnFrameValuesChange(TObject *Sender)
+{
+  if( DrawGrid->Row < 1 )
+    return;
+  int ARow = DrawGrid->Row - 1;
+  TStorageFile * p = localSFL->Get(ARow);
+  if( p )
+  {
+    FileFr->FromDialog(p);
+    DrawGrid->Invalidate();
+  }
 }
 //---------------------------------------------------------------------------
 

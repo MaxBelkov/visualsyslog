@@ -22,6 +22,7 @@
 #include "formprocess.h" // Process messages setup
 #include "sound.h"       // play sound thread
 #include "AlarmForm.h"   // show alarm message
+#include "fdb.h"         // save messages to file
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -37,18 +38,19 @@
 // save main form screen position and other params to .ini file
 TSaveParamsINI * AppParams = NULL;
 
-String ApplicationExeName;
-String WorkDir;
+String ApplicationExeName; // typically c:\program files\visualsyslog\visualsyslog.exe
+String WorkDir;            // typically c:\Users\<current user>\AppData\Local\visualsyslog
 String ErrorlogFile;
 String MainCfgFile;
 String HighlightFile;
 String ProcessFile;
 
+TStorageFileList * fdb = NULL;
 THighlightProfileList * HP = NULL;
 TMessProcessRuleList * ProcessRules = NULL;
 
 // syslog file
-TFile syslogout;
+//TFile syslogout;
 String SyslogFile;
 
 // raw file
@@ -112,7 +114,14 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   HighlightFile = WorkDir + "highlight.xml";
   ProcessFile = WorkDir + "process.xml";
 
-  MainCfg.Load(MainCfgFile);
+  fdb = new TStorageFileList;
+    // Add default file
+    TStorageFile * sf = new TStorageFile;
+    sf->number = 0;
+    sf->file = "syslog";
+    fdb->Add(sf);
+
+  MainCfg.Load(MainCfgFile, fdb);
 
   HP = new THighlightProfileList;
   HP->Load(HighlightFile);
@@ -226,7 +235,7 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   UdpServerDestroy();
 
   rawout.Close();
-  syslogout.Close();
+  //syslogout.Close();
 
   if( TalkingThread )
   {
@@ -252,6 +261,9 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
 
   delete HP;
   HP = NULL;
+
+  delete fdb;
+  fdb = NULL;
 
   delete LogSG_LivingColumns;
 
@@ -440,7 +452,7 @@ void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
           TotalLines++;
 
           sm = new TSyslogMessage;
-          sm->ProcessMessageFromFile(proto_line.c_str());
+          sm->FromString(proto_line.c_str());
 
           if( ! MessMatch.Match(sm) )
           {
@@ -519,7 +531,7 @@ void __fastcall TMainForm::mCopyToClipboardClick(TObject *Sender)
   for(int i=0, l=MessList->Count; i<l; i++)
   {
     p = (TSyslogMessage *)MessList->Items[i];
-    str += p->ClipboardString();
+    str += p->ToStringClipboard();
   }
   setClipboard(str);
 }
@@ -730,7 +742,7 @@ void __fastcall TMainForm::aSetupExecute(TObject *Sender)
       else
         CreateShortcut(CSIDL_STARTUP);
     }
-    MainCfg.Save(MainCfgFile);
+    MainCfg.Save(MainCfgFile, fdb);
   }
   delete SetupForm;
   SetupForm = NULL;
@@ -960,8 +972,8 @@ void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
         {
           // Now file_line contains new line
           TSyslogMessage sm;
-          sm.ProcessMessageFromSyslogd(file_line.c_str(), file_line.Length(), NULL);
-          sm.Save(out);
+          sm.FromStringSyslogd(file_line.c_str(), file_line.Length(), NULL);
+          out << sm.ToString();
           file_line.SetLength(0);
         }
         continue;
@@ -1192,11 +1204,13 @@ bool ProcessMessageRules(TSyslogMessage * p)
     }
     if( pr->Process.bSaveToFile )
     {
-      String f = pr->Process.SaveFile;
-      if( ExtractFilePath(f).Length() == 0 )
-        f = WorkDir + f;
-      if( ! p->Save(f) )
-        WriteToLogError("ERROR\tSave message to file: %s", f.c_str());
+      TStorageFile * sf = fdb->GetByNumber( pr->Process.SaveFile );
+      if( sf )
+      {
+        String f = sf->GetFileName();
+        if( ! sf->Save( p->ToString() ) )
+          WriteToLogError("ERROR\tSave message to file: %s", f.c_str());
+      }
     }
   }
   return rv;

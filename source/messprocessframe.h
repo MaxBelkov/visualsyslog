@@ -42,16 +42,14 @@ __published:	// IDE-managed Components
     TSpeedButton *InsertProgramButton;
     TSpeedButton *InsertAlarmMessButton;
     TCheckBox *SaveToFileCB;
-    TEdit *SaveFileEdit;
-    TSpeedButton *SpeedButton2;
     TEdit *RecipientEdit;
+    TComboBox *SaveFileCB;
     void __fastcall InsertAlarmMessButtonClick(TObject *Sender);
     void __fastcall pmInsertClick(TObject *Sender);
     void __fastcall SelWavCommonButtonClick(TObject *Sender);
     void __fastcall PlayButtonClick(TObject *Sender);
     void __fastcall SpeedButton1Click(TObject *Sender);
     void __fastcall InsertProgramButtonClick(TObject *Sender);
-    void __fastcall SpeedButton2Click(TObject *Sender);
     void __fastcall Change(TObject *Sender);
     void __fastcall RecipientEditEnter(TObject *Sender);
     void __fastcall RecipientEditExit(TObject *Sender);

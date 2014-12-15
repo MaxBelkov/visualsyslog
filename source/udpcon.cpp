@@ -7,12 +7,14 @@
 #include "messageform.h"
 #include "server.h"
 #include "udpcon.h"
+#include "fdb.h"
 
 TUDP * udp = NULL;
 
+extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
-extern TFile syslogout;
-extern String SyslogFile;
+//extern TFile syslogout;
+//extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
 void PrintSB(int i, String s);
@@ -99,10 +101,15 @@ void UdpReceiveMessage(void)
       WriteToLogRawMessage((char *)ReceiveBuffer);
 
       TSyslogMessage sm;
-      sm.ProcessMessageFromSyslogd((char *)ReceiveBuffer, udp->bytes, &a);
+      sm.FromStringSyslogd((char *)ReceiveBuffer, udp->bytes, &a);
 
       if( ProcessMessageRules(&sm) )
-        sm.Save(SyslogFile, syslogout);
+      {
+        TStorageFile * sf = fdb->Get(0);
+        if( sf )
+          if( ! sf->Save( sm.ToString() ) )
+            WriteToLogError("ERROR\tSave message to file: %s", sf->GetFileName().c_str());
+      }
     }
     delete [] ReceiveBuffer;
   }

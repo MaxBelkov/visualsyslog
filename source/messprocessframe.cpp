@@ -11,6 +11,7 @@
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 
+extern TStorageFileList * fdb;
 extern String WorkDir;
 extern TMainCfg MainCfg;
 TMessProcessFr * MessProcessFr;
@@ -20,6 +21,7 @@ __fastcall TMessProcessFr::TMessProcessFr(TComponent* Owner)
 {
   DefaultRecipient = MainCfg.Letter.recipient;
   OpenDialog->InitialDir = WorkDir;
+  fdb->GetList(SaveFileCB->Items);
 }
 //---------------------------------------------------------------------------
 TForm * TMessProcessFr::GetForm(void)
@@ -106,15 +108,6 @@ void __fastcall TMessProcessFr::InsertProgramButtonClick(TObject *Sender)
     GetForm()->ActiveControl = ProgFileEdit;
 }
 //---------------------------------------------------------------------------
-void __fastcall TMessProcessFr::SpeedButton2Click(TObject *Sender)
-{
-  OpenDialog->Title = "Select file";
-  OpenDialog->Filter = "All files (*.*)|*.*";
-  OpenDialog->DefaultExt = "";
-  if( OpenDialog->Execute() )
-    SaveFileEdit->Text = OpenDialog->FileName;
-}
-//---------------------------------------------------------------------------
 void TMessProcessFr::ToDialog(TMessProcess * p)
 {
   bEnableValuesChange = false;
@@ -132,7 +125,7 @@ void TMessProcessFr::ToDialog(TMessProcess * p)
   ProgFileEdit->Text = p->ProgFile;
   ProgHideCB->Checked = p->bProgHide;
   SaveToFileCB->Checked = p->bSaveToFile;
-  SaveFileEdit->Text = p->SaveFile;
+  SaveFileCB->ItemIndex = SaveFileCB->Items->IndexOfObject((TObject *)p->SaveFile);
 
   bEnableValuesChange = true;
 }
@@ -154,7 +147,11 @@ void TMessProcessFr::FromDialog(TMessProcess * p)
   p->ProgFile = ProgFileEdit->Text;
   p->bProgHide = ProgHideCB->Checked;
   p->bSaveToFile = SaveToFileCB->Checked;
-  p->SaveFile = SaveFileEdit->Text;
+  int i = SaveFileCB->ItemIndex;
+  if( i == -1 )
+    p->SaveFile = i;
+  else
+    p->SaveFile = (int)SaveFileCB->Items->Objects[i];
 }
 //---------------------------------------------------------------------------
 void __fastcall TMessProcessFr::Change(TObject *Sender)

@@ -21,8 +21,10 @@ TMainCfg::TMainCfg()
 const char * szSetupNode = "setup";
     const char * szMainNode = "main";
     const char * szMailNode = "mail";
+    extern const char * szStorageFiles;// = "files";
+
 //---------------------------------------------------------------------------
-void TMainCfg::Save(String file)
+void TMainCfg::Save(String file, TStorageFileList * sfl)
 {
   tinyxml2::XMLDocument doc;
   doc.InsertEndChild( doc.NewDeclaration() );
@@ -44,6 +46,8 @@ void TMainCfg::Save(String file)
   hls->InsertEndChild(p);
   Letter.Save(p);
 
+  sfl->Save(hls);
+
   XMLError err = doc.SaveFile(file.c_str());
   if( err != XML_SUCCESS )
   {
@@ -51,7 +55,7 @@ void TMainCfg::Save(String file)
   }
 }
 //---------------------------------------------------------------------------
-void TMainCfg::Load(String file)
+void TMainCfg::Load(String file, TStorageFileList * sfl)
 {
   try
   {
@@ -83,6 +87,10 @@ void TMainCfg::Load(String file)
         else if( strcmpi(p->Name(), szMailNode)==0 )
         {
           Letter.Load(p);
+        }
+        else if( strcmpi(p->Name(), szStorageFiles)==0 )
+        {
+          sfl->Load(p);
         }
       }
     }

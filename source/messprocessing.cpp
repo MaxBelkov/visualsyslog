@@ -22,6 +22,7 @@ TMessProcess::TMessProcess()
   bRunProg = false;
     bProgHide = false;
   bSaveToFile = false;
+  SaveFile = -1;
 }
 //---------------------------------------------------------------------------
 String TMessProcess::GetDescription(void)
@@ -73,7 +74,7 @@ void TMessProcess::Save(XMLElementEx * p)
     p->ws("progfile", ProgFile);
     p->wb("proghide", bProgHide);
   p->wb("savetofile", bSaveToFile);
-    p->ws("savefile", SaveFile);
+    p->wi("savefile", SaveFile);
 }
 //---------------------------------------------------------------------------
 void TMessProcess::Load(XMLElementEx * p)
@@ -90,7 +91,7 @@ void TMessProcess::Load(XMLElementEx * p)
     ProgFile = p->rs("progfile");
     bProgHide = p->rb("proghide");
   bSaveToFile = p->rb("savetofile");
-    SaveFile = p->rs("savefile");
+    SaveFile = p->ri("savefile", -1);
 }
 //---------------------------------------------------------------------------
 //---------------------------------------------------------------------------

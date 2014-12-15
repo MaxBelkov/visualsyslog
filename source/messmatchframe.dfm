@@ -12,9 +12,6 @@ object MessMatchFr: TMessMatchFr
     Align = alClient
     Caption = 'Match'
     TabOrder = 0
-    ExplicitTop = -3
-    ExplicitWidth = 522
-    ExplicitHeight = 414
     object Label1: TLabel
       Left = 12
       Top = 60
@@ -79,8 +76,8 @@ object MessMatchFr: TMessMatchFr
         'Priority >=')
     end
     object FieldCB1: TComboBox
-      Left = 38
-      Top = 57
+      Left = 36
+      Top = 52
       Width = 139
       Height = 21
       Style = csDropDownList
