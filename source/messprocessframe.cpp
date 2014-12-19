@@ -14,6 +14,7 @@
 extern TStorageFileList * fdb;
 extern String WorkDir;
 extern TMainCfg MainCfg;
+void RunSetup(int SelectedTabIndex);
 TMessProcessFr * MessProcessFr;
 //---------------------------------------------------------------------------
 __fastcall TMessProcessFr::TMessProcessFr(TComponent* Owner)
@@ -79,15 +80,23 @@ void __fastcall TMessProcessFr::SelWavCommonButtonClick(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMessProcessFr::PlayButtonClick(TObject *Sender)
 {
-  AnsiString str;
-  if( FileExists(SoundFileEdit->Text) )
+  String f = SoundFileEdit->Text;
+
+  if( f.Length() == 0 )
+    return;
+
+  if( f.Length() > 0 && ExtractFilePath(f).Length() == 0 )
+    f = WorkDir + f;
+
+  if( FileExists(f) )
   {
-    if( ::PlaySound(str.c_str(), NULL, SND_FILENAME | SND_NODEFAULT | SND_NOWAIT | SND_ASYNC) == FALSE )
+    if( ::PlaySound(f.c_str(), NULL, SND_FILENAME | SND_NODEFAULT |
+            SND_NOWAIT | SND_ASYNC) == FALSE )
       ReportError2("Error play sound file: \"%s\"", FormatLastError2(GetLastError()).c_str());
   }
   else
   {
-    ReportError2("File \"%s\" not found!", SoundFileEdit->Text.c_str());
+    ReportError2("File \"%s\" not found!", f.c_str());
   }
 }
 //---------------------------------------------------------------------------
@@ -185,6 +194,19 @@ void __fastcall TMessProcessFr::RecipientEditExit(TObject *Sender)
   {
     p->Font->Color = clGrayText;
   }
+}
+//---------------------------------------------------------------------------
+void __fastcall TMessProcessFr::SpeedButton2Click(TObject *Sender)
+{
+  int number = -1;
+  int i = SaveFileCB->ItemIndex;
+  if( i >= 0 )
+    number = (int)SaveFileCB->Items->Objects[i];
+
+  RunSetup(1);
+  fdb->GetList(SaveFileCB->Items);
+  
+  SaveFileCB->ItemIndex = SaveFileCB->Items->IndexOfObject((TObject *)number);
 }
 //---------------------------------------------------------------------------
 

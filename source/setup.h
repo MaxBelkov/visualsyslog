@@ -91,10 +91,10 @@ __published:	// IDE-managed Components
     void __fastcall FormDestroy(TObject *Sender);
 private:	// User declarations
   TStorageFileList * localSFL;
-  static int LastTabIndex;
   static int LastFileIndex;
 
 public:
+  static int LastTabIndex;
   bool bUdpRestart;
   bool bTcpRestart;
   

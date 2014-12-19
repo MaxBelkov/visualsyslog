@@ -13,8 +13,6 @@ TUDP * udp = NULL;
 
 extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
-//extern TFile syslogout;
-//extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
 void PrintSB(int i, String s);
@@ -55,6 +53,7 @@ void UdpServerStart(void)
   }
   else
   {
+    PrintSB(0, "UDP: server not started");
     String err = String("Error udp: ") + udp->GetErrorMessageEng() +
       " [udp port " + IntToStr(MainCfg.UdpPort) + "]";
     WriteToLogError(String("ERROR\t") + err);

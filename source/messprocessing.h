@@ -26,6 +26,7 @@ public:
 public:
   TMessProcess();
   String GetDescription(void);
+  String GetSoundFileName(void);
   void Save(XMLElementEx * p);
   void Load(XMLElementEx * p);
 };

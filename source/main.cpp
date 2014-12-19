@@ -23,6 +23,7 @@
 #include "sound.h"       // play sound thread
 #include "AlarmForm.h"   // show alarm message
 #include "fdb.h"         // save messages to file
+#include "matchform.h"
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -44,14 +45,11 @@ String ErrorlogFile;
 String MainCfgFile;
 String HighlightFile;
 String ProcessFile;
+String FilterFile;
 
 TStorageFileList * fdb = NULL;
 THighlightProfileList * HP = NULL;
 TMessProcessRuleList * ProcessRules = NULL;
-
-// syslog file
-//TFile syslogout;
-String SyslogFile;
 
 // raw file
 TFile rawout;
@@ -76,6 +74,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormCreate(TObject * Sender)
 {
+  FileReadBuffer = new BYTE[StartSizeToRead];
   CreateGrid();
   ViewFileMode = false;
   LastBalloonShowTime = 0UL;
@@ -105,7 +104,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
         ReportError2("Error creating directory: \"%s\"", WorkDir.c_str());
   }
 
-  SyslogFile = WorkDir + "syslog";
+  FileNumber = 0; // view main file by default (syslog)
   RawFile = WorkDir + "raw";
   DeleteFile(RawFile);
   ErrorlogFile = WorkDir + "errors.txt";
@@ -113,6 +112,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   MainCfgFile = WorkDir + "cfg.xml";
   HighlightFile = WorkDir + "highlight.xml";
   ProcessFile = WorkDir + "process.xml";
+  FilterFile = WorkDir + "filter.xml";
 
   fdb = new TStorageFileList;
     // Add default file
@@ -148,8 +148,9 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
     TcpServerStart();
   }
 
-  Init(true, 1);
-  SetFile(SyslogFile);
+  Init(true);
+
+  SetFile(GetFileName(FileNumber));
 
   Timer->Enabled = true;
   NetTimer->Enabled = true;
@@ -157,10 +158,9 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   TrayChangeIcon(0);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
+void __fastcall TMainForm::Init(bool _bLive)
 {
   bLive = _bLive;
-  FilterTimer = 0;
   SizeToRead = StartSizeToRead;
 
   // For "non-life" protocol remove functions:
@@ -178,23 +178,6 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   if( ! v.IsEmpty() )
 	aGotoNewLine->Checked = v;
 
-  v = AppParams->Values["TextFilter"];
-  if( ! v.IsEmpty() )
-  {
-	FilterEdit1->Text = v;
-    fFilter = v;
-    FieldCB1->ItemIndex = AppParams->Values["Field1"];
-  }
-  v = AppParams->Values["TextFilter2"];
-  if( ! v.IsEmpty() )
-  {
-	FilterEdit2->Text = v;
-    fFilter2 = v;
-    FieldCB2->ItemIndex = AppParams->Values["Field2"];
-  }
-  FilterByPriorityCB->ItemIndex = AppParams->Values["PriorityFilter"];
-  UpdateFilterButton();
-
   String FontName = AppParams->Values["FontName"];
   if( FontName.Length() > 0 )
   {
@@ -204,7 +187,19 @@ void __fastcall TMainForm::Init(bool _bLive, int _ProtoFormat)
   HP->CurrentProfile = AppParams->Values["HighlighProfile"];
 
   FillProfilePopupMenu();
+
   SetLinesHeight();
+
+  fdb->GetList(SelectFileCB->Items, true);
+  FileNumber = AppParams->Values["FileNumber"];
+  int i = SelectFileCB->Items->IndexOfObject((TObject *)FileNumber);
+  if( i < 0 )
+    i = 0;
+  SelectFileCB->ItemIndex = i;
+
+  MessMatch.Load(FilterFile, false);
+  MessMatchLabel->Caption = MessMatch.GetDescription();
+  ClearFilterButton2->Visible = ! MessMatch.IsAllMatch();
 
   LogSG_LivingColumns = new TStringGridLivingColumns((TStringGrid *)LogSG);
 }
@@ -215,15 +210,12 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   *AppParams << this << (TStringGrid *)LogSG;
   AppParams->Values["GotoNewMess"] = aGotoNewLine->Checked;
 
-  AppParams->Values["TextFilter"] = FilterEdit1->Text;
-  AppParams->Values["Field1"] = FieldCB1->ItemIndex;
-  AppParams->Values["TextFilter2"] = FilterEdit2->Text;
-  AppParams->Values["Field2"] = FieldCB2->ItemIndex;
-  AppParams->Values["PriorityFilter"] = FilterByPriorityCB->ItemIndex;
-
   AppParams->Values["FontName"] = LogSG->Font->Name;
   AppParams->Values["FontSize"] = LogSG->Font->Size;
   AppParams->Values["HighlighProfile"] = HP->CurrentProfile;
+  AppParams->Values["FileNumber"] = FileNumber;
+
+  MessMatch.Save(FilterFile);
 
   NetTimer->Enabled = false;
   Timer->Enabled = false;
@@ -235,7 +227,6 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   UdpServerDestroy();
 
   rawout.Close();
-  //syslogout.Close();
 
   if( TalkingThread )
   {
@@ -271,6 +262,9 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   AppParams = NULL;
 
   TSendmailThread::Exit();
+
+  delete [] FileReadBuffer;
+  FileReadBuffer = NULL;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::CreateGrid(void)
@@ -331,7 +325,7 @@ void __fastcall TMainForm::SetFile(String f)
     aMoreLines->Enabled = false;
   }
 
-  Read(true);
+  Read(true); // limit lines count off: show all readed lines
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::GotoNewLine(void)
@@ -354,30 +348,10 @@ void __fastcall TMainForm::aMoreLinesExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::TimerTimer(TObject *Sender)
 {
-  if( fFilter != FilterEdit1->Text )
-  {
-    fFilter = FilterEdit1->Text;
-    FilterTimer = 2;
-  }
-  if( fFilter2 != FilterEdit2->Text )
-  {
-    fFilter2 = FilterEdit2->Text;
-    FilterTimer = 2;
-  }
-  else if( FilterTimer > 0 )
-  {
-    FilterTimer--;
-    if( FilterTimer == 0 )
-    {
-      UpdateFilterButton();
-      // Read protocol file again
-      RedrawProto();
-    }
-  }
-
   // Check for new records, if the protocol is "live"
   if( bLive )
     if( in.IsOpen() )
+      // limit lines count on: show no more MAX(current_count, MaxGridLinesReceive) lines
       Read(false);
 }
 //---------------------------------------------------------------------------
@@ -417,115 +391,134 @@ void __fastcall TMainForm::Clear(void)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
 {
-  BYTE * p = new BYTE[SizeToRead];
-  in.Read(p, SizeToRead);
-  if( in.Bytes > 0 )
+  try
   {
-    TSyslogMessage * sm;
-    bool bHaveNewMessagesToDysplay = false;
-    int DeletedMessagesCount = 0;
-
-    TMessMatch MessMatch;
-    MessMatch.OperationP = 0; // =
-    MessMatch.Priority = FilterByPriorityCB->ItemIndex - 1;
-    MessMatch.Field1 = FieldCB1->ItemIndex / 2;
-    MessMatch.Contains1 = (FieldCB1->ItemIndex & 1) == 0;
-    MessMatch.Text1->Text = FilterEdit1->Text;
-    MessMatch.Field2 = FieldCB2->ItemIndex / 2;
-    MessMatch.Contains2 = (FieldCB2->ItemIndex & 1) == 0;
-    MessMatch.Text2->Text = FilterEdit2->Text;
-    MessMatch.MatchCase = true;
-
-    ReadedSize += in.Bytes;
-
-    // It is possible that the text file is filled so quickly that
-    // he read to the end and not at the end of the array p [] is to truncate
-    // proto_line var is global, to save cut line part
-
-    for(DWORD i=0, c=in.Bytes; i<c; i++)
+    DWORD rs;
+    for(rs=0; rs<SizeToRead; )
     {
-      if( p[i]=='\n' || p[i]=='\r' )
-      {
-        if( proto_line.Length() > 0 )
-        {
-          // Now proto_line contains new line
-          TotalLines++;
+      in.Read(FileReadBuffer, StartSizeToRead);
+      if( in.Bytes == 0 )
+        break;
+      rs += in.Bytes;
+      FileSize += in.Bytes;
+      ReadedSize += in.Bytes;
 
-          sm = new TSyslogMessage;
-          sm->FromString(proto_line.c_str());
-
-          if( ! MessMatch.Match(sm) )
-          {
-            // and the type does not match the required - continue
-            proto_line.SetLength(0);
-            delete sm;
-            continue;
-          }
-
-          if( ! bAllowAddVisibleLines )
-          {
-            // Increasing the number of lines is not allowed
-            if( MessList->Count >= MaxGridLinesReceive )
-            {
-              delete (TSyslogMessage *)MessList->Items[0];
-              MessList->Delete(0);
-              TotalLines--;
-              DeletedMessagesCount++;
-            }
-          }
-          
-          MessList->Add(sm);
-          bHaveNewMessagesToDysplay = true;
-
-          proto_line.SetLength(0);
-        }
-        continue;
-	  }
-	  proto_line += (char)p[i];
-	} // End for by protocol characters
-
-    // Establish the actual number of lines (but not less than 2)
-    LogSG->RowCount = MAX(2, MessList->Count + 1); // + 1 fixed line
-
-    if( bHaveNewMessagesToDysplay )
-    {
-      if( DeletedMessagesCount > 0 )
-        LogSG->Invalidate();
-
-      // Goto new message ?
-      if( aGotoNewLine->Checked )
-      {
-        // Yes
-        LogSG->Row = LogSG->RowCount - 1;
-      }
+      TSyslogMessage * sm;
+      bool bHaveNewMessagesToDysplay = false;
+      int DeletedMessagesCount = 0;
+/*
+      TMessMatch MessMatch;
+      if( FilterByPriorityCB->ItemIndex == 0 )
+        MessMatch.PriorityMask = PriorityMaskAll;
       else
-      {
-        // No: save cursor position and first visible line in view
-        if( DeletedMessagesCount > 0 )
-        {
-          int r = LogSG->Row - DeletedMessagesCount;
-          if( r < 1 )
-            r = 1;
-          int tr = LogSG->TopRow - DeletedMessagesCount;
-          if( tr < 1 )
-            tr = 1;
+        MessMatch.PriorityMask = 1<<(FilterByPriorityCB->ItemIndex - 1);
+      MessMatch.Field1 = FieldCB1->ItemIndex / 2;
+      MessMatch.Contains1 = (FieldCB1->ItemIndex & 1) == 0;
+      MessMatch.Text1->Text = FilterEdit1->Text;
+      MessMatch.Field2 = FieldCB2->ItemIndex / 2;
+      MessMatch.Contains2 = (FieldCB2->ItemIndex & 1) == 0;
+      MessMatch.Text2->Text = FilterEdit2->Text;
+      MessMatch.MatchCase = true;
+*/
+      // It is possible that the text file is filled so quickly that
+      // he read to the end and not at the end of the array FileReadBuffer[] is to truncate
+      // proto_line var is global, to save cut line part
 
-          LogSG->bAllowUpdate = false; // prevent flicker
-          LogSG->Row = r;
-          LogSG->TopRow = tr;
-          LogSG->bAllowUpdate = true;
+      for(DWORD i=0; i<in.Bytes; i++)
+      {
+        if( FileReadBuffer[i]=='\n' || FileReadBuffer[i]=='\r' )
+        {
+          if( proto_line.Length() > 0 )
+          {
+            // Now proto_line contains new line
+            TotalLines++;
+
+            sm = new TSyslogMessage;
+            sm->FromString(proto_line.c_str());
+
+            if( ! MessMatch.Match(sm) )
+            {
+              // and the type does not match the required - continue
+              proto_line.SetLength(0);
+              delete sm;
+              continue;
+            }
+
+            if( ! bAllowAddVisibleLines )
+            {
+              // Increasing the number of lines is not allowed
+              if( MessList->Count >= MaxGridLinesReceive )
+              {
+                delete (TSyslogMessage *)MessList->Items[0];
+                MessList->Delete(0);
+                TotalLines--;
+                DeletedMessagesCount++;
+              }
+            }
+          
+            MessList->Add(sm);
+            bHaveNewMessagesToDysplay = true;
+
+            proto_line.SetLength(0);
+          }
+          continue;
+        }
+        proto_line += (char)FileReadBuffer[i];
+      } // End for by protocol characters
+
+      // Establish the actual number of lines (but not less than 2)
+      LogSG->RowCount = MAX(2, MessList->Count + 1); // + 1 fixed line
+
+      if( bHaveNewMessagesToDysplay )
+      {
+        if( DeletedMessagesCount > 0 )
+          LogSG->Invalidate();
+
+        // Goto new message ?
+        if( aGotoNewLine->Checked )
+        {
+          // Yes
+          LogSG->Row = LogSG->RowCount - 1;
+        }
+        else
+        {
+          // No: save cursor position and first visible line in view
+          if( DeletedMessagesCount > 0 )
+          {
+            int r = LogSG->Row - DeletedMessagesCount;
+            if( r < 1 )
+              r = 1;
+            int tr = LogSG->TopRow - DeletedMessagesCount;
+            if( tr < 1 )
+              tr = 1;
+
+            LogSG->bAllowUpdate = false; // prevent flicker
+            LogSG->Row = r;
+            LogSG->TopRow = tr;
+            LogSG->bAllowUpdate = true;
+          }
         }
       }
     }
-
-    FileSize = in.GetSize64();
-    UpdateCaption();
+    if( rs > 0 )
+    {
+      //FileSize = in.GetSize64();
+      UpdateCaption();
+    }
   }
-  delete [] p;
+  catch(const Exception & E)
+  {
+    WriteToLogError("ERROR\tRead: %s", E.Message.c_str());
+  }
+  catch(...)
+  {
+    WriteToLogError("ERROR\tRead !");
+  }
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::mCopyToClipboardClick(TObject *Sender)
 {
+  TWaitCursor wait;
   String str;
   TSyslogMessage * p;
   for(int i=0, l=MessList->Count; i<l; i++)
@@ -613,28 +606,6 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
   c->TextRect(Rect, x, y, s);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::ClearFilterButtonClick(TObject *Sender)
-{
-  FilterEdit1->Text = "";
-  fFilter = "";
-
-  FilterEdit2->Text = "";
-  fFilter2 = "";
-
-  FilterTimer = 0;
-
-  FilterByPriorityCB->ItemIndex = 0;
-
-  UpdateFilterButton();
-  RedrawProto();
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::OnApplyFilter(TObject *Sender)
-{
-  UpdateFilterButton();
-  RedrawProto();
-}
-//---------------------------------------------------------------------------
 void __fastcall TMainForm::aFontExecute(TObject *Sender)
 {
   FontDialog->Font = LogSG->Font;
@@ -650,7 +621,6 @@ void __fastcall TMainForm::SetLinesHeight(void)
 {
   int rh = LogSG->Font->Size + 6;
   LogSG->DefaultRowHeight = rh + rh / 2;
-  FilterByPriorityCB->ItemHeight = 18;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aClearExecute(TObject *Sender)
@@ -734,7 +704,6 @@ void __fastcall TMainForm::aSetupExecute(TObject *Sender)
       TcpServerStop();
       TcpServerStart();
     }
-
     if( SetupForm->AutoStartCB->Checked != se )
     {
       if( se )
@@ -742,6 +711,11 @@ void __fastcall TMainForm::aSetupExecute(TObject *Sender)
       else
         CreateShortcut(CSIDL_STARTUP);
     }
+
+    fdb->GetList(SelectFileCB->Items, true);
+    int i = SelectFileCB->Items->IndexOfObject((TObject *)FileNumber);
+    SelectFileCB->ItemIndex = i;
+
     MainCfg.Save(MainCfgFile, fdb);
   }
   delete SetupForm;
@@ -964,7 +938,7 @@ void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
       break;
     fsize -= viewin.Bytes;
     
-    for(DWORD i=0, c=viewin.Bytes; i<c; i++)
+    for(DWORD i=0; i<viewin.Bytes; i++)
     {
       if( p[i]=='\n' || p[i]=='\r' )
       {
@@ -992,7 +966,7 @@ void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
 void __fastcall TMainForm::aCancelViewFileExecute(TObject *Sender)
 {
   SetViewFileMode(false);
-  SetFile(SyslogFile);
+  SetFile(GetFileName(FileNumber));
   DeleteFile(TmpViewFileName);
 }
 //---------------------------------------------------------------------------
@@ -1075,9 +1049,11 @@ void __fastcall TMainForm::aFilterByIPExecute(TObject *Sender)
     return;
   if( sm->SourceAddr.Length() == 0 )
     return;
-  FilterEdit1->Text = sm->SourceAddr;
-  FieldCB1->ItemIndex = 4;
-  FilterTimer = 1;
+  MessMatch.Clear();
+  MessMatch.Field1 = 2;
+  MessMatch.Contains1 = true;
+  MessMatch.Text1->Add(sm->SourceAddr);
+  ApplyFilter();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
@@ -1087,28 +1063,11 @@ void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
     return;
   if( sm->HostName.Length() == 0 )
     return;
-  FilterEdit1->Text = sm->HostName;
-  FieldCB1->ItemIndex = 6;
-  FilterTimer = 1;
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::aFilterByFacilityExecute(TObject *Sender)
-{
-  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
-  if( ! sm )
-    return;
-  if( sm->Facility.Length() == 0 )
-    return;
-  FilterEdit1->Text = sm->Facility;
-  FieldCB1->ItemIndex = 8;
-  FilterTimer = 1;
-}
-//---------------------------------------------------------------------------
-void __fastcall TMainForm::UpdateFilterButton(void)
-{
-  ClearFilterButton->Visible = FilterEdit1->Text.Length() > 0 ||
-                               FilterEdit2->Text.Length() > 0 ||
-                               FilterByPriorityCB->ItemIndex > 0;
+  MessMatch.Clear();
+  MessMatch.Field1 = 3;
+  MessMatch.Contains1 = true;
+  MessMatch.Text1->Add(sm->HostName);
+  ApplyFilter();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aHighlightingSetupExecute(TObject *Sender)
@@ -1179,7 +1138,7 @@ bool ProcessMessageRules(TSyslogMessage * p)
     }
     if( pr->Process.bSound )
     {
-      TalkingThread->Play(pr->Process.SoundFile, pr->Process.PlayCount);
+      TalkingThread->Play(pr->Process.GetSoundFileName(), pr->Process.PlayCount);
     }
     if( pr->Process.bSendMail )
     {
@@ -1230,7 +1189,7 @@ void AlarmShow(String s)
     ShowAlarmForm->ListBox->Items->Add(s);
     int c = ShowAlarmForm->ListBox->Items->Count;
     ShowAlarmForm->ListBox->ItemIndex = c - 1;
-    if( c > 10000 )
+    if( c > MaxGridLinesReceive )
       ShowAlarmForm->ListBox->Items->Delete(0);
   }
 
@@ -1258,6 +1217,62 @@ void __fastcall TMainForm::aProcessSetupExecute(TObject *Sender)
     ProcessRules->Load(ProcessFile);
   }
   delete ProcessForm;
+}
+//---------------------------------------------------------------------------
+void RunSetup(int SelectedTabIndex)
+{
+  if( MainForm )
+  {
+    if( SelectedTabIndex >= 0 )
+      TSetupForm::LastTabIndex = SelectedTabIndex;
+    MainForm->aSetupExecute(NULL);
+  }
+}
+//---------------------------------------------------------------------------
+String TMainForm::GetFileName(int number)
+{
+  TStorageFile * sf = fdb->GetByNumber( number );
+  if( ! sf )
+    sf = fdb->GetByNumber( 0 );
+  if( ! sf )
+    return String();
+  return sf->GetFileName();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::SelectFileCBSelect(TObject *Sender)
+{
+  int i = SelectFileCB->ItemIndex;
+  if( i == -1 )
+    FileNumber = 0;
+  else
+    FileNumber = (int)SelectFileCB->Items->Objects[i];
+  SetFile(GetFileName(FileNumber));
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::FilterButtonClick(TObject *Sender)
+{
+  FilterForm = new TFilterForm(this);
+  FilterForm->MessMatchFr->ToDialog(&MessMatch);
+  if( FilterForm->ShowModal() == mrOk )
+  {
+    FilterForm->MessMatchFr->FromDialog(&MessMatch);
+    ApplyFilter();
+  }
+  delete FilterForm;
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::ClearFilterButton2Click(TObject *Sender)
+{
+  MessMatch.Clear();
+  ApplyFilter();
+}
+//---------------------------------------------------------------------------
+void TMainForm::ApplyFilter(void)
+{
+  MessMatchLabel->Caption = MessMatch.GetDescription();
+  MessMatchLabel->Update();
+  ClearFilterButton2->Visible = ! MessMatch.IsAllMatch();
+  RedrawProto();
 }
 //---------------------------------------------------------------------------
 

@@ -72,10 +72,13 @@ object ShowAlarmForm: TShowAlarmForm
     Top = 134
     Width = 113
     Height = 28
+    Hint = 'Close alarms window and stop playing sound'
     Anchors = [akBottom]
     Cancel = True
     Caption = 'Close'
     Default = True
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 1
     OnClick = OKButtonClick
     Glyph.Data = {
@@ -105,7 +108,6 @@ object ShowAlarmForm: TShowAlarmForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-    ExplicitLeft = 149
   end
   object ListBox: TListBox
     Left = 8
@@ -121,15 +123,17 @@ object ShowAlarmForm: TShowAlarmForm
     ItemHeight = 13
     ParentFont = False
     TabOrder = 0
-    ExplicitWidth = 592
   end
   object ClearButton: TBitBtn
     Left = 307
     Top = 134
     Width = 113
     Height = 28
+    Hint = 'Clear all messages, close alarms window and stop playing sound'
     Anchors = [akBottom]
     Caption = 'Close && Clear'
+    ParentShowHint = False
+    ShowHint = True
     TabOrder = 2
     OnClick = ClearButtonClick
     Glyph.Data = {
@@ -167,6 +171,5 @@ object ShowAlarmForm: TShowAlarmForm
       AB323D88B6E7519AC8E4307EAF9B000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
       00002978AB16196B9E502A79AB12000000000000000000000000}
-    ExplicitLeft = 343
   end
 end

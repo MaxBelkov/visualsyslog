@@ -136,6 +136,11 @@ void TSyslogMessage::FromString(char * p)
 {
   Clear();
 
+  if( ! p )
+    return;
+  if( ! *p )
+    return;
+
   for(; *p && *p!='\t'; p++)
     SourceAddr += *p;
 

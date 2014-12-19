@@ -24,7 +24,7 @@ __fastcall TProcessForm::TProcessForm(TComponent* Owner) : TForm(Owner)
 
   FillRuleList(LastRuleIndex);
 
-  *AppParams >> this;
+  *AppParams >> this >> (TStringGrid *)DrawGrid;
   DrawGrid_LivingColumns = new TStringGridLivingColumns((TStringGrid *)DrawGrid);
 
   MessMatchFr->OnValuesChange = OnFrameValuesChange;
@@ -33,7 +33,7 @@ __fastcall TProcessForm::TProcessForm(TComponent* Owner) : TForm(Owner)
 //---------------------------------------------------------------------------
 void __fastcall TProcessForm::FormDestroy(TObject *Sender)
 {
-  *AppParams << this;
+  *AppParams << this << (TStringGrid *)DrawGrid;
   if( DrawGrid->Row > 0 )
     LastRuleIndex = DrawGrid->Row - 1;
   delete DrawGrid_LivingColumns;
@@ -116,7 +116,8 @@ void __fastcall TProcessForm::DrawGridDrawCell(TObject *Sender, int ACol,
     switch( ACol )
     {
       case 0: s = " Active"; break;
-      case 1: s = " Match & Process"; break;
+      case 1: s = " Match"; break;
+      case 2: s = " Action"; break;
     }
     int x = Rect.Left + 2;
     int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
@@ -134,10 +135,17 @@ void __fastcall TProcessForm::DrawGridDrawCell(TObject *Sender, int ACol,
           Rect.Top + ((Rect.Bottom - Rect.Top - ImageList->Height) / 2),
           p->bEnable ? 0 : 1, true);
       }
-      else // ACol == 1
+      else if( ACol == 1 )
       {
-        s = String(" ") + p->Match.GetDescription() +
-            " --> " + p->Process.GetDescription();
+        s = String(" ") + p->Match.GetDescription();
+
+        int x = Rect.Left + 2;
+        int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
+        c->TextRect(Rect, x, y, s);
+      }
+      else // ACol == 2
+      {
+        s = String(" ") + p->Process.GetDescription();
         //if( State.Contains(gdSelected) ) // Selected line
         //{
         //}
@@ -210,9 +218,7 @@ void __fastcall TProcessForm::OnFrameValuesChange(TObject *Sender)
 void __fastcall TProcessForm::HelpButtonClick(TObject *Sender)
 {
   ReportMess2(
-  "- Rules in the list are processed from top to bottom\n"
-  "- Match rule \"Text contains\" searches for text in all fields of the message: "
-    "Time, IP, Host, Facility, Priority, Tag, Message"
+  "Each message always goes all the actions in the list\n"
   );
 }
 //---------------------------------------------------------------------------

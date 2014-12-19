@@ -4,7 +4,7 @@ object FileFr: TFileFr
   Width = 486
   Height = 87
   TabOrder = 0
-  object GroupBox1: TGroupBox
+  object GroupBox: TGroupBox
     Left = 0
     Top = 0
     Width = 486
@@ -12,8 +12,6 @@ object FileFr: TFileFr
     Align = alClient
     Caption = 'File settings'
     TabOrder = 0
-    ExplicitWidth = 366
-    ExplicitHeight = 388
     DesignSize = (
       486
       87)
@@ -80,7 +78,6 @@ object FileFr: TFileFr
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
       OnChange = Change
-      ExplicitWidth = 254
     end
   end
   object OpenDialog: TOpenDialog

@@ -2,23 +2,15 @@
 #include <vcl.h>
 #pragma hdrstop
 
-#include "syslog.h"
+#include "messageform.h"
 #include "messmatch.h"
 
 //---------------------------------------------------------------------------
 TMessMatch::TMessMatch()
 {
-  OperationP = 0;
-  Priority = -1;
-  MatchCase = true;
-
-  Field1 = 0;
-  Contains1 = true;
   Text1 = new TStringList;
-
-  Field2 = 0;
-  Contains2 = true;
   Text2 = new TStringList;
+  Clear();
 }
 //---------------------------------------------------------------------------
 TMessMatch::~TMessMatch()
@@ -29,27 +21,39 @@ TMessMatch::~TMessMatch()
   Text2 = NULL;
 }
 //---------------------------------------------------------------------------
+void TMessMatch::Clear(void)
+{
+  bNot = false;
+  PriorityMask = PriorityMaskAll; // any Priority (match all)
+  FacilityMask = FacilityMaskAll; // any Facility (match all)
+
+  Field1 = 0;
+  Contains1 = true;
+  Text1->Text = "";
+  Field2 = 0;
+  Contains2 = true;
+  Text2->Text = "";
+
+  MatchCase = true;
+}
+//---------------------------------------------------------------------------
 bool TMessMatch::Match(TSyslogMessage * p)
 {
-  if( Priority != -1 ) // filter by priority enable
-    if( p->PRI != -1 ) // priority value exist in message
-    {
-      switch( OperationP )
-      {
-        case 0: // =
-          if( LOG_PRI(p->PRI) != LOG_PRI(Priority) )
-            return false;
-        break;
-        case 1: // <= (to emerg)
-          if( LOG_PRI(p->PRI) > LOG_PRI(Priority) )
-            return false;
-        break;
-        case 2: // >= (to debug)
-          if( LOG_PRI(p->PRI) < LOG_PRI(Priority) )
-            return false;
-        break;
-      }
-    }
+  bool rv = LocalMatch(p);
+  if( bNot )
+    return ! rv;
+  return rv;
+}
+//---------------------------------------------------------------------------
+bool TMessMatch::LocalMatch(TSyslogMessage * p)
+{
+  if( p->PRI != -1 ) // priority and facility value exist in message
+  {
+    if( ((1<<LOG_PRI(p->PRI)) & PriorityMask) == 0 )
+      return false;
+    if( ((1<<LOG_FAC(p->PRI)) & FacilityMask) == 0 )
+      return false;
+  }
 
   // AND
   int b = true;
@@ -155,25 +159,36 @@ bool TMessMatch::FieldContains(String & FieldText, String & Text)
   return r > 0;
 }
 //---------------------------------------------------------------------------
+char * szAllMessMatch = "All messages match";
+
 String TMessMatch::GetDescription(void)
 {
   String rv;
 
-  if( Priority != -1 ) // filter by priority enable
-    switch( OperationP )
-    {
-      case 0: // =
-        rv = String("Priority = ") + getcodetext(LOG_PRI(Priority), prioritynames);
-      break;
-      case 1: // <= (to emerg)
-        rv = String("Priority from ") + getcodetext(LOG_PRI(Priority), prioritynames) +
-           " to emerg";
-      break;
-      case 2: // >= (to debug)
-        rv = String("Priority from ") + getcodetext(LOG_PRI(Priority), prioritynames) +
-           " to debug";
-      break;
-    }
+  if( PriorityMask != PriorityMaskAll ) // filter by priority enable
+  {
+    rv += String("Priority = ");
+    for(int c=0,pri=0; pri<LOG_NPRIORITIES; pri++)
+      if( (1<<pri) & PriorityMask )
+      {
+        if( c++ > 0 )
+          rv += ", ";
+        rv += getcodetext(pri, prioritynames);
+      }
+  }
+
+  if( FacilityMask != FacilityMaskAll ) // filter by priority enable
+  {
+    if( rv.Length() > 0 ) rv += " AND ";
+    rv += String("Facility = ");
+    for(int c=0,fac=0; fac<LOG_NFACILITIES; fac++)
+      if( (1<<fac) & FacilityMask )
+      {
+        if( c++ > 0 )
+          rv += ", ";
+        rv += getcodetext(fac<<3, facilitynames);
+      }
+  }
 
   String t;
 
@@ -232,15 +247,24 @@ String TMessMatch::GetDescription(void)
   }
 
   if( rv.Length() == 0 )
-    rv = "All messages match";
+    rv = szAllMessMatch;
+
+  if( bNot )
+    rv = String("NOT (") + rv + ")";
 
   return rv;
 }
 //---------------------------------------------------------------------------
+bool TMessMatch::IsAllMatch(void)
+{
+  return GetDescription() == szAllMessMatch;
+}
+//---------------------------------------------------------------------------
 void TMessMatch::Save(XMLElementEx * p)
 {
-  p->wi("operationp", OperationP);
-  p->wi("priority", Priority);
+  p->wb("not", bNot);
+  p->wi("prioritymask", PriorityMask);
+  p->wi("facilitymask", FacilityMask);
   p->wb("matchcase", MatchCase);
   p->wi("field1", Field1);
   p->wb("contains1", Contains1);
@@ -252,8 +276,43 @@ void TMessMatch::Save(XMLElementEx * p)
 //---------------------------------------------------------------------------
 void TMessMatch::Load(XMLElementEx * p)
 {
-  OperationP = p->ri("operationp", 0);
-  Priority = p->ri("priority", -1);
+  if( p->exist("prioritymask") )
+  {
+    bNot = p->rb("not", false);
+    PriorityMask = p->ri("prioritymask", 0);
+    FacilityMask = p->ri("facilitymask", 0);
+  }
+  else
+  {
+    // convert from legacy format
+    int OperationP; // 0 =, 1 <= (to emerg), 2 >= (to debug)
+    int Priority;   // 0-7: syslog const LOG_, -1: any Priority (match all)
+
+    OperationP = p->ri("operationp", 0);
+    Priority = p->ri("priority", -1);
+    if( Priority==-1) // any Priority (match all)
+    {
+      PriorityMask = PriorityMaskAll;
+    }
+    else
+    {
+      PriorityMask = 0;
+      switch( OperationP )
+      {
+        case 0: // =
+          PriorityMask = 1<<Priority;
+        break;
+        case 1: // <= (to emerg)
+          for(int i=0; i<=Priority; i++)
+            PriorityMask |= 1<<Priority;
+        break;
+        case 2: // >= (to debug)
+          for(int i=Priority; i<LOG_NPRIORITIES; i++)
+            PriorityMask |= 1<<Priority;
+        break;
+      }
+    }
+  }
   MatchCase = p->rb("matchcase", true);
   Field1 = p->ri("field1", 0);
   Contains1 = p->rb("contains1", true);
@@ -263,6 +322,56 @@ void TMessMatch::Load(XMLElementEx * p)
   p->rs("text2", Text2);
 
   DeleteEmptyLines();
+}
+//---------------------------------------------------------------------------
+static char * szFilter = "filter";
+
+void TMessMatch::Save(String file, bool bShowMessage)
+{
+  tinyxml2::XMLDocument doc;
+  doc.InsertEndChild( doc.NewDeclaration() );
+
+  XMLElement * e = doc.NewElement(szFilter);
+  doc.InsertEndChild( e );
+  Save((XMLElementEx *)e);
+
+  XMLError err = doc.SaveFile(file.c_str());
+  if( err != XML_SUCCESS )
+    if( bShowMessage )
+      ReportError2("Error saving file: \"%s\" [%d]", file.c_str(), err);
+}
+//---------------------------------------------------------------------------
+void TMessMatch::Load(String file, bool bShowMessage)
+{
+  XMLError err;
+  try
+  {
+    Clear();
+    tinyxml2::XMLDocument doc;
+    err = doc.LoadFile(file.c_str());
+    if( err == XML_SUCCESS )
+    {
+      XMLElement * hls = doc.RootElement();
+      if( ! hls )
+        throw 1;
+      if( strcmpi(hls->Name(), szFilter) != 0 )
+        throw 1;
+
+      Load((XMLElementEx *)hls);
+    }
+    else
+      throw 0;
+  }
+  catch(int i)
+  {
+    if( bShowMessage )
+    {
+      if( i==0 )
+        ReportError2("Error reading file: \"%s\" [%d]", file.c_str(), err);
+      else
+        ReportError2("Incorrect format of file: \"%s\"", file.c_str());
+    }
+  }
 }
 //---------------------------------------------------------------------------
 void TMessMatch::DeleteEmptyLines(void)

@@ -13,6 +13,7 @@ USEFORM("source\AlarmForm.cpp", ShowAlarmForm);
 USEFORM("source\messprocessframe.cpp", MessProcessFr); /* TFrame: File Type */
 USEFORM("source\formprocess.cpp", ProcessForm);
 USEFORM("source\fileframe.cpp", FileFr); /* TFrame: File Type */
+USEFORM("source\matchform.cpp", FilterForm);
 //---------------------------------------------------------------------------
 extern bool bHideToTray;
 //---------------------------------------------------------------------------

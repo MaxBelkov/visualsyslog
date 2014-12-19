@@ -11,7 +11,7 @@ char *
 base64_encode(const unsigned char *input, int length)
 {
     /* http://www.adp-gmbh.ch/cpp/common/base64.html */
-    int i=0, j=0, s=0;
+    int i=0, j, s=0;
     unsigned char char_array_3[3], char_array_4[4];
 
     int b64len = (length+2 - ((length+2)%3))*4/3;
@@ -59,7 +59,7 @@ unsigned char *
 base64_decode(const char *input, int length, int *outlen)
 {
     int i = 0;
-    int j = 0;
+    int j;
     int r = 0;
     int idx = 0;
     unsigned char char_array_4[4], char_array_3[3];

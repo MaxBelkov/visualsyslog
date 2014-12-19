@@ -3,8 +3,8 @@ object HighlightForm: THighlightForm
   Top = 0
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Highlighting setup'
-  ClientHeight = 472
-  ClientWidth = 853
+  ClientHeight = 624
+  ClientWidth = 884
   Color = clBtnFace
   Constraints.MinHeight = 490
   Constraints.MinWidth = 700
@@ -59,10 +59,11 @@ object HighlightForm: THighlightForm
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 847
+    Width = 878
     Height = 41
     Align = alTop
     TabOrder = 0
+    ExplicitWidth = 847
     object Label1: TLabel
       Left = 24
       Top = 13
@@ -86,12 +87,15 @@ object HighlightForm: THighlightForm
     AlignWithMargins = True
     Left = 3
     Top = 47
-    Width = 475
-    Height = 368
+    Width = 480
+    Height = 520
     Margins.Top = 0
     Align = alClient
     Caption = 'List of rules'
     TabOrder = 1
+    ExplicitLeft = 8
+    ExplicitWidth = 475
+    ExplicitHeight = 523
     object AddButton: TSpeedButton
       Left = 9
       Top = 16
@@ -284,8 +288,8 @@ object HighlightForm: THighlightForm
       AlignWithMargins = True
       Left = 8
       Top = 51
-      Width = 459
-      Height = 309
+      Width = 464
+      Height = 461
       Margins.Left = 6
       Margins.Top = 36
       Margins.Right = 6
@@ -306,27 +310,29 @@ object HighlightForm: THighlightForm
       OnClick = DrawGridClick
       OnDblClick = DrawGridDblClick
       OnDrawCell = DrawGridDrawCell
-      ExplicitLeft = 5
-      ExplicitWidth = 465
-      ExplicitHeight = 312
+      ExplicitWidth = 459
+      ExplicitHeight = 309
       ColWidths = (
         50
         343)
     end
   end
-  object GroupBox4: TGroupBox
+  object OKGroupBox: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 421
-    Width = 847
+    Top = 573
+    Width = 878
     Height = 48
     Align = alBottom
     TabOrder = 3
+    ExplicitLeft = 8
+    ExplicitTop = 576
+    ExplicitWidth = 847
     DesignSize = (
-      847
+      878
       48)
     object OKButton: TBitBtn
-      Left = 196
+      Left = 205
       Top = 12
       Width = 113
       Height = 28
@@ -362,9 +368,10 @@ object HighlightForm: THighlightForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      ExplicitLeft = 196
     end
     object CancelButton: TBitBtn
-      Left = 370
+      Left = 386
       Top = 12
       Width = 113
       Height = 28
@@ -400,9 +407,10 @@ object HighlightForm: THighlightForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+      ExplicitLeft = 370
     end
     object HelpButton: TBitBtn
-      Left = 536
+      Left = 558
       Top = 12
       Width = 113
       Height = 28
@@ -453,31 +461,23 @@ object HighlightForm: THighlightForm
         1009081228280E0403001F000C1228281D09081228240B06001F1F00090F1A27
         180C142424110703001F1F1F00090C12151619130C0807001F1F1F1F1F000009
         0A0C09090800001F1F1F1F1F1F1F1F0000000000001F1F1F1F1F}
+      ExplicitLeft = 536
     end
   end
-  object Panel: TPanel
-    Left = 481
-    Top = 47
-    Width = 372
-    Height = 371
+  object ScrollBox1: TScrollBox
+    AlignWithMargins = True
+    Left = 489
+    Top = 50
+    Width = 392
+    Height = 517
+    HorzScrollBar.Tracking = True
+    VertScrollBar.Tracking = True
     Align = alRight
-    BevelOuter = bvNone
+    BorderStyle = bsNone
     TabOrder = 2
-    inline MessStyleFr: TMessStyleFr
-      Left = 2
-      Top = 224
-      Width = 366
-      Height = 132
-      TabOrder = 1
-      ExplicitLeft = 2
-      ExplicitTop = 224
-      ExplicitWidth = 366
-      inherited GroupBox1: TGroupBox
-        Width = 366
-        ExplicitWidth = 366
-        ExplicitHeight = 132
-      end
-    end
+    ExplicitLeft = 3
+    ExplicitTop = 40
+    ExplicitHeight = 673
     object ActiveCB: TCheckBox
       Left = 4
       Top = 10
@@ -490,17 +490,35 @@ object HighlightForm: THighlightForm
       Left = 2
       Top = 35
       Width = 366
-      Height = 184
-      TabOrder = 2
+      Height = 340
+      TabOrder = 1
       ExplicitLeft = 2
       ExplicitTop = 35
+      inherited GroupBox1: TGroupBox
+        ExplicitHeight = 340
+      end
+    end
+    inline MessStyleFr: TMessStyleFr
+      Left = 2
+      Top = 380
+      Width = 366
+      Height = 132
+      TabOrder = 2
+      ExplicitLeft = 2
+      ExplicitTop = 380
+      ExplicitWidth = 366
+      inherited GroupBox1: TGroupBox
+        Width = 366
+        ExplicitWidth = 366
+        ExplicitHeight = 132
+      end
     end
   end
   object ImageList: TImageList
     Left = 624
     Top = 8
     Bitmap = {
-      494C010102000800300010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C010102000800340010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

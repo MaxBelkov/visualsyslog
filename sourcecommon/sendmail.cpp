@@ -7,22 +7,25 @@
 TSendmailThread * SendmailThread = NULL;
 
 //---------------------------------------------------------------------------
-//static
-String smtpError(int code)
+// http://www.iana.org/assignments/smtp-enhanced-status-codes/smtp-enhanced-status-codes.xhtml
+static String smtpError(int code)
 {
   switch(code)
   {
 	case 211: return "System status, or system help reply";
 	case 214: return "Help message";
-	case 220: return "Service ready ";
-	case 221: return "Service closing transmission channel ";
-	case 250: return "Requested mail action okay, completed ";
+	case 220: return "Service ready";
+	case 221: return "Service closing transmission channel";
+	case 250: return "Requested mail action okay, completed";
 	case 251: return "User not local; will forward to ";
 	case 354: return "Start mail input; end with \".\"";
 	case 421: return "Service not available, closing transmission channel";
+    case 422: return "A password transition is needed";
+    case 432: return "A password transition is needed #2";
 	case 450: return "Requested mail action not taken: mailbox unavailable";
 	case 451: return "Requested action aborted: local error in processing";
 	case 452: return "Requested action not taken: insufficient system storage";
+    case 453: return "System not accepting network messages";
 	case 500: return "Syntax error, command unrecognized";
 	case 501: return "Syntax error in parameters or arguments";
 	case 502: return "Command not implemented";
@@ -30,15 +33,21 @@ String smtpError(int code)
 	case 504: return "Command parameter not implemented";
     case 512: return "The host server for the recipient’s domain name cannot be found (DNS error)";
     case 513: return "Address type is incorrect or authentication required";
+    case 521: return "Recipient address has null MX";
     case 523: return "The Recipient’s mailbox cannot receive messages this big";
+    case 524: return "Encryption required for requested authentication mechanism";
+    case 525: return "User Account Disabled";
     case 530: return "Access denied";
+    case 534: return "Authentication mechanism is too weak";
     case 535: return "Username and Password not accepted";
+    case 538: return "Encryption required for requested authentication mechanism #2";
     case 541: return "Recipient Address Rejected – Access denied";
 	case 550: return "Requested action not taken: mailbox unavailable";
 	case 551: return "User not local; please try <....>";
 	case 552: return "Requested mail action aborted: exceeded storage allocation";
 	case 553: return "Requested action not taken: mailbox name not allowed";
 	case 554: return "Transaction failed";
+    case 555: return "Invalid command arguments";
   }
   return String().sprintf("Unknown(%d)", code);
 }

@@ -4,10 +4,6 @@
 
 #include "syslog.h"
 
-#define	INTERNAL_NOPRI	0x10	// the "no priority" priority
-				// mark "facility"
-#define	INTERNAL_MARK	LOG_MAKEPRI(LOG_NFACILITIES, 0)
-
 CODE prioritynames[] =
   {
     { "alert", LOG_ALERT },
@@ -42,6 +38,10 @@ CODE facilitynames[] =
     { "syslog", LOG_SYSLOG },
     { "user", LOG_USER },
     { "uucp", LOG_UUCP },
+    { "ntp", LOG_NTP },
+    { "logaudit", LOG_LOGAUDIT },
+    { "logalert", LOG_LOGALERT },
+    { "clock", LOG_CLOCK },
     { "local0", LOG_LOCAL0 },
     { "local1", LOG_LOCAL1 },
     { "local2", LOG_LOCAL2 },
@@ -72,6 +72,24 @@ int gettextcode(const char * value, CODE * codetable)
 			if (strcmp(i->c_name, value)==0)
 				return (i->c_val);
 	return -1;
+}
+//---------------------------------------------------------------------------
+void GetPriorities(TStrings * s)
+{
+  s->BeginUpdate();
+  s->Clear();
+  for(int pri=0; pri<LOG_NPRIORITIES; pri++)
+    s->AddObject(getcodetext(pri, prioritynames), (TObject *)pri);
+  s->EndUpdate();
+}
+//---------------------------------------------------------------------------
+void GetFacilities(TStrings * s)
+{
+  s->BeginUpdate();
+  s->Clear();
+  for(int fac=0; fac<LOG_NFACILITIES; fac++)
+    s->AddObject(getcodetext(fac<<3, facilitynames), (TObject *)fac);
+  s->EndUpdate();
 }
 //---------------------------------------------------------------------------
 #pragma package(smart_init)

@@ -4,11 +4,15 @@
 
 #include "messageform.h"
 #include "messprocessing.h"
+#include "fdb.h"
 
 const char * szProcessRuleNodes = "processrules";
   const char * szProcessRuleNode = "processrule";
     extern const char * szMatchNode; //= "match";
     const char * szProcessNode = "process";
+
+extern String WorkDir;
+extern TStorageFileList * fdb;
 
 //---------------------------------------------------------------------------
 TMessProcess::TMessProcess()
@@ -17,12 +21,20 @@ TMessProcess::TMessProcess()
   bAlarm = false;
     AlarmMess = "{time} {message}";
   bSound = false;
+    SoundFile = "alarm.wav";
     PlayCount = 1;
   bSendMail = false;
   bRunProg = false;
     bProgHide = false;
   bSaveToFile = false;
   SaveFile = -1;
+}
+//---------------------------------------------------------------------------
+String TMessProcess::GetSoundFileName(void)
+{
+  if( SoundFile.Length() > 0 && ExtractFilePath(SoundFile).Length() == 0 )
+    return WorkDir + SoundFile;
+  return SoundFile;
 }
 //---------------------------------------------------------------------------
 String TMessProcess::GetDescription(void)
@@ -55,7 +67,11 @@ String TMessProcess::GetDescription(void)
   if( bSaveToFile )
   {
     if( ! rv.IsEmpty() ) rv += a;
-    rv += "Save to file";
+    rv += "Save to file \"";
+
+    TStorageFile * sf = fdb->GetByNumber( SaveFile );
+    if( sf )
+      rv += sf->file + "\"";
   }
   return rv;  
 }
@@ -83,7 +99,7 @@ void TMessProcess::Load(XMLElementEx * p)
   bAlarm = p->rb("alarm");
     AlarmMess = p->rs("alarmmess");
   bSound = p->rb("sound");
-    SoundFile = p->rs("soundfile");
+    SoundFile = p->rs("soundfile", "alarm.wav");
     PlayCount = p->ri("playcount");
   bSendMail = p->rb("sendmail");
     Recipient = p->rs("recipient");

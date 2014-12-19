@@ -37,18 +37,14 @@ __published:	// IDE-managed Components
     TTimer *Timer;
     TGroupBox *GroupBox1;
     TGroupBox *GroupBox2;
-    TEdit *FilterEdit1;
     TPopupMenu *ClipboardPM;
     TMenuItem *mCopyToClipboard;
     TLabel *Label2;
-    TComboBox *FilterByPriorityCB;
     TFontDialog *FontDialog;
     TImageList *ImageList;
     TStatusBar *StatusBar;
     TTimer *NetTimer;
     TMenuItem *N1;
-    TEdit *FilterEdit2;
-    TSpeedButton *ClearFilterButton;
     TImageList *TrayImageList;
     TPopupMenu *TrayPopupMenu;
     TMenuItem *mOpenMainForm;
@@ -98,30 +94,29 @@ __published:	// IDE-managed Components
     TMenuItem *Ping1;
     TAction *aFilterByIP;
     TAction *aFilterByHost;
-    TAction *aFilterByFacility;
     TMenuItem *N4;
     TMenuItem *FilteringbyIP1;
     TMenuItem *FilteringbyHost1;
-    TMenuItem *FilteringbyFacility1;
     TAction *aHighlightingSetup;
     TToolButton *ToolButton13;
     TPopupMenu *HighlightingProfilesPM;
     TMenuItem *HighlightingSetup1;
-    TComboBox *FieldCB1;
-    TComboBox *FieldCB2;
     TAction *aShowAlarms;
     TMenuItem *Showalarmswindow1;
     TAction *aProcessSetup;
     TToolButton *ToolButton14;
     TMenuItem *Messageprocessingsetup1;
+    TComboBox *SelectFileCB;
+    TLabel *MessMatchLabel;
+    TSpeedButton *FilterButton;
+    TSpeedButton *ClearFilterButton2;
+    TLabel *Label1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall mCopyToClipboardClick(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
     void __fastcall LogSGDrawCell(TObject *Sender, int ACol, int ARow,
           TRect &Rect, TGridDrawState State);
     void __fastcall FormDestroy(TObject *Sender);
-    void __fastcall ClearFilterButtonClick(TObject *Sender);
-    void __fastcall OnApplyFilter(TObject *Sender);
     void __fastcall FormCreate(TObject *Sender);
     void __fastcall NetTimerTimer(TObject *Sender);
     void __fastcall mOpenMainFormClick(TObject *Sender);
@@ -140,10 +135,12 @@ __published:	// IDE-managed Components
     void __fastcall aPingExecute(TObject *Sender);
     void __fastcall aFilterByIPExecute(TObject *Sender);
     void __fastcall aFilterByHostExecute(TObject *Sender);
-    void __fastcall aFilterByFacilityExecute(TObject *Sender);
     void __fastcall aHighlightingSetupExecute(TObject *Sender);
     void __fastcall aShowAlarmsExecute(TObject *Sender);
     void __fastcall aProcessSetupExecute(TObject *Sender);
+    void __fastcall SelectFileCBSelect(TObject *Sender);
+    void __fastcall FilterButtonClick(TObject *Sender);
+    void __fastcall ClearFilterButton2Click(TObject *Sender);
 
 public:
   // Main grid
@@ -155,15 +152,14 @@ private:	// User declarations
 
   TList * MessList;       // List of messages to dislpay
 
+  BYTE * FileReadBuffer;  // buffer for file reading
   TFile in;               // syslog file
   DWORD SizeToRead;       // size to read from syslog file
 
-  String fFile;     // Full file name
+  int FileNumber;   // Current viewed file number (TStorageFileList::GetByNumber)
+  String fFile;     // Current viewed file name
   bool bLive;       // Live view ? (yes by default)
-
-  String fFilter;   // Text filter string
-  String fFilter2;  // Text filter string2
-  int FilterTimer;  // Text filter timer in seconds
+  TMessMatch MessMatch; // Display filter
 
   ULONGLONG FileSize;   // Size of fFile when open
   DWORD ReadedSize; // Bytes read from fFile
@@ -190,7 +186,7 @@ private:
   void __fastcall GotoNewLine(void);
   // Clear string grig
   void __fastcall Clear(void);
-  // [Read the tail | Read new part] of the syslog file
+  // Read the tail of the syslog file
   void __fastcall Read(bool bAllowAddVisibleLines);
   // Print captions of main form and string grig
   void __fastcall UpdateCaption(void);
@@ -198,7 +194,11 @@ private:
   void __fastcall SetLinesHeight(void);
   // Initialization code
   // Called once when program start
-  void __fastcall Init(bool _bLive, int _ProtoFormat);
+  void __fastcall Init(bool _bLive);
+  // Get file to view by number
+  String GetFileName(int number);
+  // apply MessMatch
+  void ApplyFilter(void);
 
 public:		// User declarations
   __fastcall TMainForm(TComponent* Owner);
@@ -212,8 +212,6 @@ public:		// User declarations
 
   // Get display message by index
   TSyslogMessage * __fastcall GetMessageByIndex(int i);
-
-  void __fastcall UpdateFilterButton(void);
 
   void __fastcall FillProfilePopupMenu(void);
   void __fastcall ChangeProfileClick(TObject *Sender);

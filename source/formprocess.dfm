@@ -3,8 +3,8 @@ object ProcessForm: TProcessForm
   Top = 0
   BorderIcons = [biSystemMenu, biMaximize]
   Caption = 'Message processing setup'
-  ClientHeight = 680
-  ClientWidth = 873
+  ClientHeight = 478
+  ClientWidth = 845
   Color = clBtnFace
   Constraints.MinHeight = 400
   Constraints.MinWidth = 700
@@ -59,17 +59,17 @@ object ProcessForm: TProcessForm
     AlignWithMargins = True
     Left = 3
     Top = 3
-    Width = 469
-    Height = 620
+    Width = 441
+    Height = 418
     Align = alClient
-    Caption = 'List of rules'
+    Caption = 'Action list'
     TabOrder = 0
     object AddButton: TSpeedButton
       Left = 9
       Top = 16
       Width = 75
       Height = 28
-      Hint = 'Add a rule to the list'
+      Hint = 'Add new action to the list'
       Caption = 'Add'
       Flat = True
       Glyph.Data = {
@@ -124,7 +124,7 @@ object ProcessForm: TProcessForm
       Top = 16
       Width = 75
       Height = 28
-      Hint = 'Delete a rule from the list'
+      Hint = 'Delete action from the list'
       Caption = 'Delete'
       Flat = True
       Glyph.Data = {
@@ -163,7 +163,7 @@ object ProcessForm: TProcessForm
       Top = 16
       Width = 75
       Height = 28
-      Hint = 'Put rule higher'
+      Hint = 'Put higher'
       Caption = 'Up'
       Flat = True
       Glyph.Data = {
@@ -210,7 +210,7 @@ object ProcessForm: TProcessForm
       Top = 16
       Width = 75
       Height = 28
-      Hint = 'Put rule below'
+      Hint = 'Put below'
       Caption = 'Down'
       Flat = True
       Glyph.Data = {
@@ -256,14 +256,14 @@ object ProcessForm: TProcessForm
       AlignWithMargins = True
       Left = 8
       Top = 51
-      Width = 453
-      Height = 561
+      Width = 425
+      Height = 359
       Margins.Left = 6
       Margins.Top = 36
       Margins.Right = 6
       Margins.Bottom = 6
       Align = alClient
-      ColCount = 2
+      ColCount = 3
       DefaultColWidth = 400
       FixedCols = 0
       RowCount = 2
@@ -272,33 +272,33 @@ object ProcessForm: TProcessForm
       Font.Height = -13
       Font.Name = 'Tahoma'
       Font.Style = []
-      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goThumbTracking]
+      Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowSelect, goThumbTracking]
       ParentFont = False
       TabOrder = 0
       OnClick = DrawGridClick
       OnDblClick = DrawGridDblClick
       OnDrawCell = DrawGridDrawCell
-      ExplicitLeft = 5
-      ExplicitWidth = 459
-      ExplicitHeight = 564
+      ExplicitLeft = 10
+      ExplicitTop = 53
       ColWidths = (
         50
-        343)
+        163
+        178)
     end
   end
   object GroupBox4: TGroupBox
     AlignWithMargins = True
     Left = 3
-    Top = 629
-    Width = 867
+    Top = 427
+    Width = 839
     Height = 48
     Align = alBottom
     TabOrder = 2
     DesignSize = (
-      867
+      839
       48)
     object OKButton: TBitBtn
-      Left = 202
+      Left = 194
       Top = 12
       Width = 113
       Height = 28
@@ -336,7 +336,7 @@ object ProcessForm: TProcessForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     end
     object CancelButton: TBitBtn
-      Left = 380
+      Left = 366
       Top = 12
       Width = 113
       Height = 28
@@ -374,7 +374,7 @@ object ProcessForm: TProcessForm
         FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
     end
     object HelpButton: TBitBtn
-      Left = 551
+      Left = 531
       Top = 12
       Width = 113
       Height = 28
@@ -429,10 +429,10 @@ object ProcessForm: TProcessForm
   end
   object ScrollBox1: TScrollBox
     AlignWithMargins = True
-    Left = 478
+    Left = 450
     Top = 3
     Width = 392
-    Height = 620
+    Height = 418
     HorzScrollBar.Tracking = True
     VertScrollBar.Tracking = True
     Align = alRight
@@ -443,38 +443,33 @@ object ProcessForm: TProcessForm
       Top = 10
       Width = 109
       Height = 17
-      Caption = 'Rule Active'
+      Caption = 'Action active'
       TabOrder = 0
     end
     inline MessMatchFr: TMessMatchFr
       Left = 2
       Top = 35
       Width = 366
-      Height = 184
+      Height = 340
       TabOrder = 1
       ExplicitLeft = 2
       ExplicitTop = 35
-      inherited GroupBox1: TGroupBox
-        ExplicitTop = 0
-        ExplicitWidth = 366
-        ExplicitHeight = 184
-      end
     end
     inline MessProcessFr: TMessProcessFr
       Left = 2
-      Top = 226
+      Top = 380
       Width = 366
       Height = 388
       TabOrder = 2
       ExplicitLeft = 2
-      ExplicitTop = 226
+      ExplicitTop = 380
     end
   end
   object ImageList: TImageList
     Left = 232
     Top = 144
     Bitmap = {
-      494C010102000800400010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C0101020008004C0010001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000

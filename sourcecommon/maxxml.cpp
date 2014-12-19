@@ -30,7 +30,12 @@ String XMLElementEx::ConvertAfterLoad(const AnsiString s)
   return rv2;
 }
 //---------------------------------------------------------------------------
-String XMLElementEx::rs(const String name, String defval)
+bool XMLElementEx::exist(const AnsiString name)
+{
+  return FirstChildElement(name.c_str()) != NULL;
+}
+//---------------------------------------------------------------------------
+String XMLElementEx::rs(const AnsiString name, String defval)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( p )
@@ -40,7 +45,7 @@ String XMLElementEx::rs(const String name, String defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::rs(const String name, TStrings * val)
+void XMLElementEx::rs(const AnsiString name, TStrings * val)
 {
   val->Clear();
   for(XMLElement * p = FirstChildElement(name.c_str());
@@ -51,7 +56,7 @@ void XMLElementEx::rs(const String name, TStrings * val)
   }
 }
 //---------------------------------------------------------------------------
-int XMLElementEx::ri(const String name, int defval)
+int XMLElementEx::ri(const AnsiString name, int defval)
 {
   int rv;
   XMLElement * p = FirstChildElement(name.c_str());
@@ -59,7 +64,7 @@ int XMLElementEx::ri(const String name, int defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-double XMLElementEx::rd(const String name, double defval)
+double XMLElementEx::rd(const AnsiString name, double defval)
 {
   double rv;
   XMLElement * p = FirstChildElement(name.c_str());
@@ -67,7 +72,7 @@ double XMLElementEx::rd(const String name, double defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-bool XMLElementEx::rb(const String name, bool defval)
+bool XMLElementEx::rb(const AnsiString name, bool defval)
 {
   bool rv;
   XMLElement * p = FirstChildElement(name.c_str());
@@ -75,7 +80,7 @@ bool XMLElementEx::rb(const String name, bool defval)
   return defval;
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::ws(const String name, String val)
+void XMLElementEx::ws(const AnsiString name, String val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )
@@ -86,7 +91,7 @@ void XMLElementEx::ws(const String name, String val)
   p->SetText( ConvertToSave(val).c_str() );
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::ws(const String name, TStrings * val)
+void XMLElementEx::ws(const AnsiString name, TStrings * val)
 {
   XMLElement * p;
   while( (p = FirstChildElement(name.c_str())) != NULL )
@@ -100,7 +105,7 @@ void XMLElementEx::ws(const String name, TStrings * val)
   }
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::wi(const String name, int val)
+void XMLElementEx::wi(const AnsiString name, int val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )
@@ -115,7 +120,7 @@ void XMLElementEx::wi(const String name, int val)
   }
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::wd(const String name, double val)
+void XMLElementEx::wd(const AnsiString name, double val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )
@@ -130,7 +135,7 @@ void XMLElementEx::wd(const String name, double val)
   }
 }
 //---------------------------------------------------------------------------
-void XMLElementEx::wb(const String name, bool val)
+void XMLElementEx::wb(const AnsiString name, bool val)
 {
   XMLElement * p = FirstChildElement(name.c_str());
   if( ! p )

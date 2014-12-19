@@ -25,9 +25,9 @@ public:
   // p must be null terminated
   bool FromStringSyslogd(char * p, int size, sockaddr_in * from_addr);
 
-  // Format message to string (for saving to file)
+  // Format message to string (saving to file)
   AnsiString ToString(void);
-  // Read message from string p,
+  // Read message from string p (reading from file),
   // p must be null terminated
   void FromString(char * p);
 

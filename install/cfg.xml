@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<setup>
+    <main>
+        <UdpEnable>1</UdpEnable>
+        <UdpInterface>0.0.0.0</UdpInterface>
+        <UdpPort>514</UdpPort>
+        <TcpEnable>1</TcpEnable>
+        <TcpInterface>0.0.0.0</TcpInterface>
+        <TcpPort>514</TcpPort>
+    </main>
+    <mail>
+        <server></server>
+        <port>25</port>
+        <username></username>
+        <password>595F36CEE356F25BAE17DFD26A6C7CAF04B25D87FB7E0BDDBC</password>
+        <ssl>0</ssl>
+        <sender></sender>
+        <sender_name></sender_name>
+        <recipient></recipient>
+        <subject></subject>
+        <message></message>
+    </mail>
+    <files>
+        <file>
+            <file>syslog</file>
+            <number>0</number>
+        </file>
+    </files>
+</setup>

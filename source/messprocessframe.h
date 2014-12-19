@@ -44,6 +44,7 @@ __published:	// IDE-managed Components
     TCheckBox *SaveToFileCB;
     TEdit *RecipientEdit;
     TComboBox *SaveFileCB;
+    TSpeedButton *SpeedButton2;
     void __fastcall InsertAlarmMessButtonClick(TObject *Sender);
     void __fastcall pmInsertClick(TObject *Sender);
     void __fastcall SelWavCommonButtonClick(TObject *Sender);
@@ -53,6 +54,7 @@ __published:	// IDE-managed Components
     void __fastcall Change(TObject *Sender);
     void __fastcall RecipientEditEnter(TObject *Sender);
     void __fastcall RecipientEditExit(TObject *Sender);
+    void __fastcall SpeedButton2Click(TObject *Sender);
 private:	// User declarations
     TForm * GetForm(void);
     bool bEnableValuesChange;

@@ -51,9 +51,15 @@ void __fastcall TFileFr::Change(TObject *Sender)
 void TFileFr::CanEdit(bool b)
 {
   if( b )
+  {
+    GroupBox->Caption = "File settings";
     FileEdit->Font->Color = clWindowText;
+  }
   else
+  {
+    GroupBox->Caption = "File settings for default file (read only)";
     FileEdit->Font->Color = clGrayText;
+  }
   Enabled = b;  
 }
 //---------------------------------------------------------------------------

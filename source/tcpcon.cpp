@@ -49,8 +49,6 @@ BYTE * TSyslogdTcpConn::GetBufferSize(int NeedFreeSize)
 
 extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
-//extern TFile syslogout;
-//extern String SyslogFile;
 bool WriteToLogError(String fmt, ...);
 bool WriteToLogRawMessage(char * p);
 void PrintSB(int i, String s);
@@ -96,6 +94,7 @@ void TcpServerStart(void)
   }
   else
   {
+    TcpPrintStatus();
     String err = String("Error tcp: ") + tcp->GetErrorMessageEng() +
       " [tcp port " + IntToStr(MainCfg.TcpPort) + "]";
     WriteToLogError(String("ERROR\t") + err);

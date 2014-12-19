@@ -149,11 +149,12 @@ void TStorageFileList::operator = (TStorageFileList * p)
   }
 }
 //---------------------------------------------------------------------------
-void TStorageFileList::GetList(TStrings * s)
+void TStorageFileList::GetList(TStrings * s, bool getall)
 {
   s->BeginUpdate();
+  s->Clear();
   TStorageFile * p;
-  for(int i=1; i<Count; i++)
+  for(int i=getall?0:1; i<Count; i++)
   {
     p = Get(i);
     s->AddObject(p->GetDescription(), (TObject *)p->number);

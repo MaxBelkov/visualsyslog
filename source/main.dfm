@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = 'Visual Syslog'
   ClientHeight = 481
-  ClientWidth = 855
+  ClientWidth = 933
   Color = clBtnFace
   Constraints.MinHeight = 220
   Constraints.MinWidth = 400
@@ -22,24 +22,85 @@ object MainForm: TMainForm
     AlignWithMargins = True
     Left = 6
     Top = 69
-    Width = 843
-    Height = 52
+    Width = 921
+    Height = 68
     Margins.Left = 6
     Margins.Right = 6
     Align = alTop
-    Caption = 'Display message filtering'
+    Caption = 'Display'
     TabOrder = 0
     object Label2: TLabel
-      Left = 563
+      Left = 65
       Top = 22
-      Width = 34
+      Width = 39
       Height = 13
       Alignment = taRightJustify
-      Caption = 'Priority'
+      Caption = 'View file'
     end
-    object ClearFilterButton: TSpeedButton
-      Left = 763
-      Top = 20
+    object MessMatchLabel: TLabel
+      Left = 182
+      Top = 45
+      Width = 78
+      Height = 13
+      Caption = 'MessMatchLabel'
+    end
+    object FilterButton: TSpeedButton
+      Left = 118
+      Top = 44
+      Width = 18
+      Height = 18
+      Hint = 'Edit filter'
+      Flat = True
+      Glyph.Data = {
+        36050000424D3605000000000000360400002800000010000000100000000100
+        080000000000000100000000000000000000000100000000000002020200061A
+        26006E323200020E46004A225A0006425E00064A6200025666000E5E72007A66
+        520056567A008A464E009A424200C6726600869E7E00021282000A628A00027E
+        8200066A9A00164AA2000E7EAE00020AD2000216D2000222FE00023EFE00164E
+        DE00265AE2000A8A9200028EAE000686B600029AB2002E8AAE00329EBE0006AE
+        B600668E9E000292C60002B2C20002A6D20036AADA0036BAF2005296FE0002CE
+        D60002EAF20002FAFA004EC6FE0096D2AA00C6DAAA0000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        000000000500000000001C0DAF00B379E600140DAF00010000006C4B25000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        0000000000000000000000000000000000000000000000000000000000000000
+        000000000C00F0C5180000000000340DAF0017008C00D9030000D8492500BC9A
+        210020000500C0B6180001000000E8C51800580DAF00AF1FE600311FE6000000
+        00000000000000000000DC0DAF00069D2100DC0DAF00259D2100B7000000980F
+        AF0001000000011000001800000000000000B40DAF004200000000000000A00D
+        AF00000000000000000000000000000000000C0000000200000001010000180E
+        AF000000000000000C00800E5A0000000000030000000A000D00C3000000F0C5
+        18000000000054040000A80B5A0001000000780E5A00FC0DAF00AF1FE6005404
+        0000300EAF0001100000780E5A00100EAF003C29E60000000C0000000000800E
+        5A00200EAF006F29E600800E5A00980FAF00380EAF003E299100300EAF000100
+        000000000000000000007C0FAF002F444D00D0379E000000000000000000680E
+        AF000200000080000000000000000810AF00D0379E0065444D000C0000000000
+        000001000000443A5C004F524B004C4D530072766500335C69006F5C31005C65
+        6400745F31002E626D0000009B00300EAF0030E19C00540FAF004DD7E2002C51
+        3F00FEFFFF00AE22E6004921E6002C0000002C000000100000004921E6002C00
+        00002C00000010000000880FAF004DD7E2002C513F00FEFFFF00AE22E6004921
+        E600F8D7520035000000FCD75200B06FC70048009B0074019B00C0269F004806
+        9B005001C700A80EAF000200000000000000000000000000C700D8E19C004E4C
+        4B000000C700030025000E1E00002C000000D40FAF001000000038E09C000100
+        0000D0E19C006C0FAF00AF1FE600D8E19C000000000093449B00D0E19C00A80F
+        AF00DF4B4B000000C700B1EA0500C0379E00B72A4700D0379E00030303030303
+        0303030303030303030303000603030303030303030303030303031F27140503
+        030303030303030303030303262725060103030303030303030303031F2C1C1E
+        1D08030303030303030303030320242A1E2310030303030303030303031B292B
+        2A1E231203030303030303030303212B2B2A1E23060303030303030303030329
+        2B2B2A070B0C03030303030303030303292B1B0E0D020C030303030303030303
+        03112D2E090D020C030303030303030303032D0E2E090D040F03030303030303
+        0303032D0E2E0A171503030303030303030303032D2228181603030303030303
+        0303030303131A19030303030303030303030303030303030303}
+      ParentShowHint = False
+      ShowHint = True
+      OnClick = FilterButtonClick
+    end
+    object ClearFilterButton2: TSpeedButton
+      Left = 148
+      Top = 44
       Width = 18
       Height = 18
       Hint = 'Clear filter (show all messages)'
@@ -74,113 +135,45 @@ object MainForm: TMainForm
       ParentShowHint = False
       ShowHint = True
       Visible = False
-      OnClick = ClearFilterButtonClick
+      OnClick = ClearFilterButton2Click
     end
-    object FilterEdit1: TEdit
-      Left = 155
-      Top = 20
-      Width = 120
-      Height = 21
-      TabOrder = 1
+    object Label1: TLabel
+      Left = 23
+      Top = 45
+      Width = 81
+      Height = 13
+      Alignment = taRightJustify
+      Caption = 'Message filtering'
     end
-    object FilterByPriorityCB: TComboBox
-      Left = 605
-      Top = 18
-      Width = 145
-      Height = 21
-      Style = csDropDownList
-      DropDownCount = 12
-      ItemHeight = 13
-      ItemIndex = 0
-      TabOrder = 4
-      Text = '<all>'
-      OnSelect = OnApplyFilter
-      Items.Strings = (
-        '<all>'
-        'emerg'
-        'alert'
-        'crit'
-        'err'
-        'warning'
-        'notice'
-        'info'
-        'debug')
-    end
-    object FilterEdit2: TEdit
-      Left = 431
-      Top = 20
-      Width = 121
-      Height = 21
-      TabOrder = 3
-    end
-    object FieldCB1: TComboBox
-      Left = 10
-      Top = 20
-      Width = 139
+    object SelectFileCB: TComboBox
+      Left = 118
+      Top = 17
+      Width = 264
       Height = 21
       Style = csDropDownList
-      DropDownCount = 16
+      DropDownCount = 20
       ItemHeight = 13
-      ItemIndex = 0
       TabOrder = 0
-      Text = 'Text contains'
-      OnSelect = OnApplyFilter
-      Items.Strings = (
-        'Text contains'
-        'Text NOT contains'
-        'Message contains'
-        'Message NOT contains'
-        'IP ='
-        'IP <>'
-        'Host ='
-        'Host <>'
-        'Facility ='
-        'Facility <>'
-        'Tag ='
-        'Tag <>')
-    end
-    object FieldCB2: TComboBox
-      Left = 286
-      Top = 20
-      Width = 139
-      Height = 21
-      Style = csDropDownList
-      DropDownCount = 16
-      ItemHeight = 13
-      ItemIndex = 0
-      TabOrder = 2
-      Text = 'Text contains'
-      OnSelect = OnApplyFilter
-      Items.Strings = (
-        'Text contains'
-        'Text NOT contains'
-        'Message contains'
-        'Message NOT contains'
-        'IP ='
-        'IP <>'
-        'Host ='
-        'Host <>'
-        'Facility ='
-        'Facility <>'
-        'Tag ='
-        'Tag <>')
+      OnSelect = SelectFileCBSelect
     end
   end
   object GroupBox2: TGroupBox
     AlignWithMargins = True
     Left = 6
-    Top = 127
-    Width = 843
-    Height = 332
+    Top = 143
+    Width = 921
+    Height = 316
     Margins.Left = 6
     Margins.Right = 6
     Align = alClient
     TabOrder = 1
+    ExplicitTop = 151
+    ExplicitHeight = 308
   end
   object StatusBar: TStatusBar
     Left = 0
     Top = 462
-    Width = 855
+    Width = 933
     Height = 19
     Panels = <
       item
@@ -199,7 +192,7 @@ object MainForm: TMainForm
     AlignWithMargins = True
     Left = 6
     Top = 6
-    Width = 843
+    Width = 921
     Height = 60
     Margins.Left = 6
     Margins.Top = 6
@@ -323,9 +316,6 @@ object MainForm: TMainForm
     object FilteringbyHost1: TMenuItem
       Action = aFilterByHost
     end
-    object FilteringbyFacility1: TMenuItem
-      Action = aFilterByFacility
-    end
     object N4: TMenuItem
       Caption = '-'
     end
@@ -403,7 +393,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 192
     Bitmap = {
-      494C01011000D801E80110001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01011000D801040210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000005000000001002000000000000050
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1081,7 +1071,7 @@ object MainForm: TMainForm
     Left = 64
     Top = 288
     Bitmap = {
-      494C01010100D801D80210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010100D801F40210001000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000400000001000000001002000000000000010
       0000000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -1255,7 +1245,7 @@ object MainForm: TMainForm
     Left = 152
     Top = 232
     Bitmap = {
-      494C01010C008C019C0120002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
+      494C01010C008C01B80120002000FFFFFFFFFF10FFFFFFFFFFFFFFFF424D3600
       0000000000003600000028000000800000008000000001002000000000000000
       0100000000000000000000000000000000000000000000000000000000000000
       0000000000000000000000000000000000000000000000000000000000000000
@@ -3456,10 +3446,6 @@ object MainForm: TMainForm
       Caption = 'Filtering by Host'
       OnExecute = aFilterByHostExecute
     end
-    object aFilterByFacility: TAction
-      Caption = 'Filtering by Facility'
-      OnExecute = aFilterByFacilityExecute
-    end
     object aHighlightingSetup: TAction
       Caption = 'Highlighting setup...'
       ImageIndex = 13
@@ -3472,6 +3458,7 @@ object MainForm: TMainForm
     end
     object aProcessSetup: TAction
       Caption = 'Message processing setup...'
+      Hint = 'Message processing setup'
       ImageIndex = 15
       OnExecute = aProcessSetupExecute
     end

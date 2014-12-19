@@ -14,7 +14,7 @@
 class TFileFr : public TFrame
 {
 __published:	// IDE-managed Components
-    TGroupBox *GroupBox1;
+    TGroupBox *GroupBox;
     TLabel *Label11;
     TOpenDialog *OpenDialog;
     TEdit *FileEdit;
