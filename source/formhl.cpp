@@ -5,6 +5,8 @@
 #include "messageform.h"
 #include "messhl.h"
 #include "saveini.h"     // TSaveParamsINI
+#include "cfg.h"         // program config
+#include "gr.h"          // 3D
 #include "formhl.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -14,6 +16,7 @@
 
 extern TSaveParamsINI * AppParams;
 extern String HighlightFile;
+extern TMainCfg MainCfg;
 int THighlightForm::LastRuleIndex = 0;
 THighlightForm * HighlightForm;
 //---------------------------------------------------------------------------
@@ -156,6 +159,13 @@ void __fastcall THighlightForm::DrawGridDrawCell(TObject *Sender, int ACol,
       case 0: s = " Active"; break;
       case 1: s = " Match & Style preview"; break;
     }
+
+    if( MainCfg.b3D )
+    {
+      FillVolume(c, Rect, c->Brush->Color);
+      c->Brush->Style = bsClear;
+    }
+
     int x = Rect.Left + 2;
     int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
     c->TextRect(Rect, x, y, s);
@@ -191,6 +201,12 @@ void __fastcall THighlightForm::DrawGridDrawCell(TObject *Sender, int ACol,
 
           mh->Style.SetFontStyle(c->Font);
 
+          if( MainCfg.b3D )
+          {
+            FillVolume(c, Rect, c->Brush->Color);
+            c->Brush->Style = bsClear;
+          }
+
           int x = Rect.Left + 2;
           int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
           c->TextRect(Rect, x, y, s);
@@ -198,6 +214,7 @@ void __fastcall THighlightForm::DrawGridDrawCell(TObject *Sender, int ACol,
       }
     }
   }
+
 }
 //---------------------------------------------------------------------------
 // show params of current rule

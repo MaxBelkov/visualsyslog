@@ -15,7 +15,7 @@ extern TSaveParamsINI * AppParams;
 __fastcall TShowAlarmForm::TShowAlarmForm(TComponent* Owner)
     : TForm(Owner)
 {
-  ListBox->Color = (TColor)RGB(255,151,203);
+  ListBox->Color = (TColor)RGB(255,197,197);
   *AppParams >> this;
 }
 //---------------------------------------------------------------------------

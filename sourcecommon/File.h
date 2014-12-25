@@ -175,6 +175,6 @@ bool IsPath(char * szName);
 // Получить в out время последнего изменения файла name
 bool GetFileModificationTime(AnsiString name, ULONGLONG & out);
 //---------------------------------------------------------------------------
-extern char szCR[];
+extern char CR[];
 //---------------------------------------------------------------------------
 #endif

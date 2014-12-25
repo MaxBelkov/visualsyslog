@@ -24,13 +24,14 @@
 #include "AlarmForm.h"   // show alarm message
 #include "fdb.h"         // save messages to file
 #include "matchform.h"
+#include "gr.h"          // 3D
 #include "main.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
 #pragma resource "*.dfm"
 
-// Start size in bytes, to read from text file
-#define StartSizeToRead (1024*1024)
+// Start size in bytes, to read from text file (+1024 - GotoNewLine)
+#define StartSizeToRead (1024*1024+1024)
 // Max lines count in the string grid when receive messages
 #define MaxGridLinesReceive 10000
 
@@ -156,6 +157,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   NetTimer->Enabled = true;
 
   TrayChangeIcon(0);
+  Caption = GetFullAppName();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Init(bool _bLive)
@@ -355,17 +357,16 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
       Read(false);
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::UpdateCaption(void)
+void __fastcall TMainForm::UpdateDislpayInfo(void)
 {
-  String s = GetFullAppName() +
-             "  [View file " + (ViewFileMode ? ViewFileName : fFile);
+  String s;
+  if( ViewFileMode )
+    s = ViewFileName + " ";
   // If the text file is not completely read
   if( aMoreLines->Enabled )
-    s += " the last " + GetBytesStringEng(ReadedSize) +
+    s += "the last " + GetBytesStringEng(ReadedSize) +
          " of the " + GetBytesStringEng(FileSize);
-  s += "]";
-  if( Caption != s )
-    Caption = s;
+  ViewFileInfoLabel->Caption = s;
 
   int lc = MessList->Count;
   if( TotalLines != lc )
@@ -386,60 +387,42 @@ void __fastcall TMainForm::Clear(void)
   TotalLines = 0;
   ReadedSize = 0;
 
-  UpdateCaption();
+  UpdateDislpayInfo();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
 {
   try
   {
+    bool bHaveNewMessagesToDysplay = false;
+    int DeletedMessagesCount = 0;
+    TSyslogMessage * sm;
     DWORD rs;
     for(rs=0; rs<SizeToRead; )
     {
       in.Read(FileReadBuffer, StartSizeToRead);
       if( in.Bytes == 0 )
         break;
-      rs += in.Bytes;
-      FileSize += in.Bytes;
-      ReadedSize += in.Bytes;
 
-      TSyslogMessage * sm;
-      bool bHaveNewMessagesToDysplay = false;
-      int DeletedMessagesCount = 0;
-/*
-      TMessMatch MessMatch;
-      if( FilterByPriorityCB->ItemIndex == 0 )
-        MessMatch.PriorityMask = PriorityMaskAll;
-      else
-        MessMatch.PriorityMask = 1<<(FilterByPriorityCB->ItemIndex - 1);
-      MessMatch.Field1 = FieldCB1->ItemIndex / 2;
-      MessMatch.Contains1 = (FieldCB1->ItemIndex & 1) == 0;
-      MessMatch.Text1->Text = FilterEdit1->Text;
-      MessMatch.Field2 = FieldCB2->ItemIndex / 2;
-      MessMatch.Contains2 = (FieldCB2->ItemIndex & 1) == 0;
-      MessMatch.Text2->Text = FilterEdit2->Text;
-      MessMatch.MatchCase = true;
-*/
-      // It is possible that the text file is filled so quickly that
-      // he read to the end and not at the end of the array FileReadBuffer[] is to truncate
-      // proto_line var is global, to save cut line part
-
-      for(DWORD i=0; i<in.Bytes; i++)
+      DWORD ProcessedBytesCount = 0;
+      for(DWORD i=0, c=0; i<in.Bytes; i++)
       {
         if( FileReadBuffer[i]=='\n' || FileReadBuffer[i]=='\r' )
         {
-          if( proto_line.Length() > 0 )
+          ProcessedBytesCount = i + 1;
+
+          if( c > 0 )
           {
-            // Now proto_line contains new line
+            // process new line
             TotalLines++;
 
             sm = new TSyslogMessage;
-            sm->FromString(proto_line.c_str());
+            sm->FromString(FileReadBuffer+i-c, c);
 
             if( ! MessMatch.Match(sm) )
             {
-              // and the type does not match the required - continue
-              proto_line.SetLength(0);
+              // message does not match - continue
+              c = 0;
               delete sm;
               continue;
             }
@@ -455,55 +438,68 @@ void __fastcall TMainForm::Read(bool bAllowAddVisibleLines)
                 DeletedMessagesCount++;
               }
             }
-          
+
             MessList->Add(sm);
             bHaveNewMessagesToDysplay = true;
 
-            proto_line.SetLength(0);
+            c = 0;
           }
-          continue;
-        }
-        proto_line += (char)FileReadBuffer[i];
-      } // End for by protocol characters
-
-      // Establish the actual number of lines (but not less than 2)
-      LogSG->RowCount = MAX(2, MessList->Count + 1); // + 1 fixed line
-
-      if( bHaveNewMessagesToDysplay )
-      {
-        if( DeletedMessagesCount > 0 )
-          LogSG->Invalidate();
-
-        // Goto new message ?
-        if( aGotoNewLine->Checked )
-        {
-          // Yes
-          LogSG->Row = LogSG->RowCount - 1;
         }
         else
         {
-          // No: save cursor position and first visible line in view
-          if( DeletedMessagesCount > 0 )
-          {
-            int r = LogSG->Row - DeletedMessagesCount;
-            if( r < 1 )
-              r = 1;
-            int tr = LogSG->TopRow - DeletedMessagesCount;
-            if( tr < 1 )
-              tr = 1;
+          c++;
+        }
+      } // End for by readed bytes
 
-            LogSG->bAllowUpdate = false; // prevent flicker
-            LogSG->Row = r;
-            LogSG->TopRow = tr;
-            LogSG->bAllowUpdate = true;
-          }
+      if( ProcessedBytesCount < in.Bytes )
+      {
+        if( ! in.SetPointer64(-(LONGLONG)(in.Bytes - ProcessedBytesCount), FILE_CURRENT) )
+          throw Exception(String("error set file position: ") + in.ErrorMessage);
+      }
+
+      rs += ProcessedBytesCount;
+      ReadedSize += ProcessedBytesCount;
+
+    } // End for
+
+    // Establish the actual number of lines (but not less than 2)
+    LogSG->RowCount = MAX(2, MessList->Count + 1); // + 1 fixed line
+
+    if( bHaveNewMessagesToDysplay )
+    {
+      if( DeletedMessagesCount > 0 )
+        LogSG->Invalidate();
+
+      // Goto new message ?
+      if( aGotoNewLine->Checked )
+      {
+        // Yes
+        LogSG->Row = LogSG->RowCount - 1;
+      }
+      else
+      {
+        // No: save cursor position and first visible line in view
+        if( DeletedMessagesCount > 0 )
+        {
+          int r = LogSG->Row - DeletedMessagesCount;
+          if( r < 1 )
+            r = 1;
+          int tr = LogSG->TopRow - DeletedMessagesCount;
+          if( tr < 1 )
+            tr = 1;
+
+          LogSG->bAllowUpdate = false; // prevent flicker
+          LogSG->Row = r;
+          LogSG->TopRow = tr;
+          LogSG->bAllowUpdate = true;
         }
       }
     }
+
     if( rs > 0 )
     {
-      //FileSize = in.GetSize64();
-      UpdateCaption();
+      FileSize = in.GetSize64();
+      UpdateDislpayInfo();
     }
   }
   catch(const Exception & E)
@@ -601,6 +597,13 @@ void __fastcall TMainForm::LogSGDrawCell(TObject *Sender, int ACol,
       pMessStyle->SetFontStyle(c->Font);
     }
   }
+
+  if( MainCfg.b3D )
+  {
+    FillVolume(c, Rect, c->Brush->Color);
+    c->Brush->Style = bsClear;
+  }
+
   int x = Rect.Left + 2;
   int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
   c->TextRect(Rect, x, y, s);
@@ -652,7 +655,7 @@ bool WriteToLogRawMessage(char * p)
   }
 
   String s(p);
-  s += szCR;
+  s += ::CR;
   rawout << s;
   return true;
 }
@@ -674,7 +677,7 @@ bool WriteToLogError(String fmt, ...)
   if( s.Pos("ERROR\t") > 0 )
     SB(2) = s.SubString(7, s.Length()-6);
 
-  s = Now().DateTimeString() + '\t' + s + szCR;
+  s = Now().DateTimeString() + '\t' + s + ::CR;
   out << s;
   va_end(argptr);
   return true;
@@ -715,6 +718,8 @@ void __fastcall TMainForm::aSetupExecute(TObject *Sender)
     fdb->GetList(SelectFileCB->Items, true);
     int i = SelectFileCB->Items->IndexOfObject((TObject *)FileNumber);
     SelectFileCB->ItemIndex = i;
+
+    LogSG->Invalidate(); // 3D
 
     MainCfg.Save(MainCfgFile, fdb);
   }
@@ -989,7 +994,26 @@ void __fastcall TMainForm::SetViewFileMode(bool b)
   aGotoNewLine->Visible = ! b;
   mOpenFilesLoc->Visible = ! b;
   aClear->Visible = ! b;
-  UpdateCaption();
+  if( b )
+  {
+    // view external file
+    if( SelectFileCB->Visible )
+    {
+      SelectFileCB->Visible = false;
+      ViewFileInfoLabel->Tag = ViewFileInfoLabel->Left;
+      ViewFileInfoLabel->Left = SelectFileCB->Left;
+    }
+  }
+  else
+  {
+    // normal view
+    if( ! SelectFileCB->Visible )
+    {
+      SelectFileCB->Visible = true;
+      ViewFileInfoLabel->Left = ViewFileInfoLabel->Tag;
+    }
+  }
+  UpdateDislpayInfo();
 }
 //---------------------------------------------------------------------------
 TSyslogMessage * __fastcall TMainForm::GetMessageByIndex(int i)
@@ -1067,6 +1091,26 @@ void __fastcall TMainForm::aFilterByHostExecute(TObject *Sender)
   MessMatch.Field1 = 3;
   MessMatch.Contains1 = true;
   MessMatch.Text1->Add(sm->HostName);
+  ApplyFilter();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aFilterByTagExecute(TObject *Sender)
+{
+  TSyslogMessage * sm = GetMessageByIndex(LogSG->Row - 1);
+  if( ! sm )
+    return;
+  if( sm->Tag.Length() == 0 )
+    return;
+
+  String _tag = sm->Tag;
+  int i = _tag.Pos('[');
+  if( i > 0 )
+    _tag.Delete(i, _tag.Length()-i+1);
+
+  MessMatch.Clear();
+  MessMatch.Field1 = 5;
+  MessMatch.Contains1 = true;
+  MessMatch.Text1->Add(_tag);
   ApplyFilter();
 }
 //---------------------------------------------------------------------------
@@ -1249,7 +1293,7 @@ void __fastcall TMainForm::SelectFileCBSelect(TObject *Sender)
   SetFile(GetFileName(FileNumber));
 }
 //---------------------------------------------------------------------------
-void __fastcall TMainForm::FilterButtonClick(TObject *Sender)
+void __fastcall TMainForm::aDisplayFilterExecute(TObject *Sender)
 {
   FilterForm = new TFilterForm(this);
   FilterForm->MessMatchFr->ToDialog(&MessMatch);

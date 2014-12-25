@@ -16,6 +16,8 @@ TMainCfg::TMainCfg()
   TcpEnable = false;
   TcpInterface = "0.0.0.0";
   TcpPort = 514;
+
+  b3D = true;
 }
 //---------------------------------------------------------------------------
 const char * szSetupNode = "setup";
@@ -41,6 +43,7 @@ void TMainCfg::Save(String file, TStorageFileList * sfl)
   p->wb("TcpEnable", TcpEnable);
   p->ws("TcpInterface", TcpInterface);
   p->wi("TcpPort", TcpPort);
+  p->wb("D3", b3D);
 
   p = (XMLElementEx *)doc.NewElement(szMailNode);
   hls->InsertEndChild(p);
@@ -57,10 +60,11 @@ void TMainCfg::Save(String file, TStorageFileList * sfl)
 //---------------------------------------------------------------------------
 void TMainCfg::Load(String file, TStorageFileList * sfl)
 {
+  XMLError err;
   try
   {
     tinyxml2::XMLDocument doc;
-    XMLError err = doc.LoadFile(file.c_str());
+    err = doc.LoadFile(file.c_str());
     if( err == XML_SUCCESS )
     {
       XMLElement * hls;
@@ -83,6 +87,7 @@ void TMainCfg::Load(String file, TStorageFileList * sfl)
           TcpEnable = p->rb("TcpEnable", false);
           TcpInterface = p->rs("TcpInterface", "0.0.0.0");
           TcpPort = p->ri("TcpPort", 514);
+          b3D = p->rb("D3", true);
         }
         else if( strcmpi(p->Name(), szMailNode)==0 )
         {
@@ -100,7 +105,7 @@ void TMainCfg::Load(String file, TStorageFileList * sfl)
   catch(int i)
   {
     if( i==0 )
-      ReportError2("Error reading file: \"%s\"", file.c_str());
+      ReportError2("Error reading file: \"%s\" [%d]", file.c_str(), err);
     else
       ReportError2("Incorrect format of file: \"%s\"", file.c_str());
   }

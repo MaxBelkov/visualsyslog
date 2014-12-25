@@ -76,6 +76,8 @@ __published:	// IDE-managed Components
     TSpeedButton *DelFileButton;
     TDrawGrid *DrawGrid;
     TFileFr *FileFr;
+    TGroupBox *GroupBox4;
+    TCheckBox *D3CB;
     void __fastcall OKButtonClick(TObject *Sender);
     void __fastcall SmtpSelClick(TObject *Sender);
     void __fastcall pmInsertClick(TObject *Sender);

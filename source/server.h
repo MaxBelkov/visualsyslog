@@ -27,9 +27,8 @@ public:
 
   // Format message to string (saving to file)
   AnsiString ToString(void);
-  // Read message from string p (reading from file),
-  // p must be null terminated
-  void FromString(char * p);
+  // Read message from string p[len]
+  void FromString(char * p, int len);
 
   // Convert message to text string in clipboard format
   String ToStringClipboard(void);

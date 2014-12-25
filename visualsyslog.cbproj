@@ -42,20 +42,16 @@
     <Defines>_DEBUG;$(Defines)</Defines>
     <DynamicRTL>false</DynamicRTL>
     <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
-    <BCC_MonitorThis>true</BCC_MonitorThis>
     <ILINK_DisableIncrementalLinking>true</ILINK_DisableIncrementalLinking>
     <BCC_UseRegisterVariables>None</BCC_UseRegisterVariables>
     <DCC_Define>DEBUG</DCC_Define>
     <BCC_DebugLineNumbers>true</BCC_DebugLineNumbers>
-    <BCC_MonitorGlobalAndStackData>true</BCC_MonitorGlobalAndStackData>
     <IntermediateOutputDir>Debug</IntermediateOutputDir>
-    <BCC_AllCodeguardOptions>true</BCC_AllCodeguardOptions>
     <TASM_DisplaySourceLines>true</TASM_DisplaySourceLines>
     <BCC_StackFrames>true</BCC_StackFrames>
     <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
     <ILINK_LibraryPath>$(BDS)\lib\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
     <TASM_Debugging>Full</TASM_Debugging>
-    <BCC_MonitorInlinePtrAccess>true</BCC_MonitorInlinePtrAccess>
     <BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Cfg_2)'!=''">
@@ -69,13 +65,7 @@
     <Borland.Personality>CPlusPlusBuilder.Personality</Borland.Personality>
     <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">4</VersionInfo><VersionInfo Name="Release">2</VersionInfo><VersionInfo Name="Build">43</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.4.2.43</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.4.2.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
-      
-      
-      
-      
-      
-      
+<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">4</VersionInfo><VersionInfo Name="Release">2</VersionInfo><VersionInfo Name="Build">46</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.4.2.46</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.4.2.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
       <Excluded_Packages Name="C:\Users\Максим\Documents\DevExpress VCL\Library\RS11\dcldxPSTeeChartRS11.bpl">ExpressPrinting System ReportLink for TeeChart by Developer Express Inc.</Excluded_Packages>
       <Excluded_Packages Name="C:\Users\Максим\Documents\DevExpress VCL\Library\RS11\dcldxPSDBTeeChartRS11.bpl">ExpressPrinting System ReportLink for DBTeeChart by Developer Express Inc.</Excluded_Packages>
       <Excluded_Packages Name="$(BDS)\bin\bcboffice2k100.bpl">CodeGear C++Builder Office 2000 Servers Package</Excluded_Packages>
@@ -95,6 +85,10 @@
     </CppCompile>
     <CppCompile Include="sourcecommon\File.cpp">
       <BuildOrder>4</BuildOrder>
+    </CppCompile>
+    <CppCompile Include="sourcecommon\gr.cpp">
+      <DependentOn>sourcecommon\gr.h</DependentOn>
+      <BuildOrder>17</BuildOrder>
     </CppCompile>
     <CppCompile Include="sourcecommon\gridcolumns.cpp">
       <DependentOn>sourcecommon\gridcolumns.h</DependentOn>
@@ -146,104 +140,104 @@
     <CppCompile Include="source\aboutbox.cpp">
       <Form>AboutBoxForm</Form>
       <DependentOn>source\aboutbox.h</DependentOn>
-      <BuildOrder>21</BuildOrder>
+      <BuildOrder>22</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\AlarmForm.cpp">
       <Form>ShowAlarmForm</Form>
       <DependentOn>source\AlarmForm.h</DependentOn>
-      <BuildOrder>33</BuildOrder>
+      <BuildOrder>34</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\cfg.cpp">
       <DependentOn>source\cfg.h</DependentOn>
-      <BuildOrder>22</BuildOrder>
+      <BuildOrder>23</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\fdb.cpp">
       <DependentOn>source\fdb.h</DependentOn>
-      <BuildOrder>36</BuildOrder>
+      <BuildOrder>37</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\fileframe.cpp">
       <Form>FileFr</Form>
       <DesignClass>TFrame</DesignClass>
       <DependentOn>source\fileframe.h</DependentOn>
-      <BuildOrder>37</BuildOrder>
+      <BuildOrder>38</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\formhl.cpp">
       <Form>HighlightForm</Form>
       <DependentOn>source\formhl.h</DependentOn>
-      <BuildOrder>30</BuildOrder>
+      <BuildOrder>31</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\formprocess.cpp">
       <Form>ProcessForm</Form>
       <DependentOn>source\formprocess.h</DependentOn>
-      <BuildOrder>35</BuildOrder>
+      <BuildOrder>36</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\main.cpp">
       <Form>MainForm</Form>
       <DependentOn>source\main.h</DependentOn>
-      <BuildOrder>19</BuildOrder>
+      <BuildOrder>20</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\matchform.cpp">
       <Form>FilterForm</Form>
       <DependentOn>source\matchform.h</DependentOn>
-      <BuildOrder>38</BuildOrder>
+      <BuildOrder>39</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messhl.cpp">
       <DependentOn>source\messhl.h</DependentOn>
-      <BuildOrder>29</BuildOrder>
+      <BuildOrder>30</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messmatch.cpp">
       <DependentOn>source\messmatch.h</DependentOn>
-      <BuildOrder>26</BuildOrder>
+      <BuildOrder>27</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messmatchframe.cpp">
       <Form>MessMatchFr</Form>
       <DesignClass>TFrame</DesignClass>
       <DependentOn>source\messmatchframe.h</DependentOn>
-      <BuildOrder>25</BuildOrder>
+      <BuildOrder>26</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messprocessframe.cpp">
       <Form>MessProcessFr</Form>
       <DesignClass>TFrame</DesignClass>
       <DependentOn>source\messprocessframe.h</DependentOn>
-      <BuildOrder>34</BuildOrder>
+      <BuildOrder>35</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messprocessing.cpp">
       <DependentOn>source\messprocessing.h</DependentOn>
-      <BuildOrder>31</BuildOrder>
+      <BuildOrder>32</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messstyle.cpp">
       <DependentOn>source\messstyle.h</DependentOn>
-      <BuildOrder>27</BuildOrder>
+      <BuildOrder>28</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\messstyleframe.cpp">
       <Form>MessStyleFr</Form>
       <DesignClass>TFrame</DesignClass>
       <DependentOn>source\messstyleframe.h</DependentOn>
-      <BuildOrder>28</BuildOrder>
+      <BuildOrder>29</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\server.cpp">
       <DependentOn>source\server.h</DependentOn>
-      <BuildOrder>18</BuildOrder>
+      <BuildOrder>19</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\setup.cpp">
       <Form>SetupForm</Form>
       <DependentOn>source\setup.h</DependentOn>
-      <BuildOrder>20</BuildOrder>
+      <BuildOrder>21</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\sound.cpp">
-      <BuildOrder>32</BuildOrder>
+      <BuildOrder>33</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\syslog.cpp">
       <DependentOn>source\syslog.h</DependentOn>
-      <BuildOrder>17</BuildOrder>
+      <BuildOrder>18</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\tcpcon.cpp">
       <DependentOn>source\tcpcon.h</DependentOn>
-      <BuildOrder>23</BuildOrder>
+      <BuildOrder>24</BuildOrder>
     </CppCompile>
     <CppCompile Include="source\udpcon.cpp">
       <DependentOn>source\udpcon.h</DependentOn>
-      <BuildOrder>24</BuildOrder>
+      <BuildOrder>25</BuildOrder>
     </CppCompile>
     <CppCompile Include="visualsyslog.cpp">
       <BuildOrder>1</BuildOrder>

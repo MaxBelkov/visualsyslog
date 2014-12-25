@@ -110,7 +110,7 @@ object SetupForm: TSetupForm
         Top = 199
         Width = 486
         Height = 58
-        Caption = 'Other'
+        Caption = 'Launch'
         TabOrder = 2
         object AutoStartCB: TCheckBox
           Left = 20
@@ -206,6 +206,22 @@ object SetupForm: TSetupForm
           TabOrder = 2
         end
       end
+      object GroupBox4: TGroupBox
+        Left = 8
+        Top = 263
+        Width = 486
+        Height = 58
+        Caption = 'Highlighting'
+        TabOrder = 3
+        object D3CB: TCheckBox
+          Left = 20
+          Top = 24
+          Width = 254
+          Height = 17
+          Caption = '3D fill'
+          TabOrder = 0
+        end
+      end
     end
     object TabSheet3: TTabSheet
       Caption = 'Files'
@@ -215,7 +231,7 @@ object SetupForm: TSetupForm
         Left = 8
         Top = 3
         Width = 486
-        Height = 254
+        Height = 310
         Caption = 'Files'
         TabOrder = 0
         object AddFileButton: TSpeedButton
@@ -317,7 +333,7 @@ object SetupForm: TSetupForm
           Left = 8
           Top = 51
           Width = 470
-          Height = 195
+          Height = 251
           Margins.Left = 6
           Margins.Top = 36
           Margins.Right = 6
@@ -337,18 +353,19 @@ object SetupForm: TSetupForm
           TabOrder = 0
           OnClick = DrawGridClick
           OnDrawCell = DrawGridDrawCell
+          ExplicitHeight = 195
           ColWidths = (
             440)
         end
       end
       inline FileFr: TFileFr
         Left = 8
-        Top = 270
+        Top = 320
         Width = 486
         Height = 87
         TabOrder = 1
         ExplicitLeft = 8
-        ExplicitTop = 270
+        ExplicitTop = 320
       end
     end
     object TabSheet2: TTabSheet

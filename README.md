@@ -13,7 +13,7 @@ Features
 * Receive messages from various devices via UDP or TCP protocol (compliant to RFC 3164)
 * Syslog messages are displayed in real-time
 * Customizable color highlighting
-* Filter displayed syslog messages based on facility, priority, host, source address or message contents
+* Filter displayed syslog messages based on facility, priority, host, source address, tag or message contents
 * Import historical syslog messages after the start of the program
 * Minimize to system tray
 * View and analyze syslog messages from the file
@@ -26,8 +26,8 @@ Features
 Download
 ===
 Visual Syslog Server for Windows download installer:  
-[Download last developper snapshot 1.4.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
-[Download latest stable release 1.4.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
+[Last developper snapshot 1.4.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Latest stable release 1.4.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Installation
 ===
@@ -45,7 +45,6 @@ Installer project file _visualsyslog.iss_
 
 Is not supported yet
 ===
-* Alarms
 * Log file rotation
 * RFC 5424
 

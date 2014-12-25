@@ -567,9 +567,9 @@ String GetBytesStringEng(ULONGLONG count)
     rv.printf("%lu.%u Gb", count/ONE_GB, (WORD)((double)(count%ONE_GB)/(ONE_GB/10.0)));
   // Mb >= 1
   else if( count >= ONE_MB )
-    rv.printf("%lu.%u Mb", count/ONE_MB, (WORD)((double)(count%ONE_MB)/(ONE_MB/10.0)));
+    rv.printf("%lu.%u Mb", (ULONG)(count/ONE_MB), (WORD)((double)(count%ONE_MB)/(ONE_MB/10.0)));
   // Kb >= 2
-  else if( count >= 2048 )
+  else if( count >= 2*ONE_KB )
     rv.printf("%lu.%u Kb", count/ONE_KB, (WORD)((double)(count%ONE_KB)/(ONE_KB/10.0)));
   // b >= 2
   else

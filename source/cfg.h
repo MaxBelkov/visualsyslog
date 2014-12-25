@@ -15,6 +15,7 @@ public:
   bool TcpEnable;
   String TcpInterface;
   int TcpPort;
+  bool b3D;
 
   // mail
   TLetter Letter;

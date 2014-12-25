@@ -4,7 +4,7 @@
 
 #include "File.h"
 
-char szCR[] = "\r\n\x0";
+char CR[] = "\r\n\x0";
 //---------------------------------------------------------------------------
 __fastcall TFile::TFile(bool enableExceptions) :
   handle(NULL), Error(false), Exceptions( enableExceptions ), LastError(0), bytes(0)
@@ -178,8 +178,8 @@ bool __fastcall TFile::SetPointer64(LONGLONG Dist, DWORD MoveMethod)
   LastError = 0;
   LARGE_INTEGER li;
   li.QuadPart = Dist;
-  Error = SetFilePointer(handle, li.LowPart, &li.HighPart, MoveMethod) ==
-    INVALID_SET_FILE_POINTER;
+  DWORD dw = SetFilePointer(handle, li.LowPart, &li.HighPart, MoveMethod);
+  Error = dw == INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR;
   if( Error ) LastError = GetLastError();
   if( Exceptions && Error ) throw 0;
   return ! Error;
@@ -200,8 +200,9 @@ LONGLONG __fastcall TFile::GetPointer64(void)
   }
   LastError = 0;
   LARGE_INTEGER li;
+  li.QuadPart = 0;
   li.LowPart = SetFilePointer(handle, 0, &li.HighPart, FILE_CURRENT);
-  Error = li.LowPart == INVALID_SET_FILE_POINTER;
+  Error = li.LowPart == INVALID_SET_FILE_POINTER && GetLastError() != NO_ERROR;
   if( Error ) LastError = GetLastError();
   if( Exceptions && Error ) throw 0;
   return li.QuadPart;
@@ -246,7 +247,7 @@ bool __fastcall TFile::SetEnd(void)
 //---------------------------------------------------------------------------
 bool __fastcall TFile::WriteString(char * string)
 {
-  Error = ! (Write((BYTE *)string, lstrlen(string)) && Write((BYTE *)szCR, lstrlen(szCR)));
+  Error = ! (Write((BYTE *)string, lstrlen(string)) && Write((BYTE *)CR, lstrlen(CR)));
   return ! Error;
 }
 //---------------------------------------------------------------------------

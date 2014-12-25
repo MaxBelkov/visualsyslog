@@ -111,6 +111,11 @@ __published:	// IDE-managed Components
     TSpeedButton *FilterButton;
     TSpeedButton *ClearFilterButton2;
     TLabel *Label1;
+    TLabel *ViewFileInfoLabel;
+    TAction *aDisplayFilter;
+    TMenuItem *Displayfilter1;
+    TAction *aFilterByTag;
+    TMenuItem *FilteringbyTag1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall mCopyToClipboardClick(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -139,8 +144,9 @@ __published:	// IDE-managed Components
     void __fastcall aShowAlarmsExecute(TObject *Sender);
     void __fastcall aProcessSetupExecute(TObject *Sender);
     void __fastcall SelectFileCBSelect(TObject *Sender);
-    void __fastcall FilterButtonClick(TObject *Sender);
     void __fastcall ClearFilterButton2Click(TObject *Sender);
+    void __fastcall aDisplayFilterExecute(TObject *Sender);
+    void __fastcall aFilterByTagExecute(TObject *Sender);
 
 public:
   // Main grid
@@ -165,8 +171,6 @@ private:	// User declarations
   DWORD ReadedSize; // Bytes read from fFile
   int TotalLines;   // Total lines readed from file
 
-  AnsiString proto_line; // Used in Read() function
-
   DWORD LastBalloonShowTime;
 
   // View file mode
@@ -188,8 +192,8 @@ private:
   void __fastcall Clear(void);
   // Read the tail of the syslog file
   void __fastcall Read(bool bAllowAddVisibleLines);
-  // Print captions of main form and string grig
-  void __fastcall UpdateCaption(void);
+  // Print captions of string grig and view file info
+  void __fastcall UpdateDislpayInfo(void);
   // Set lines height when change font
   void __fastcall SetLinesHeight(void);
   // Initialization code

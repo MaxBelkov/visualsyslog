@@ -47,7 +47,10 @@ bool TSyslogMessage::FromStringSyslogd(char * p, int size, sockaddr_in * from_ad
   }
   if( PRI >= 0 )
   {
-    Facility = getcodetext(LOG_FAC(PRI) << 3, facilitynames);
+    int f = LOG_FAC(PRI);
+    if( f < LOG_NFACILITIES )
+      Facility = getcodetext(f << 3, facilitynames);
+    //else invalid facility number   
     Priority = getcodetext(LOG_PRI(PRI), prioritynames);
   }
 
@@ -129,18 +132,49 @@ AnsiString TSyslogMessage::ToString(void)
 {
   return SourceAddr + '\t' + DateStr + '\t' + HostName + '\t' +
   ((PRI >= 0) ? (Facility + '\t' + Priority) : AnsiString('\t')) + '\t' +
-  Tag + '\t' + Msg + szCR;
+  Tag + '\t' + Msg + CR;
 }
 //---------------------------------------------------------------------------
-void TSyslogMessage::FromString(char * p)
+void TSyslogMessage::FromString(char * p, int len)
 {
-  Clear();
+  // SourceAddr = String(p, int count) 5 time faster than
+  // String SourceAddr += *p
 
   if( ! p )
     return;
   if( ! *p )
     return;
 
+  int i=0, c;
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  SourceAddr = String(p+i-c, c);
+  if( p[i]=='\t' ) i++; // skip tab char
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  DateStr = String(p+i-c, c);
+  if( p[i]=='\t' ) i++;
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  HostName = String(p+i-c, c);
+  if( p[i]=='\t' ) i++;
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  Facility = String(p+i-c, c);
+  if( p[i]=='\t' ) i++;
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  Priority = String(p+i-c, c);
+  if( p[i]=='\t' ) i++;
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  Tag = String(p+i-c, c);
+  if( p[i]=='\t' ) i++;
+
+  for(c=0; p[i]!='\t' && i<len; i++,c++);
+  Msg = String(p+i-c, c);
+
+/*
   for(; *p && *p!='\t'; p++)
     SourceAddr += *p;
 
@@ -161,7 +195,7 @@ void TSyslogMessage::FromString(char * p)
 
   for(p++; *p && *p!='\t'; p++)
     Msg += *p;
-
+*/
   // -1 if gettextcode nothing found
   PRI = gettextcode(Priority.c_str(), prioritynames);
   if( PRI >= 0 )
@@ -217,7 +251,7 @@ String TSyslogMessage::ToStringClipboard(void)
   return
   DateStr + '\t' + SourceAddr + '\t' + HostName + '\t' +
   ((PRI >= 0) ? (Facility + '\t' + Priority) : String('\t')) + '\t' +
-  Tag + '\t' + Msg + szCR;
+  Tag + '\t' + Msg + CR;
 }
 //---------------------------------------------------------------------------
 // {time} {ip} {host} {facility} {priority} {tag} {message}

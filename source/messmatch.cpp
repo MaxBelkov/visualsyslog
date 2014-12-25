@@ -164,33 +164,40 @@ char * szAllMessMatch = "All messages match";
 String TMessMatch::GetDescription(void)
 {
   String rv;
+  String t;
 
   if( PriorityMask != PriorityMaskAll ) // filter by priority enable
   {
-    rv += String("Priority = ");
-    for(int c=0,pri=0; pri<LOG_NPRIORITIES; pri++)
+    int c=0;
+    t = "";
+    for(int pri=0; pri<LOG_NPRIORITIES; pri++)
       if( (1<<pri) & PriorityMask )
       {
         if( c++ > 0 )
-          rv += ", ";
-        rv += getcodetext(pri, prioritynames);
+          t += " OR ";
+        t += getcodetext(pri, prioritynames);
       }
+    if( c > 1 )
+      t = String("(") + t + ")";
+    rv += String("Priority = ") + t;
   }
 
   if( FacilityMask != FacilityMaskAll ) // filter by priority enable
   {
     if( rv.Length() > 0 ) rv += " AND ";
-    rv += String("Facility = ");
-    for(int c=0,fac=0; fac<LOG_NFACILITIES; fac++)
+    int c=0;
+    t = "";
+    for(int fac=0; fac<LOG_NFACILITIES; fac++)
       if( (1<<fac) & FacilityMask )
       {
         if( c++ > 0 )
-          rv += ", ";
-        rv += getcodetext(fac<<3, facilitynames);
+          t += " OR ";
+        t += getcodetext(fac<<3, facilitynames);
       }
+    if( c > 1 )
+      t = String("(") + t + ")";
+    rv += String("Facility = ") + t;
   }
-
-  String t;
 
   if( Text1->Count > 0 )
   {

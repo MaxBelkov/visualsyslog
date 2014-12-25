@@ -55,6 +55,8 @@ __fastcall TSetupForm::TSetupForm(TComponent* Owner)
   TcpInterfaceCB->Text = MainCfg.TcpInterface;
   TcpPortEdit->Text = MainCfg.TcpPort;
 
+  D3CB->Checked = MainCfg.b3D;
+
   // files
   localSFL = new TStorageFileList;
   *localSFL = fdb; 
@@ -145,6 +147,8 @@ void __fastcall TSetupForm::OKButtonClick(TObject *Sender)
   MainCfg.TcpEnable = EnableTcpCB->Checked;
   MainCfg.TcpInterface = TcpInterfaceCB->Text;
   MainCfg.TcpPort = port;
+
+  MainCfg.b3D = D3CB->Checked;
 
   // files
   *fdb = localSFL;
