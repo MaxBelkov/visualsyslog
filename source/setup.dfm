@@ -4,7 +4,7 @@ object SetupForm: TSetupForm
   BorderStyle = bsDialog
   Caption = 'Setup'
   ClientHeight = 537
-  ClientWidth = 527
+  ClientWidth = 594
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -16,12 +16,12 @@ object SetupForm: TSetupForm
   OnCloseQuery = FormCloseQuery
   OnDestroy = FormDestroy
   DesignSize = (
-    527
+    594
     537)
   PixelsPerInch = 96
   TextHeight = 13
   object OKButton: TBitBtn
-    Left = 122
+    Left = 145
     Top = 501
     Width = 113
     Height = 28
@@ -57,9 +57,10 @@ object SetupForm: TSetupForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    ExplicitLeft = 122
   end
   object CancelButton: TBitBtn
-    Left = 287
+    Left = 331
     Top = 501
     Width = 113
     Height = 28
@@ -95,20 +96,22 @@ object SetupForm: TSetupForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
+    ExplicitLeft = 287
   end
   object PageControl: TPageControl
     Left = 8
     Top = 8
-    Width = 512
+    Width = 578
     Height = 481
     ActivePage = TabSheet1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Main'
+      ExplicitWidth = 504
       object GroupBox1: TGroupBox
         Left = 8
-        Top = 199
-        Width = 486
+        Top = 187
+        Width = 553
         Height = 58
         Caption = 'Launch'
         TabOrder = 2
@@ -123,8 +126,8 @@ object SetupForm: TSetupForm
       end
       object UdpGroupBox: TGroupBox
         Left = 8
-        Top = 15
-        Width = 486
+        Top = 3
+        Width = 553
         Height = 89
         Caption = 'UDP syslog server'
         TabOrder = 0
@@ -146,7 +149,7 @@ object SetupForm: TSetupForm
         object UdpInterfaceCB: TComboBox
           Left = 196
           Top = 51
-          Width = 153
+          Width = 170
           Height = 21
           ItemHeight = 13
           ParentShowHint = False
@@ -154,7 +157,7 @@ object SetupForm: TSetupForm
           TabOrder = 1
         end
         object UdpPortEdit: TEdit
-          Left = 368
+          Left = 390
           Top = 51
           Width = 65
           Height = 21
@@ -166,8 +169,8 @@ object SetupForm: TSetupForm
       end
       object TcpGroupBox: TGroupBox
         Left = 8
-        Top = 110
-        Width = 486
+        Top = 98
+        Width = 553
         Height = 83
         Caption = 'TCP syslog server'
         TabOrder = 1
@@ -189,7 +192,7 @@ object SetupForm: TSetupForm
         object TcpInterfaceCB: TComboBox
           Left = 196
           Top = 43
-          Width = 153
+          Width = 170
           Height = 21
           ItemHeight = 13
           ParentShowHint = False
@@ -197,7 +200,7 @@ object SetupForm: TSetupForm
           TabOrder = 1
         end
         object TcpPortEdit: TEdit
-          Left = 368
+          Left = 390
           Top = 43
           Width = 65
           Height = 21
@@ -208,8 +211,8 @@ object SetupForm: TSetupForm
       end
       object GroupBox4: TGroupBox
         Left = 8
-        Top = 263
-        Width = 486
+        Top = 251
+        Width = 553
         Height = 58
         Caption = 'Highlighting'
         TabOrder = 3
@@ -226,11 +229,12 @@ object SetupForm: TSetupForm
     object TabSheet3: TTabSheet
       Caption = 'Files'
       ImageIndex = 2
+      ExplicitWidth = 504
       object FilesGB: TGroupBox
         AlignWithMargins = True
         Left = 8
         Top = 3
-        Width = 486
+        Width = 553
         Height = 310
         Caption = 'Files'
         TabOrder = 0
@@ -332,7 +336,7 @@ object SetupForm: TSetupForm
           AlignWithMargins = True
           Left = 8
           Top = 51
-          Width = 470
+          Width = 537
           Height = 251
           Margins.Left = 6
           Margins.Top = 36
@@ -353,19 +357,31 @@ object SetupForm: TSetupForm
           TabOrder = 0
           OnClick = DrawGridClick
           OnDrawCell = DrawGridDrawCell
-          ExplicitHeight = 195
+          ExplicitWidth = 470
           ColWidths = (
-            440)
+            506)
         end
       end
       inline FileFr: TFileFr
         Left = 8
         Top = 320
-        Width = 486
+        Width = 553
         Height = 87
         TabOrder = 1
         ExplicitLeft = 8
         ExplicitTop = 320
+        ExplicitWidth = 553
+        inherited GroupBox: TGroupBox
+          Width = 553
+          inherited SpeedButton2: TSpeedButton
+            Left = 520
+            ExplicitLeft = 520
+          end
+          inherited FileEdit: TEdit
+            Width = 505
+            ExplicitWidth = 505
+          end
+        end
       end
     end
     object TabSheet2: TTabSheet
@@ -374,7 +390,7 @@ object SetupForm: TSetupForm
       object GroupBox2: TGroupBox
         Left = 8
         Top = 3
-        Width = 486
+        Width = 553
         Height = 150
         Caption = 'Smtp server'
         TabOrder = 0
@@ -386,7 +402,7 @@ object SetupForm: TSetupForm
           Caption = 'Address'
         end
         object Label4: TLabel
-          Left = 170
+          Left = 194
           Top = 16
           Width = 20
           Height = 13
@@ -400,30 +416,30 @@ object SetupForm: TSetupForm
           Caption = 'Username'
         end
         object Label6: TLabel
-          Left = 170
+          Left = 194
           Top = 72
           Width = 46
           Height = 13
           Caption = 'Password'
         end
         object Label7: TLabel
-          Left = 242
+          Left = 266
           Top = 16
           Width = 17
           Height = 13
           Caption = 'SSL'
         end
         object Label13: TLabel
-          Left = 346
-          Top = 16
+          Left = 402
+          Top = 15
           Width = 89
           Height = 13
           Caption = 'Select smtp server'
         end
         object SpeedButton1: TSpeedButton
           Tag = 3
-          Left = 346
-          Top = 35
+          Left = 402
+          Top = 34
           Width = 103
           Height = 22
           Caption = 'Gmail'
@@ -431,16 +447,16 @@ object SetupForm: TSetupForm
         end
         object SpeedButton2: TSpeedButton
           Tag = 2
-          Left = 346
-          Top = 63
+          Left = 402
+          Top = 62
           Width = 103
           Height = 22
           Caption = 'iCloud Mail'
           OnClick = SmtpSelClick
         end
         object SpeedButton3: TSpeedButton
-          Left = 346
-          Top = 91
+          Left = 402
+          Top = 90
           Width = 103
           Height = 22
           Caption = '@mail.ru'
@@ -448,8 +464,8 @@ object SetupForm: TSetupForm
         end
         object SpeedButton4: TSpeedButton
           Tag = 1
-          Left = 346
-          Top = 119
+          Left = 402
+          Top = 118
           Width = 103
           Height = 22
           Caption = 'yandex'
@@ -458,12 +474,12 @@ object SetupForm: TSetupForm
         object serverEdit: TEdit
           Left = 16
           Top = 35
-          Width = 137
+          Width = 161
           Height = 21
           TabOrder = 0
         end
         object portEdit: TEdit
-          Left = 170
+          Left = 194
           Top = 35
           Width = 55
           Height = 21
@@ -472,20 +488,20 @@ object SetupForm: TSetupForm
         object usernameEdit: TEdit
           Left = 16
           Top = 91
-          Width = 137
+          Width = 161
           Height = 21
           TabOrder = 3
         end
         object passwordEdit: TEdit
-          Left = 170
+          Left = 194
           Top = 91
-          Width = 137
+          Width = 161
           Height = 21
           PasswordChar = '*'
           TabOrder = 4
         end
         object sslComboBox: TComboBox
-          Left = 242
+          Left = 266
           Top = 35
           Width = 65
           Height = 21
@@ -501,7 +517,7 @@ object SetupForm: TSetupForm
       object GroupBox3: TGroupBox
         Left = 8
         Top = 159
-        Width = 486
+        Width = 553
         Height = 282
         Caption = 'Message'
         TabOrder = 1
@@ -542,8 +558,8 @@ object SetupForm: TSetupForm
         end
         object InsertMemoButton: TSpeedButton
           Tag = 1
-          Left = 442
-          Top = 106
+          Left = 473
+          Top = 130
           Width = 25
           Height = 25
           Hint = 'Insert to Message...'
@@ -551,36 +567,36 @@ object SetupForm: TSetupForm
           Glyph.Data = {
             36040000424D3604000000000000360000002800000010000000100000000100
             2000000000000004000000000000000000000000000000000000000000000000
-            000000000000000000000000000000000000000000000FC68F380FC68FFF0FC6
-            8F38000000000000000000000000000000000000000000000000000000000000
-            0000000000000000000000000000000000000FC68F3811C48EFFFFFFFFFF11C4
-            8EFF0FC68F380000000000000000000000000000000000000000000000000000
-            00000000000000000000000000000FC68F3813C28CFF85F7D5FF0FE3AFFF85F7
-            D5FF12C28CFF0FC68F3800000000000000000000000000000000000000000000
-            000000000000000000000FC68F3815C08AFF78F5D1FF10E1ADFF0FE2ADFF0FE2
-            ADFF78F5D1FF15C08AFF0FC68F38000000000000000000000000000000000000
-            0000000000000FC68F3818BD88FF55EDC4FF0FE0ABFF0FDFABFF0FE0ABFF0FDF
-            ABFF0FE0ABFF55EDC4FF18BD88FF0FC68F380000000000000000000000000000
-            00000FC68F381BB985FF3BE7B9FF0FDDA9FF0FDCA9FF0FDDA9FF0FDDA9FF0FDD
-            A9FF0FDCA8FF0EDDA8FF3BE7B9FF1BB985FF0FC68F3800000000000000000FC6
-            8F381EB783FF30E2B3FF2CE1B1FF2BE1B1FF0FDAA6FF0FDAA6FF0EDAA6FF0FDA
-            A6FF0EDBA6FF2CE1B1FF2CE1B1FF30E2B3FF1EB783FF0FC68F380000000021B3
-            80FF21B380FF22B380FF22B380FF22B380FF0ED7A3FF0ED8A3FF0ED7A4FF0ED8
-            A3FF0FD8A3FF21B380FF22B380FF22B380FF21B380FF22B380FF000000000000
-            000000000000000000000000000025B07EFF0ED29FFF0ED5A1FF0ED5A1FF0ED6
-            A1FF0DD29EFF24B07DFF00000000000000000000000000000000000000000000
-            000000000000000000000000000028AC7BFF0FCC9AFF0DD39EFF0DD39EFF0ED3
-            9EFF0FCD9AFF28AD7BFF00000000000000000000000000000000000000000000
-            00000000000000000000000000002BA978FF0FC895FF0DD19CFF0DD09BFF0DD0
-            9CFF0FC795FF2BA979FF00000000000000000000000000000000000000000000
-            00000000000000000000000000002EA776FF0FC392FF0DCE99FF0DCE99FF0DCE
-            9AFF0FC392FF2EA776FF00000000000000000000000000000000000000000000
-            000000000000000000000000000030A474FF10C190FF10C190FF10C190FF10C0
-            90FF10C190FF30A474FF00000000000000000000000000000000000000000000
-            000000000000000000000000000032A173FF3DD7A8FF3DD7A8FF3DD7A8FF3DD7
-            A8FF3DD7A8FF32A172FF00000000000000000000000000000000000000000000
-            000000000000000000000000000034A071FF34A071FF34A071FF34A071FF34A0
-            71FF34A071FF34A071FF00000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000FC68F3822B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000000000000FC68F381EB783FF21B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000FC68F381BB985FF30E2B3FF22B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000FC68F3818BD88FF3BE7B9FF2CE1B1FF22B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00000FC68F3815C08AFF55EDC4FF0EDDA8FF2CE1B1FF21B380FF24B07DFF28AD
+            7BFF2BA979FF2EA776FF30A474FF32A172FF34A071FF00000000000000000FC6
+            8F3812C28CFF78F5D1FF0FE0ABFF0FDCA8FF0EDBA6FF0FD8A3FF0DD29EFF0FCD
+            9AFF0FC795FF0FC392FF10C190FF3DD7A8FF34A071FF000000000FC68F3811C4
+            8EFF85F7D5FF0FE2ADFF0FDFABFF0FDDA9FF0FDAA6FF0ED8A3FF0ED6A1FF0ED3
+            9EFF0DD09CFF0DCE9AFF10C090FF3DD7A8FF34A071FF000000000FC68FFFFFFF
+            FFFF0FE3AFFF0FE2ADFF0FE0ABFF0FDDA9FF0EDAA6FF0ED7A4FF0ED5A1FF0DD3
+            9EFF0DD09BFF0DCE99FF10C190FF3DD7A8FF34A071FF000000000FC68F3811C4
+            8EFF85F7D5FF10E1ADFF0FDFABFF0FDDA9FF0FDAA6FF0ED8A3FF0ED5A1FF0DD3
+            9EFF0DD19CFF0DCE99FF10C190FF3DD7A8FF34A071FF00000000000000000FC6
+            8F3813C28CFF78F5D1FF0FE0ABFF0FDCA9FF0FDAA6FF0ED7A3FF0ED29FFF0FCC
+            9AFF0FC895FF0FC392FF10C190FF3DD7A8FF34A071FF00000000000000000000
+            00000FC68F3815C08AFF55EDC4FF0FDDA9FF2BE1B1FF22B380FF25B07EFF28AC
+            7BFF2BA978FF2EA776FF30A474FF32A173FF34A071FF00000000000000000000
+            0000000000000FC68F3818BD88FF3BE7B9FF2CE1B1FF22B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000FC68F381BB985FF30E2B3FF22B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            00000000000000000000000000000FC68F381EB783FF21B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
+            0000000000000000000000000000000000000FC68F3821B380FF000000000000
+            0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000000000000000
             0000000000000000000000000000000000000000000000000000}
           ParentShowHint = False
@@ -589,7 +605,7 @@ object SetupForm: TSetupForm
         end
         object TestButton: TSpeedButton
           Tag = 1
-          Left = 111
+          Left = 143
           Top = 240
           Width = 263
           Height = 28
@@ -642,8 +658,8 @@ object SetupForm: TSetupForm
         end
         object InsertSubjectButton: TSpeedButton
           Tag = 1
-          Left = 351
-          Top = 88
+          Left = 473
+          Top = 91
           Width = 25
           Height = 25
           Hint = 'Insert to Subject...'
@@ -711,7 +727,7 @@ object SetupForm: TSetupForm
         object subjectEdit: TEdit
           Left = 16
           Top = 91
-          Width = 329
+          Width = 451
           Height = 21
           TabOrder = 3
         end

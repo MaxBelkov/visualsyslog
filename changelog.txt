@@ -1,5 +1,23 @@
 Visual Syslog Server for Windows Version history
 
+1.5.0  2014-12-26
+
+- Improved interface
+- Improved performance
+- Improved filtering messages
+- Generating notifications depending on the content of the received message:
+  Show alarms windows
+  Play sound file
+  Send e-mail notifications via smtp server
+  Customizable notices format
+- Performs actions depending on the content of the received message:
+  Run external program with params
+  Saving message to the specified file
+- Support for sending mail via SMTP server with authentication SSL / TLS
+  (support Gmail and iCloud mail smtp servers)
+- Installer adds firewall exception
+- 3D highlighting
+
 1.4.1  2014-11-25
 
 - Fixed bugs

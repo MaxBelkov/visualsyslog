@@ -1,2 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<processrules/>
+<processrules>
+    <processrule>
+        <enable>0</enable>
+        <match>
+            <not>0</not>
+            <prioritymask>255</prioritymask>
+            <facilitymask>16777215</facilitymask>
+            <matchcase>1</matchcase>
+            <field1>0</field1>
+            <contains1>1</contains1>
+            <field2>0</field2>
+            <contains2>1</contains2>
+        </match>
+        <process>
+            <ignore>0</ignore>
+            <alarm>0</alarm>
+            <alarmmess>{time} {message}</alarmmess>
+            <sound>0</sound>
+            <soundfile>alarm.wav</soundfile>
+            <playcount>1</playcount>
+            <sendmail>0</sendmail>
+            <recipient></recipient>
+            <runprog>0</runprog>
+            <progfile></progfile>
+            <proghide>0</proghide>
+            <savetofile>0</savetofile>
+            <savefile>-1</savefile>
+        </process>
+    </processrule>
+</processrules>

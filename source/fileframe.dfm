@@ -23,7 +23,7 @@ object FileFr: TFileFr
       Caption = 'Name'
     end
     object SpeedButton2: TSpeedButton
-      Left = 449
+      Left = 455
       Top = 39
       Width = 25
       Height = 25
@@ -68,12 +68,11 @@ object FileFr: TFileFr
       ParentShowHint = False
       ShowHint = True
       OnClick = SpeedButton2Click
-      ExplicitLeft = 271
     end
     object FileEdit: TEdit
       Left = 11
       Top = 43
-      Width = 432
+      Width = 440
       Height = 21
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
