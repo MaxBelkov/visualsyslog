@@ -1,11 +1,9 @@
 ![](https://raw.githubusercontent.com/MaxBelkov/visualsyslog/master/screens/ico.png) Visual Syslog Server for Windows
 ===
-Visual Syslog Server for Windows with a graphical user interface.
-
-Visual Syslog for Windows is a free open source program to receive and view syslog messages.
+Visual Syslog Server for Windows is a free open source program to receive and view syslog messages.
 Useful when setting up routers and systems based on Unix/Linux.
 
-Visual Syslog for Windows has a live messages view: switches to a new received message. Helpful color highlighting.
+Visual Syslog Server for Windows has a live messages view: switches to a new received message. Helpful color highlighting.
 Useful message filtering. Customizable notification and actions.
 
 ![Visual Syslog Server for Windows](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
@@ -62,20 +60,20 @@ Support
 ===
 Your questions and suggestions please send to ![](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
 
-Is not supported yet
+Coming Soon
 ===
 * Log file rotation
-* RFC 5424
+* Statistics
 
 If you need these or other functions let me know.  
 
 Screenshots
 ===
 
-Color highlighting
+Color highlighting setup
 ![Visual Syslog Server for Windows color highlighting](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen2.png?raw=true)
 
-Message processing
+Message processing setup
 ![Visual Syslog Server for Windows message processing](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true)
 
 Smtp server setup to send e-mail messages
