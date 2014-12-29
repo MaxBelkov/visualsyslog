@@ -35,13 +35,13 @@
 <a id="-visual-syslog-server-for-windows" class="anchor" href="#-visual-syslog-server-for-windows" aria-hidden="true"><span class="octicon octicon-link"></span></a>
 <img src="https://raw.githubusercontent.com/MaxBelkov/visualsyslog/master/screens/ico.png" alt=""> Visual Syslog Server for Windows</h1>
 
-<p>Visual Syslog Server for Windows with a graphical user interface.</p>
+<p>Visual Syslog Server for Windows is a free open source program to receive and view syslog messages.
+Useful when setting up routers and systems based on Unix/Linux.</p>
 
-<p>Visual Syslog for Windows is a free open source program to receive and view syslog messages. Useful when setting up routers and systems based on Unix/Linux.</p>
+<p>Visual Syslog Server for Windows has a live messages view: switches to a new received message. Helpful color highlighting.
+Useful message filtering. Customizable notification and actions.</p>
 
-<p>Visual Syslog for Windows has a live messages view: switches to a new received message. Helpful color highlighting. Useful message filtering.</p>
-
-<p><img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true" alt="Visual Syslog Server Screen"></p>
+<p><img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true" alt="Visual Syslog Server for Windows"></p>
 
 <h1>
 <a id="features" class="anchor" href="#features" aria-hidden="true"><span class="octicon octicon-link"></span></a>Features</h1>
@@ -49,15 +49,34 @@
 <ul>
 <li>Receive messages from various devices via UDP or TCP protocol (compliant to RFC 3164)</li>
 <li>Syslog messages are displayed in real-time</li>
-<li>Customizable color highlighting</li>
-<li>Filter displayed syslog messages based on facility, priority, host, source address or message contents</li>
-<li>Import historical syslog messages after the start of the program</li>
-<li>Minimize to system tray</li>
-<li>View and analyze syslog messages from the file</li>
+<li>Stores messages in files on disk</li>
+<li>Filter displayed syslog messages based on facility, priority, host, source address, tag or message contents</li>
+<li>Customizable color highlighting with nice 3D design</li>
+<li>Generating notifications depending on the content of the received message:
+
+<ul>
+<li>Show alarms windows</li>
+<li>Play sound file</li>
+<li>Send e-mail notifications via smtp server</li>
+<li>Customizable notices format</li>
+</ul>
+</li>
+<li>Performs actions depending on the content of the received message:
+
+<ul>
+<li>Run external program with params</li>
+<li>Saving message to the specified file</li>
+</ul>
+</li>
+<li>Support for sending mail via SMTP server with authentication SSL / TLS
+(Support Gmail and iCloud mail smtp servers. You can use the push notifications on your mobile device for instant delivery of alarms.)</li>
 <li>Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012</li>
-<li>Lightweight and fast</li>
-<li>Easy to install: adjustment is not required</li>
+<li>Lightweight and very fast</li>
 <li>Run as a Windows application</li>
+<li>Minimize to system tray</li>
+<li>Easy to install: adjustment is not required</li>
+<li>Import historical syslog messages after the start of the program</li>
+<li>View and analyze syslog messages from the file</li>
 <li>Free open source software, licensed under the GPL V2</li>
 </ul>
 
@@ -65,36 +84,53 @@
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h1>
 
 <p>Visual Syslog Server for Windows download installer:<br>
-<a href="https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true">Download last developper snapshot 1.4.0</a><br>
-<a href="https://github.com/MaxBelkov/visualsyslog/releases/latest">Download latest stable release 1.4.0</a></p>
+<a href="https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true">Last developper snapshot 1.5.0</a><br>
+<a href="https://github.com/MaxBelkov/visualsyslog/releases/latest">Latest stable release 1.5.0</a></p>
 
 <h1>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
 
 <p>After installation Visual Syslog Server for Windows works immediately: adjustment is not required.
 Waiting for messages on the UDP port 514 (default setting).
-Visual Syslog Server is an Windows application (installing a system service is not required).</p>
+Visual Syslog Server is an Windows application (installing a system service is not required).
+Installer adds firewall exception.</p>
 
 <h1>
 <a id="building-from-sources" class="anchor" href="#building-from-sources" aria-hidden="true"><span class="octicon octicon-link"></span></a>Building from sources</h1>
 
-<p>To build Windows Syslog Server from sources use CodeGear RAD Studio C++Builder 2007.<br>
-Main project file <em>visualsyslog.cbproj</em></p>
+<p>To build Windows Syslog Server from sources use CodeGear RAD Studio C++Builder 2007<br>
+Main project file <em>visualsyslog.cbproj</em><br>
+Required components: <a href="http://www.indyproject.org/Sockets/index.EN.aspx">Indy.Sockets (VCL) version 10</a></p>
 
 <p>To build the installer, use Inno Setup Compiler 5.5.1(a)<br>
 Installer project file <em>visualsyslog.iss</em></p>
 
 <h1>
-<a id="is-not-supported-yet" class="anchor" href="#is-not-supported-yet" aria-hidden="true"><span class="octicon octicon-link"></span></a>Is not supported yet</h1>
+<a id="support" class="anchor" href="#support" aria-hidden="true"><span class="octicon octicon-link"></span></a>Support</h1>
+
+<p>Your questions and suggestions please send to <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true" alt=""></p>
+
+<h1>
+<a id="coming-soon" class="anchor" href="#coming-soon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Coming Soon</h1>
 
 <ul>
-<li>Alarms</li>
 <li>Log file rotation</li>
-<li>RFC 5424</li>
+<li>Statistics</li>
 </ul>
 
-<p>If you need these or other functions let me know.<br>
-Your questions and suggestions please send to <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true" alt=" "></p>
+<p>If you need these or other functions let me know.  </p>
+
+<h1>
+<a id="screenshots" class="anchor" href="#screenshots" aria-hidden="true"><span class="octicon octicon-link"></span></a>Screenshots</h1>
+
+<p>Color highlighting setup
+<img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen2.png?raw=true" alt="Visual Syslog Server for Windows color highlighting"></p>
+
+<p>Message processing setup
+<img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true" alt="Visual Syslog Server for Windows message processing"></p>
+
+<p>Smtp server setup to send e-mail messages
+<img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen4.png?raw=true" alt="Visual Syslog Server for Windows smtp server setup"></p>
       </section>
     </div>
 
