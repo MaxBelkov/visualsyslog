@@ -8,7 +8,7 @@ Useful when setting up routers and systems based on Unix/Linux.
 Visual Syslog for Windows has a live messages view: switches to a new received message. Helpful color highlighting.
 Useful message filtering. Customizable notification and actions.
 
-![Visual Syslog Server Screen](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
+![Visual Syslog Server for Windows](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true)
 
 Features
 ===
@@ -18,13 +18,13 @@ Features
 * Filter displayed syslog messages based on facility, priority, host, source address, tag or message contents
 * Customizable color highlighting with nice 3D design
 * Generating notifications depending on the content of the received message:
-  Show alarms windows
-  Play sound file
-  Send e-mail notifications via smtp server
-  Customizable notices format
+  * Show alarms windows
+  * Play sound file
+  * Send e-mail notifications via smtp server
+  * Customizable notices format
 * Performs actions depending on the content of the received message:
-  Run external program with params
-  Saving message to the specified file
+  * Run external program with params
+  * Saving message to the specified file
 * Support for sending mail via SMTP server with authentication SSL / TLS
   (Support Gmail and iCloud mail smtp servers. You can use the push notifications on your mobile device for instant delivery of alarms.)
 * Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012
@@ -52,11 +52,15 @@ Installer adds firewall exception.
 Building from sources
 ===
 To build Windows Syslog Server from sources use CodeGear RAD Studio C++Builder 2007  
-Main project file _visualsyslog.cbproj_
+Main project file _visualsyslog.cbproj_  
 Required components: [Indy.Sockets (VCL) version 10](http://www.indyproject.org/Sockets/index.EN.aspx)
 
 To build the installer, use Inno Setup Compiler 5.5.1(a)  
 Installer project file _visualsyslog.iss_
+
+Support
+===
+Your questions and suggestions please send to ![](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
 
 Is not supported yet
 ===
@@ -64,4 +68,15 @@ Is not supported yet
 * RFC 5424
 
 If you need these or other functions let me know.  
-Your questions and suggestions please send to ![ ](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
+
+Screenshots
+===
+
+Color highlighting
+![Visual Syslog Server for Windows color highlighting](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen2.png?raw=true)
+
+Message processing
+![Visual Syslog Server for Windows message processing](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true)
+
+Smtp server setup to send e-mail messages
+![Visual Syslog Server for Windows smtp server setup](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen4.png?raw=true)
