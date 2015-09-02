@@ -116,6 +116,8 @@ __published:	// IDE-managed Components
     TMenuItem *Displayfilter1;
     TAction *aFilterByTag;
     TMenuItem *FilteringbyTag1;
+    TAction *aHideBars;
+    TMenuItem *Hidetoolbars1;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall mCopyToClipboardClick(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -147,6 +149,7 @@ __published:	// IDE-managed Components
     void __fastcall ClearFilterButton2Click(TObject *Sender);
     void __fastcall aDisplayFilterExecute(TObject *Sender);
     void __fastcall aFilterByTagExecute(TObject *Sender);
+    void __fastcall aHideBarsExecute(TObject *Sender);
 
 public:
   // Main grid

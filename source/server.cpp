@@ -47,10 +47,12 @@ bool TSyslogMessage::FromStringSyslogd(char * p, int size, sockaddr_in * from_ad
   }
   if( PRI >= 0 )
   {
-    int f = LOG_FAC(PRI);
-    if( f < LOG_NFACILITIES )
-      Facility = getcodetext(f << 3, facilitynames);
-    //else invalid facility number   
+    // invalid facility number not allowed: message filtering mechanism will fail
+    // replace invalid facility number by LOGALERT
+    if( LOG_FAC(PRI) >= LOG_NFACILITIES )
+      PRI = LOG_PRI(PRI) | LOG_LOGALERT;
+
+    Facility = getcodetext(LOG_FAC(PRI) << 3, facilitynames);
     Priority = getcodetext(LOG_PRI(PRI), prioritynames);
   }
 
@@ -99,7 +101,7 @@ bool TSyslogMessage::FromStringSyslogd(char * p, int size, sockaddr_in * from_ad
   // and now - process message
   // Replace all tabs by spaces,
   // cut all carriage returns and line feeds,
-  // replace all chars < 32 by '.'
+  // replace all chars 0..32 by '.'
   Msg = "";
   for(int i=0; p[i]; i++)
   {
@@ -107,7 +109,7 @@ bool TSyslogMessage::FromStringSyslogd(char * p, int size, sockaddr_in * from_ad
       Msg += ' ';
     else if( p[i] == '\r' )
       ;
-    else if( p[i] < 32 )
+    else if( p[i] >= 0 && p[i] < 32 )
       Msg += '.';
     else
       Msg += p[i];

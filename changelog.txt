@@ -1,5 +1,11 @@
 Visual Syslog Server for Windows Version history
 
+1.5.1  2015-09-02
+
+- "Hide tool bars" context menu item
+- Invalid facility codes in the received messages replaced by "logalert"
+- Fixed bugs
+
 1.5.0  2014-12-26
 
 - Improved interface

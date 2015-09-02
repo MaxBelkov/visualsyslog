@@ -622,7 +622,8 @@ void __fastcall TMainForm::aFontExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::SetLinesHeight(void)
 {
-  int rh = LogSG->Font->Size + 6;
+  // TFont::Height may be negative !
+  int rh = ABS(LogSG->Font->Height) + 6;
   LogSG->DefaultRowHeight = rh + rh / 2;
 }
 //---------------------------------------------------------------------------
@@ -1317,6 +1318,22 @@ void TMainForm::ApplyFilter(void)
   MessMatchLabel->Update();
   ClearFilterButton2->Visible = ! MessMatch.IsAllMatch();
   RedrawProto();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aHideBarsExecute(TObject *Sender)
+{
+  if( ToolBar->Visible )
+  {
+    GroupBox1->Visible = false;
+    ToolBar->Visible = false;
+    aHideBars->Caption = "Show tool bars";
+  }
+  else
+  {
+    GroupBox1->Visible = true;
+    ToolBar->Visible = true;
+    aHideBars->Caption = "Hide tool bars";
+  }
 }
 //---------------------------------------------------------------------------
 

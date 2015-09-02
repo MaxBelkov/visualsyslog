@@ -37,8 +37,8 @@ Features
 Download
 ===
 Visual Syslog Server for Windows download installer:  
-[Last developper snapshot 1.5.0](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
-[Latest stable release 1.5.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
+[Last developper snapshot 1.5.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Latest stable release 1.5.1](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Installation
 ===
@@ -60,7 +60,7 @@ Support
 ===
 Your questions and suggestions please send to ![](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true)
 
-Coming Soon
+Future plans
 ===
 * Log file rotation
 * Statistics
