@@ -23,6 +23,13 @@ __fastcall TMessProcessFr::TMessProcessFr(TComponent* Owner)
   DefaultRecipient = MainCfg.Letter.recipient;
   OpenDialog->InitialDir = WorkDir;
   fdb->GetList(SaveFileCB->Items);
+
+  TStorageFile * p = fdb->Get(0);
+  if( p )
+  {
+    IgnoreCB->Caption = String("Ignore (do not save to the default file \"") +
+      p->GetDescription() + "\")";
+  }
 }
 //---------------------------------------------------------------------------
 TForm * TMessProcessFr::GetForm(void)

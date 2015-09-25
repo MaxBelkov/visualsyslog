@@ -349,7 +349,6 @@ void __fastcall TSetupForm::DrawGridClick(TObject *Sender)
   {
     FileFr->Visible = true;
   }
-  //FileFr->Enabled = DrawGrid->Row != 1;
   FileFr->CanEdit(DrawGrid->Row != 1);
 
   int ARow = DrawGrid->Row - 1;

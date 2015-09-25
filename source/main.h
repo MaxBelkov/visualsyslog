@@ -181,6 +181,8 @@ private:	// User declarations
   String ViewFileName;
   String TmpViewFileName;
 
+  bool bFirstTimerTick;
+
 private:
   // Clear string grig
   // Set working file name to f

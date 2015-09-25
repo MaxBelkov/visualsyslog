@@ -116,7 +116,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
   FilterFile = WorkDir + "filter.xml";
 
   fdb = new TStorageFileList;
-    // Add default file
+    // Add default file if config file not exist
     TStorageFile * sf = new TStorageFile;
     sf->number = 0;
     sf->file = "syslog";
@@ -153,10 +153,14 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 
   SetFile(GetFileName(FileNumber));
 
+  bFirstTimerTick = true;
   Timer->Enabled = true;
   NetTimer->Enabled = true;
 
-  TrayChangeIcon(0);
+  // TrayChangeIcon moved to TimerTimer()
+  // Reason: sometimes an exception occurred "Cannot create shell notification icon."
+  //TrayChangeIcon(0);
+  
   Caption = GetFullAppName();
 }
 //---------------------------------------------------------------------------
@@ -350,6 +354,12 @@ void __fastcall TMainForm::aMoreLinesExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::TimerTimer(TObject *Sender)
 {
+  if( bFirstTimerTick )
+  {
+    TrayChangeIcon(0);
+    bFirstTimerTick = false;
+  }
+
   // Check for new records, if the protocol is "live"
   if( bLive )
     if( in.IsOpen() )
@@ -1160,9 +1170,6 @@ static void OnReceiveMail(TLetter * l)
 // return false if message p should be ignored
 bool ProcessMessageRules(TSyslogMessage * p)
 {
-  // test:
-  //AlarmShow(p->Format("{time} {message}"));
-
   bool rv = true;
   TMessProcessRule * pr;
   for(int i=0; i<ProcessRules->Count; i++)

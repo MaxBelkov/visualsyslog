@@ -16,13 +16,15 @@ public:
   BYTE PriorityMask;  // 8 priorities (LOG_)
   DWORD FacilityMask; // 24 facilities (LOG_)
 
-  // AND
+  // rule 1
   int Field1;     // 0-Text, 1-Message, 2-IP, 3-Host, 4-Facility, 5-Tag
   bool Contains1; // true(1) -  Contains or = Text1
                   // false(0) - NOT Contains or <> Text1
-  TStringList * Text1; // text strings to find in message i:<ip column> h:<host column>
-                       // f:<facility column>
+  TStringList * Text1; // text strings to find in message
+
   // AND
+
+  // rule 2
   int Field2;
   bool Contains2;
   TStringList * Text2;

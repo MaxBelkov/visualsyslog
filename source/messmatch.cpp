@@ -55,8 +55,8 @@ bool TMessMatch::LocalMatch(TSyslogMessage * p)
       return false;
   }
 
-  // AND
-  int b = true;
+  // rule 1
+  bool b = true;
   for(int i=0; i<Text1->Count; i++)
   {
     if( MatchAllFilds(p, Field1, Contains1, Text1->Strings[i]) )
@@ -70,7 +70,7 @@ bool TMessMatch::LocalMatch(TSyslogMessage * p)
   if( ! b )
     return false;
 
-  // AND
+  // rule 2
   b = true;
   for(int i=0; i<Text2->Count; i++)
   {
@@ -201,7 +201,7 @@ String TMessMatch::GetDescription(void)
 
   if( Text1->Count > 0 )
   {
-    t = GetDelimitedText(Text1, " OR ");
+    t = GetDelimitedText(Text1, "\" OR \"");
     if( rv.Length() > 0 ) rv += " AND ";
     switch( Field1 )
     {
@@ -228,7 +228,7 @@ String TMessMatch::GetDescription(void)
 
   if( Text2->Count > 0 )
   {
-    t = GetDelimitedText(Text2, " OR ");
+    t = GetDelimitedText(Text2, "\" OR \"");
     if( rv.Length() > 0 ) rv += " AND ";
     switch( Field2 )
     {

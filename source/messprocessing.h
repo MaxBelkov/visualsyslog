@@ -9,7 +9,7 @@
 class TMessProcess
 {
 public:
-  bool bIgnore;       // Ignore (do not save to file "syslog")
+  bool bIgnore;       // Ignore (do not save to the default file "syslog")
   bool bAlarm;        //
     String AlarmMess; //
   bool bSound;        //
