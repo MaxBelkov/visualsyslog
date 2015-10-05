@@ -72,6 +72,7 @@ Visual Syslog Сервер удобен для настройки серверов, маршрутизаторов и встраиваем
 ![Visual Syslog Сервер для Windows обработка сообщений](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true)
 
 Основные параметры настройки
+
 ![Visual Syslog Сервер для Windows основные параметры настройки](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen6.png?raw=true)
 
 Настройка файлов для сохранения сообщений и разбивка их на части

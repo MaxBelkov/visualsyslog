@@ -79,6 +79,7 @@ Message processing setup
 ![Visual Syslog Server for Windows message processing](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true)
 
 Main setup
+
 ![Visual Syslog Server for Windows main setup](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen6.png?raw=true)
 
 Files rotation setup
