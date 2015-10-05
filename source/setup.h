@@ -78,6 +78,8 @@ __published:	// IDE-managed Components
     TFileFr *FileFr;
     TGroupBox *GroupBox4;
     TCheckBox *D3CB;
+    TGroupBox *GroupBox5;
+    TCheckBox *WriteRawCB;
     void __fastcall OKButtonClick(TObject *Sender);
     void __fastcall SmtpSelClick(TObject *Sender);
     void __fastcall pmInsertClick(TObject *Sender);

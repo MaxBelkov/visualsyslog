@@ -8,6 +8,7 @@
 #include "cfg.h"
 #include "messageform.h" // cool message box
 #include "server.h"
+#include "saveini.h"     // TSaveParamsINI
 #include "setup.h"
 //---------------------------------------------------------------------------
 #pragma package(smart_init)
@@ -16,6 +17,8 @@
 
 extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
+extern TSaveParamsINI * AppParams;
+
 int TSetupForm::LastTabIndex = 0;
 int TSetupForm::LastFileIndex = 0;
 TSetupForm * SetupForm = NULL;
@@ -56,6 +59,7 @@ __fastcall TSetupForm::TSetupForm(TComponent* Owner)
   TcpPortEdit->Text = MainCfg.TcpPort;
 
   D3CB->Checked = MainCfg.b3D;
+  WriteRawCB->Checked = MainCfg.bWriteRaw;
 
   // files
   localSFL = new TStorageFileList;
@@ -67,6 +71,8 @@ __fastcall TSetupForm::TSetupForm(TComponent* Owner)
   ToInterface(&MainCfg.Letter);
 
   PageControl->TabIndex = LastTabIndex;
+
+  *AppParams >> (TStringGrid *)DrawGrid;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::FormDestroy(TObject *Sender)
@@ -76,6 +82,7 @@ void __fastcall TSetupForm::FormDestroy(TObject *Sender)
     LastFileIndex = DrawGrid->Row - 1;
   delete localSFL;
   localSFL = NULL;
+  *AppParams << (TStringGrid *)DrawGrid;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::FillRuleList(int SelectedIndex)
@@ -149,6 +156,7 @@ void __fastcall TSetupForm::OKButtonClick(TObject *Sender)
   MainCfg.TcpPort = port;
 
   MainCfg.b3D = D3CB->Checked;
+  MainCfg.bWriteRaw = WriteRawCB->Checked;
 
   // files
   *fdb = localSFL;
@@ -343,18 +351,17 @@ void __fastcall TSetupForm::DrawGridClick(TObject *Sender)
   if( DrawGrid->Row < 1 )
   {
     FileFr->Visible = false;
-    return;
   }
   else
   {
     FileFr->Visible = true;
-  }
-  FileFr->CanEdit(DrawGrid->Row != 1);
+    FileFr->SetDefaultFile(DrawGrid->Row == 1);
 
-  int ARow = DrawGrid->Row - 1;
-  TStorageFile * p = localSFL->Get(ARow);
-  if( p )
-    FileFr->ToDialog(p);
+    int ARow = DrawGrid->Row - 1;
+    TStorageFile * p = localSFL->Get(ARow);
+    if( p )
+      FileFr->ToDialog(p);
+  }
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::DrawGridDrawCell(TObject *Sender, int ACol,
@@ -368,10 +375,8 @@ void __fastcall TSetupForm::DrawGridDrawCell(TObject *Sender, int ACol,
     switch( ACol )
     {
       case 0: s = " File"; break;
+      case 1: s = " Rotation"; break;
     }
-    int x = Rect.Left + 2;
-    int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
-    c->TextRect(Rect, x, y, s);
   }
   else
   {
@@ -379,14 +384,14 @@ void __fastcall TSetupForm::DrawGridDrawCell(TObject *Sender, int ACol,
     if( p )
     {
       if( ACol == 0 )
-      {
         s = String(" ") + p->GetDescription();
-        int x = Rect.Left + 2;
-        int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
-        c->TextRect(Rect, x, y, s);
-      }
+      else if( ACol == 1 )
+        s = String(" ") + p->GetRotationDescription();
     }
   }
+  int x = Rect.Left + 2;
+  int y = Rect.Top + ((Rect.Bottom - Rect.Top - c->TextHeight(s)) / 2);
+  c->TextRect(Rect, x, y, s);
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::OnFrameValuesChange(TObject *Sender)

@@ -3,7 +3,7 @@ object SetupForm: TSetupForm
   Top = -4
   BorderStyle = bsDialog
   Caption = 'Setup'
-  ClientHeight = 537
+  ClientHeight = 572
   ClientWidth = 594
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -17,12 +17,12 @@ object SetupForm: TSetupForm
   OnDestroy = FormDestroy
   DesignSize = (
     594
-    537)
+    572)
   PixelsPerInch = 96
   TextHeight = 13
   object OKButton: TBitBtn
     Left = 145
-    Top = 501
+    Top = 538
     Width = 113
     Height = 28
     Anchors = [akBottom]
@@ -57,11 +57,10 @@ object SetupForm: TSetupForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-    ExplicitLeft = 122
   end
   object CancelButton: TBitBtn
     Left = 331
-    Top = 501
+    Top = 538
     Width = 113
     Height = 28
     Anchors = [akBottom]
@@ -96,21 +95,16 @@ object SetupForm: TSetupForm
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF
       FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF}
-    ExplicitLeft = 287
   end
   object PageControl: TPageControl
     Left = 8
-    Top = 8
+    Top = 2
     Width = 578
-    Height = 481
+    Height = 528
     ActivePage = TabSheet1
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Main'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 504
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 8
         Top = 187
@@ -154,7 +148,7 @@ object SetupForm: TSetupForm
           Top = 51
           Width = 170
           Height = 21
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = False
           TabOrder = 1
@@ -197,7 +191,7 @@ object SetupForm: TSetupForm
           Top = 43
           Width = 170
           Height = 21
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = False
           TabOrder = 1
@@ -228,6 +222,24 @@ object SetupForm: TSetupForm
           TabOrder = 0
         end
       end
+      object GroupBox5: TGroupBox
+        Left = 8
+        Top = 315
+        Width = 553
+        Height = 58
+        Caption = 'Working'
+        TabOrder = 4
+        object WriteRawCB: TCheckBox
+          Left = 20
+          Top = 24
+          Width = 509
+          Height = 17
+          Caption = 
+            'Write all received messages to a file "raw" for diagnostic purpo' +
+            'ses'
+          TabOrder = 0
+        end
+      end
     end
     object TabSheet3: TTabSheet
       Caption = 'Files'
@@ -237,7 +249,7 @@ object SetupForm: TSetupForm
         Left = 8
         Top = 3
         Width = 553
-        Height = 310
+        Height = 223
         Caption = 'Files'
         TabOrder = 0
         object AddFileButton: TSpeedButton
@@ -339,13 +351,13 @@ object SetupForm: TSetupForm
           Left = 8
           Top = 51
           Width = 537
-          Height = 251
+          Height = 164
           Margins.Left = 6
           Margins.Top = 36
           Margins.Right = 6
           Margins.Bottom = 6
           Align = alClient
-          ColCount = 1
+          ColCount = 2
           DefaultColWidth = 400
           FixedCols = 0
           RowCount = 2
@@ -354,28 +366,34 @@ object SetupForm: TSetupForm
           Font.Height = -13
           Font.Name = 'Tahoma'
           Font.Style = []
-          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goRowSelect, goThumbTracking]
+          Options = [goFixedVertLine, goFixedHorzLine, goVertLine, goHorzLine, goColSizing, goRowSelect, goThumbTracking]
           ParentFont = False
           TabOrder = 0
           OnClick = DrawGridClick
           OnDrawCell = DrawGridDrawCell
-          ExplicitWidth = 470
           ColWidths = (
-            506)
+            308
+            202)
         end
       end
       inline FileFr: TFileFr
         Left = 8
-        Top = 320
+        Top = 232
         Width = 553
-        Height = 87
+        Height = 262
         TabOrder = 1
         ExplicitLeft = 8
-        ExplicitTop = 320
+        ExplicitTop = 232
         ExplicitWidth = 553
+        ExplicitHeight = 262
         inherited GroupBox: TGroupBox
           Width = 553
+          Height = 262
           ExplicitWidth = 553
+          ExplicitHeight = 262
+          DesignSize = (
+            553
+            262)
           inherited SpeedButton2: TSpeedButton
             Left = 520
             ExplicitLeft = 520
@@ -384,16 +402,24 @@ object SetupForm: TSetupForm
             Width = 505
             ExplicitWidth = 505
           end
+          inherited Panel1: TPanel
+            Width = 530
+            ExplicitWidth = 530
+            inherited HelpLabel: TLabel
+              Left = 496
+              ExplicitLeft = 496
+            end
+            inherited NewNameEdit: TEdit
+              Width = 376
+              ExplicitWidth = 376
+            end
+          end
         end
       end
     end
     object TabSheet2: TTabSheet
       Caption = 'E-mail'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 8
         Top = 3

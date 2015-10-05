@@ -18,6 +18,7 @@ TMainCfg::TMainCfg()
   TcpPort = 514;
 
   b3D = true;
+  bWriteRaw = false;
 }
 //---------------------------------------------------------------------------
 const char * szSetupNode = "setup";
@@ -44,6 +45,7 @@ void TMainCfg::Save(String file, TStorageFileList * sfl)
   p->ws("TcpInterface", TcpInterface);
   p->wi("TcpPort", TcpPort);
   p->wb("D3", b3D);
+  p->wb("WriteRaw", bWriteRaw);
 
   p = (XMLElementEx *)doc.NewElement(szMailNode);
   hls->InsertEndChild(p);
@@ -88,6 +90,7 @@ void TMainCfg::Load(String file, TStorageFileList * sfl)
           TcpInterface = p->rs("TcpInterface", "0.0.0.0");
           TcpPort = p->ri("TcpPort", 514);
           b3D = p->rb("D3", true);
+          bWriteRaw = p->rb("WriteRaw", false);
         }
         else if( strcmpi(p->Name(), szMailNode)==0 )
         {

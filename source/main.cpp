@@ -75,6 +75,7 @@ __fastcall TMainForm::TMainForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::FormCreate(TObject * Sender)
 {
+  Application->HintHidePause = 30000; // 30 sec.
   FileReadBuffer = new BYTE[StartSizeToRead];
   CreateGrid();
   ViewFileMode = false;
@@ -151,6 +152,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 
   Init(true);
 
+  FileRotationNumber = 0;
   SetFile(GetFileName(FileNumber));
 
   bFirstTimerTick = true;
@@ -332,6 +334,20 @@ void __fastcall TMainForm::SetFile(String f)
   }
 
   Read(true); // limit lines count off: show all readed lines
+
+  UpdateDislpayInfo();
+}
+//---------------------------------------------------------------------------
+void __fastcall PreRotateFile(String FileName)
+{
+  if( FileName == MainForm->fFile )
+    MainForm->in.Close();
+}
+//---------------------------------------------------------------------------
+void __fastcall PostRotateFile(void)
+{
+  if( ! MainForm->in.IsOpen() )
+    MainForm->SetFile(MainForm->fFile);
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::GotoNewLine(void)
@@ -357,6 +373,9 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
   if( bFirstTimerTick )
   {
     TrayChangeIcon(0);
+    // Toolbar buttons visibility failure when
+    // call UpdateRotationViewControl() from TMainForm::FormCreate() !!!
+    UpdateRotationViewControl();
     bFirstTimerTick = false;
   }
 
@@ -365,6 +384,10 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
     if( in.IsOpen() )
       // limit lines count on: show no more MAX(current_count, MaxGridLinesReceive) lines
       Read(false);
+
+  // check LogRotate...
+  if( fdb )
+    fdb->CheckRotate();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::UpdateDislpayInfo(void)
@@ -374,8 +397,11 @@ void __fastcall TMainForm::UpdateDislpayInfo(void)
     s = ViewFileName + " ";
   // If the text file is not completely read
   if( aMoreLines->Enabled )
-    s += "the last " + GetBytesStringEng(ReadedSize) +
-         " of the " + GetBytesStringEng(FileSize);
+    s += "[the last " + GetBytesStringEng(ReadedSize) +
+         " of the " + GetBytesStringEng(FileSize) + "]";
+  if( FileRotationNumber > 0 )
+    s += String("  ") + ExtractFileName(fFile);
+
   ViewFileInfoLabel->Caption = s;
 
   int lc = MessList->Count;
@@ -654,6 +680,9 @@ void __fastcall TMainForm::NetTimerTimer(TObject *Sender)
 //---------------------------------------------------------------------------
 bool WriteToLogRawMessage(char * p)
 {
+  if( ! MainCfg.bWriteRaw )
+    return true;
+    
   if( ! rawout.IsOpen() )
   {
     rawout.Open(RawFile, GENERIC_WRITE,
@@ -687,6 +716,8 @@ bool WriteToLogError(String fmt, ...)
   // Print in the status bar
   if( s.Pos("ERROR\t") > 0 )
     SB(2) = s.SubString(7, s.Length()-6);
+  else
+    SB(2) = s;
 
   s = Now().DateTimeString() + '\t' + s + ::CR;
   out << s;
@@ -981,8 +1012,8 @@ void __fastcall TMainForm::aViewFileExecute(TObject *Sender)
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aCancelViewFileExecute(TObject *Sender)
 {
+  SelectFileCBSelect(NULL);
   SetViewFileMode(false);
-  SetFile(GetFileName(FileNumber));
   DeleteFile(TmpViewFileName);
 }
 //---------------------------------------------------------------------------
@@ -1014,6 +1045,8 @@ void __fastcall TMainForm::SetViewFileMode(bool b)
       ViewFileInfoLabel->Tag = ViewFileInfoLabel->Left;
       ViewFileInfoLabel->Left = SelectFileCB->Left;
     }
+    aRotatePrev->Visible = false;
+    aRotateNext->Visible = false;
   }
   else
   {
@@ -1023,12 +1056,15 @@ void __fastcall TMainForm::SetViewFileMode(bool b)
       SelectFileCB->Visible = true;
       ViewFileInfoLabel->Left = ViewFileInfoLabel->Tag;
     }
+    UpdateRotationViewControl();
   }
   UpdateDislpayInfo();
 }
 //---------------------------------------------------------------------------
 TSyslogMessage * __fastcall TMainForm::GetMessageByIndex(int i)
 {
+  if( ! MessList )
+    return NULL;
   if( i < 0 || i >= MessList->Count )
     return NULL;
   return (TSyslogMessage *)MessList->Items[i];
@@ -1298,7 +1334,9 @@ void __fastcall TMainForm::SelectFileCBSelect(TObject *Sender)
     FileNumber = 0;
   else
     FileNumber = (int)SelectFileCB->Items->Objects[i];
+  FileRotationNumber = 0;
   SetFile(GetFileName(FileNumber));
+  UpdateRotationViewControl();
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::aDisplayFilterExecute(TObject *Sender)
@@ -1341,6 +1379,51 @@ void __fastcall TMainForm::aHideBarsExecute(TObject *Sender)
     ToolBar->Visible = true;
     aHideBars->Caption = "Hide tool bars";
   }
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aRotatePrevExecute(TObject *Sender)
+{
+  TStorageFile * sf = fdb->GetByNumber( FileNumber );
+  if( ! sf )
+    return;
+  if( ! sf->IsRotationEnable() )
+    return;
+  String f = sf->RotationLogGetItem(FileRotationNumber+1);
+  if( f.IsEmpty() )
+    return;
+  if( ! FileExists(f) )
+    return;
+  FileRotationNumber++;
+  SetFile( f );
+  UpdateRotationViewControl();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::aRotateNextExecute(TObject *Sender)
+{
+  TStorageFile * sf = fdb->GetByNumber( FileNumber );
+  if( ! sf )
+    return;
+  if( ! sf->IsRotationEnable() )
+    return;
+  String f = sf->RotationLogGetItem(FileRotationNumber-1);
+  if( f.IsEmpty() )
+    return;
+  if( ! FileExists(f) )
+    return;
+  FileRotationNumber--;
+  SetFile( f );
+  UpdateRotationViewControl();
+}
+//---------------------------------------------------------------------------
+void __fastcall TMainForm::UpdateRotationViewControl(void)
+{
+  TStorageFile * sf = fdb->GetByNumber( FileNumber );
+  if( ! sf )
+    return;
+  bool b = sf->IsRotationEnable();
+  aRotatePrev->Visible = b;
+  aRotateNext->Visible = b;
+  aRotateNext->Enabled = FileRotationNumber > 0;
 }
 //---------------------------------------------------------------------------
 

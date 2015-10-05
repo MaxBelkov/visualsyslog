@@ -2,19 +2,19 @@ object FileFr: TFileFr
   Left = 0
   Top = 0
   Width = 486
-  Height = 87
+  Height = 261
   TabOrder = 0
   object GroupBox: TGroupBox
     Left = 0
     Top = 0
     Width = 486
-    Height = 87
+    Height = 261
     Align = alClient
     Caption = 'File settings'
     TabOrder = 0
     DesignSize = (
       486
-      87)
+      261)
     object Label11: TLabel
       Left = 11
       Top = 24
@@ -69,6 +69,13 @@ object FileFr: TFileFr
       ShowHint = True
       OnClick = SpeedButton2Click
     end
+    object Label1: TLabel
+      Left = 295
+      Top = 135
+      Width = 22
+      Height = 13
+      Caption = 'hour'
+    end
     object FileEdit: TEdit
       Left = 11
       Top = 43
@@ -77,6 +84,201 @@ object FileFr: TFileFr
       Anchors = [akLeft, akTop, akRight]
       TabOrder = 0
       OnChange = Change
+    end
+    object RotationRB1: TRadioButton
+      Left = 11
+      Top = 76
+      Width = 113
+      Height = 17
+      Caption = 'Rotation off'
+      TabOrder = 1
+      OnClick = Change
+    end
+    object RotationRB2: TRadioButton
+      Left = 11
+      Top = 103
+      Width = 113
+      Height = 17
+      Caption = 'Rotation by size:'
+      TabOrder = 2
+      OnClick = Change
+    end
+    object RotationRB3: TRadioButton
+      Left = 11
+      Top = 130
+      Width = 113
+      Height = 17
+      Caption = 'Rotation by date:'
+      TabOrder = 3
+      OnClick = Change
+    end
+    object SizeEdit: TEdit
+      Left = 136
+      Top = 101
+      Width = 49
+      Height = 21
+      TabOrder = 4
+      Text = '1'
+      OnChange = Change
+    end
+    object MultCB: TComboBox
+      Left = 217
+      Top = 101
+      Width = 49
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 0
+      TabOrder = 6
+      Text = 'KBs'
+      OnSelect = Change
+      Items.Strings = (
+        'KBs'
+        'MBs'
+        'GBs')
+    end
+    object MomentCB: TComboBox
+      Left = 136
+      Top = 130
+      Width = 66
+      Height = 21
+      Style = csDropDownList
+      ItemHeight = 13
+      ItemIndex = 2
+      TabOrder = 7
+      Text = 'Month'
+      OnSelect = Change
+      Items.Strings = (
+        'Day'
+        'Week'
+        'Month'
+        'Year')
+    end
+    object HourEdit: TEdit
+      Left = 216
+      Top = 130
+      Width = 49
+      Height = 21
+      TabOrder = 8
+      Text = '0'
+      OnChange = Change
+    end
+    object Panel1: TPanel
+      Left = 11
+      Top = 160
+      Width = 466
+      Height = 97
+      Anchors = [akLeft, akTop, akRight]
+      BevelOuter = bvNone
+      TabOrder = 10
+      DesignSize = (
+        466
+        97)
+      object Label4: TLabel
+        Left = 0
+        Top = 0
+        Width = 139
+        Height = 13
+        Caption = 'After rotation rename file to:'
+      end
+      object HelpLabel: TLabel
+        Left = 432
+        Top = 46
+        Width = 27
+        Height = 16
+        Cursor = crHandPoint
+        Anchors = [akTop, akRight]
+        Caption = 'help'
+        Font.Charset = DEFAULT_CHARSET
+        Font.Color = clNavy
+        Font.Height = -13
+        Font.Name = 'Tahoma'
+        Font.Style = [fsBold, fsUnderline]
+        ParentFont = False
+        ParentShowHint = False
+        ShowHint = True
+        OnClick = HelpLabelClick
+        ExplicitLeft = 435
+      end
+      object Label2: TLabel
+        Left = 0
+        Top = 76
+        Width = 76
+        Height = 13
+        Caption = 'Number of files:'
+      end
+      object RenamingRB0: TRadioButton
+        Left = 8
+        Top = 22
+        Width = 174
+        Height = 17
+        Caption = 'Name + number'
+        Checked = True
+        TabOrder = 0
+        TabStop = True
+        OnClick = Change
+      end
+      object RenamingRB1: TRadioButton
+        Left = 8
+        Top = 46
+        Width = 97
+        Height = 17
+        Caption = 'New name:'
+        TabOrder = 1
+        OnClick = Change
+      end
+      object CountEdit: TEdit
+        Left = 109
+        Top = 72
+        Width = 70
+        Height = 21
+        TabOrder = 3
+        Text = '1'
+        OnChange = Change
+      end
+      object NewNameEdit: TEdit
+        Left = 109
+        Top = 45
+        Width = 312
+        Height = 21
+        Anchors = [akLeft, akTop, akRight]
+        TabOrder = 2
+        OnChange = Change
+      end
+      object CountEditUD: TUpDown
+        Left = 179
+        Top = 72
+        Width = 17
+        Height = 21
+        Associate = CountEdit
+        Min = 1
+        Max = 32767
+        Position = 1
+        TabOrder = 4
+        Thousands = False
+      end
+    end
+    object HourEditUD: TUpDown
+      Left = 265
+      Top = 130
+      Width = 17
+      Height = 21
+      Associate = HourEdit
+      Max = 23
+      TabOrder = 9
+      Thousands = False
+    end
+    object SizeEditUD: TUpDown
+      Left = 185
+      Top = 101
+      Width = 17
+      Height = 21
+      Associate = SizeEdit
+      Min = 1
+      Max = 32767
+      Position = 1
+      TabOrder = 5
+      Thousands = False
     end
   end
   object OpenDialog: TOpenDialog

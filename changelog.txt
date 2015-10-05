@@ -1,8 +1,15 @@
 Visual Syslog Server for Windows Version history
 
+1.6.0  2015-09-29
+
+- Log file rotation by size
+- Log file rotation by date
+- Renaming files after rotation
+- Improved performance
+
 1.5.2  2015-09-25
 
-- The ability to change the default log file name
+- The ability to change the default log file name "syslog"
 
 1.5.1  2015-09-02
 

@@ -118,6 +118,12 @@ __published:	// IDE-managed Components
     TMenuItem *FilteringbyTag1;
     TAction *aHideBars;
     TMenuItem *Hidetoolbars1;
+    TAction *aRotatePrev;
+    TAction *aRotateNext;
+    TMenuItem *Viewpreviouspart1;
+    TMenuItem *Viewnextpart1;
+    TToolButton *ToolButton7;
+    TToolButton *ToolButton15;
     void __fastcall TimerTimer(TObject *Sender);
     void __fastcall mCopyToClipboardClick(TObject *Sender);
     void __fastcall LogSGDblClick(TObject *Sender);
@@ -150,6 +156,8 @@ __published:	// IDE-managed Components
     void __fastcall aDisplayFilterExecute(TObject *Sender);
     void __fastcall aFilterByTagExecute(TObject *Sender);
     void __fastcall aHideBarsExecute(TObject *Sender);
+    void __fastcall aRotatePrevExecute(TObject *Sender);
+    void __fastcall aRotateNextExecute(TObject *Sender);
 
 public:
   // Main grid
@@ -162,10 +170,11 @@ private:	// User declarations
   TList * MessList;       // List of messages to dislpay
 
   BYTE * FileReadBuffer;  // buffer for file reading
-  TFile in;               // syslog file
+  TFile in;               // current viewed syslog file
   DWORD SizeToRead;       // size to read from syslog file
 
   int FileNumber;   // Current viewed file number (TStorageFileList::GetByNumber)
+  int FileRotationNumber; // Current viewed file rotation number
   String fFile;     // Current viewed file name
   bool bLive;       // Live view ? (yes by default)
   TMessMatch MessMatch; // Display filter
@@ -188,6 +197,9 @@ private:
   // Set working file name to f
   // Read maxsize bytes from the end of file f and show in the string grid
   void __fastcall SetFile(String f);
+  // Rotation
+  friend void __fastcall PreRotateFile(String FileName);
+  friend void __fastcall PostRotateFile(void);
   // Read protocol text file again
   // Called when filters changes
   void __fastcall RedrawProto(void);
@@ -224,6 +236,8 @@ public:		// User declarations
 
   void __fastcall FillProfilePopupMenu(void);
   void __fastcall ChangeProfileClick(TObject *Sender);
+
+  void __fastcall UpdateRotationViewControl(void);
 };
 //---------------------------------------------------------------------------
 extern PACKAGE TMainForm * MainForm;

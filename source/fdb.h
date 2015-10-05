@@ -10,10 +10,28 @@
 class TStorageFile
 {
 public:
-  int number;   // number to link from TMessProcess::SaveFile
+  int number;   // file number to link from TMessProcess::SaveFile
   String file;  // file name
+
+  // *** LogRotate ***
+  int rotation_type;   // file rotation: 0-disable, 1-by size, 2-by date [0]
+  // rotation by size
+  int rotation_size;   // > 0 [10]
+  int rotation_mult;   // 0,1,2 (KBs,MBs,GBs) [MBs]
+  // rotation by date
+  int rotation_moment; // 0,1,2,3 (Day,Week,Month,Year) [Week]
+  int rotation_hour;   // 0..23 [0]
+  // file name after rotation
+  int rotation_renaming; // 0-file+number[rotation_count] 1-rename file to rotation_name
+  String rotation_name;  // new file name after rotation {dd-mm-yyyy hh}
+  int rotation_count;    // total number of rotated files >= 1 [10]
+
+private:
   TFile out;    // file write object
-  //LogRotate
+
+public:
+  ULONGLONG file_size; // for log rotatition by size
+  int last_date; // for log rotatition by date
 
 public:
   TStorageFile();
@@ -28,6 +46,25 @@ public:
 
   void Save(XMLElementEx * p);
   void Load(XMLElementEx * p);
+
+  // *** LogRotate ***
+  void RotateFile(void);
+
+  String GetFileNameToRotate(int num); // for rotation_renaming==0
+  String GetNewRotationName(void);     // for rotation_renaming==1
+
+  bool IsRotationEnable(void);
+  bool IsNeedRenameAfterRotate(void);
+
+  String GetRotationDescription(void);
+
+  // *** Rotation names log ***
+  // (It used to view file with buttons "View prev" "view next")
+  String RotationLogFormatFileName(void);
+  // fn - log file name
+  void RotationLogAddItem(String fn, String & file_to_delete);
+  // num: 0-GetFileName() >=1-read rotation name from file
+  String RotationLogGetItem(int num);
 };
 //---------------------------------------------------------------------------
 // file list
@@ -50,6 +87,8 @@ public:
 
   TStorageFile * __fastcall GetByNumber(int _number);
   int GetNewNumber(void);
+
+  void CheckRotate(void);
 
 private:
   virtual void __fastcall Clear(void);
