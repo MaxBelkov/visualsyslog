@@ -40,6 +40,8 @@ Useful when setting up routers and systems based on Unix/Linux.</p>
 <p>Visual Syslog Server for Windows has a live messages view: switches to a new received message. Helpful color highlighting.
 Useful message filtering. Customizable notification and actions.</p>
 
+<p><a href="readme_rus.md">Read in Russian</a></p>
+
 <p><img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen1.png?raw=true" alt="Visual Syslog Server for Windows"></p>
 
 <h1>
@@ -49,6 +51,7 @@ Useful message filtering. Customizable notification and actions.</p>
 <li>Receive messages from various devices via UDP or TCP protocol (compliant to RFC 3164)</li>
 <li>Syslog messages are displayed in real-time</li>
 <li>Stores messages in files on disk</li>
+<li>Log file rotation by size or by date</li>
 <li>Filter displayed syslog messages based on facility, priority, host, source address, tag or message contents</li>
 <li>Customizable color highlighting with nice 3D design</li>
 <li>Generating notifications depending on the content of the received message:
@@ -69,13 +72,13 @@ Useful message filtering. Customizable notification and actions.</p>
 </li>
 <li>Support for sending mail via SMTP server with authentication SSL / TLS
 (Support Gmail and iCloud mail smtp servers. You can use the push notifications on your mobile device for instant delivery of alarms.)</li>
-<li>Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012</li>
 <li>Lightweight and very fast</li>
 <li>Run as a Windows application</li>
 <li>Minimize to system tray</li>
+<li>Support Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012</li>
 <li>Easy to install: adjustment is not required</li>
 <li>Import historical syslog messages after the start of the program</li>
-<li>View and analyze syslog messages from the file</li>
+<li>View syslog messages from the file</li>
 <li>Free open source software, licensed under the GPL V2</li>
 </ul>
 
@@ -83,14 +86,14 @@ Useful message filtering. Customizable notification and actions.</p>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span class="octicon octicon-link"></span></a>Download</h1>
 
 <p>Visual Syslog Server for Windows download installer:<br>
-<a href="https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true">Last developper snapshot 1.5.0</a><br>
-<a href="https://github.com/MaxBelkov/visualsyslog/releases/latest">Latest stable release 1.5.0</a></p>
+<a href="https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true">Last developper snapshot 1.6.0</a><br>
+<a href="https://github.com/MaxBelkov/visualsyslog/releases/latest">Latest stable release 1.6.0</a></p>
 
 <h1>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
 
 <p>After installation Visual Syslog Server for Windows works immediately: adjustment is not required.
-Waiting for messages on the UDP port 514 (default setting).
+Waiting for messages on the UDP and TCP port 514 (default setting).
 Visual Syslog Server is an Windows application (installing a system service is not required).
 Installer adds firewall exception.</p>
 
@@ -110,11 +113,10 @@ Installer project file <em>visualsyslog.iss</em></p>
 <p>Your questions and suggestions please send to <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/m.png?raw=true" alt=""></p>
 
 <h1>
-<a id="coming-soon" class="anchor" href="#coming-soon" aria-hidden="true"><span class="octicon octicon-link"></span></a>Coming Soon</h1>
+<a id="future-plans" class="anchor" href="#future-plans" aria-hidden="true"><span class="octicon octicon-link"></span></a>Future plans</h1>
 
 <ul>
-<li>Log file rotation</li>
-<li>Statistics</li>
+<li>Message statistics</li>
 </ul>
 
 <p>If you need these or other functions let me know.  </p>
@@ -127,6 +129,13 @@ Installer project file <em>visualsyslog.iss</em></p>
 
 <p>Message processing setup
 <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true" alt="Visual Syslog Server for Windows message processing"></p>
+
+<p>Main setup</p>
+
+<p><img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen6.png?raw=true" alt="Visual Syslog Server for Windows main setup"></p>
+
+<p>Files rotation setup
+<img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen5.png?raw=true" alt="Visual Syslog Server for Windows files rotation setup"></p>
 
 <p>Smtp server setup to send e-mail messages
 <img src="https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen4.png?raw=true" alt="Visual Syslog Server for Windows smtp server setup"></p>
@@ -141,17 +150,7 @@ Installer project file <em>visualsyslog.iss</em></p>
       </footer>
     </div>
 
-              <script type="text/javascript">
-            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
-            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
-          </script>
-          <script type="text/javascript">
-            try {
-              var pageTracker = _gat._getTracker("UA-55039528-1");
-            pageTracker._trackPageview();
-            } catch(err) {}
-          </script>
-
+    
 
   </body>
 </html>
