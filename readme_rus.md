@@ -66,9 +66,11 @@ Visual Syslog Сервер удобен для настройки серверов, маршрутизаторов и встраиваем
 ===
 
 Настройка цветового выделения сообщений
+
 ![Visual Syslog Сервер для Windows цветовое выделение сообщений](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen2.png?raw=true)
 
 Обработка сообщений
+
 ![Visual Syslog Сервер для Windows обработка сообщений](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true)
 
 Основные параметры настройки
@@ -76,7 +78,9 @@ Visual Syslog Сервер удобен для настройки серверов, маршрутизаторов и встраиваем
 ![Visual Syslog Сервер для Windows основные параметры настройки](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen6.png?raw=true)
 
 Настройка файлов для сохранения сообщений и разбивка их на части
+
 ![Visual Syslog Сервер для Windows настройка файлов](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen5.png?raw=true)
 
 Отправка сообщений электронной почты через SMTP сервер
+
 ![Visual Syslog Сервер для Windows настройка отправки почты](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen4.png?raw=true)

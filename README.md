@@ -73,9 +73,11 @@ Screenshots
 ===
 
 Color highlighting setup
+
 ![Visual Syslog Server for Windows color highlighting](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen2.png?raw=true)
 
 Message processing setup
+
 ![Visual Syslog Server for Windows message processing](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen3.png?raw=true)
 
 Main setup
@@ -83,7 +85,9 @@ Main setup
 ![Visual Syslog Server for Windows main setup](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen6.png?raw=true)
 
 Files rotation setup
+
 ![Visual Syslog Server for Windows files rotation setup](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen5.png?raw=true)
 
 Smtp server setup to send e-mail messages
+
 ![Visual Syslog Server for Windows smtp server setup](https://github.com/MaxBelkov/visualsyslog/blob/master/screens/screen4.png?raw=true)
