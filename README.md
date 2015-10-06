@@ -35,12 +35,13 @@ Features
 * Easy to install: adjustment is not required
 * Import historical syslog messages after the start of the program
 * View syslog messages from the file
+* The ability to receive messages encoded in UTF8
 * Free open source software, licensed under the GPL V2
 
 Download
 ===
 Visual Syslog Server for Windows download installer:  
-[Last developper snapshot 1.6.0](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Last developper snapshot 1.6.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
 [Latest stable release 1.6.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Installation

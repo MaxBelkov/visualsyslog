@@ -1,5 +1,9 @@
 Visual Syslog Server for Windows Version history
 
+1.6.1  2015-10-06
+
+- The ability to receive messages encoded in UTF8
+
 1.6.0  2015-09-29
 
 - Log file rotation by size

@@ -32,11 +32,12 @@ Visual Syslog Сервер удобен для настройки серверов, маршрутизаторов и встраиваем
 * Выполняется как обычное приложение
 * Поддерживает операционные системы Windows XP/Vista/7/8/8.1, Windows Server 2003/2008/2012
 * Показ истории сообщений после запуска программы
+* Поддержка кодировки UTF8 в тексте сообщения
 * Просмотр сообщений syslog из файла на диске
 
 Получение программы
 ===
-[Последняя версия 1.6.0](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Последняя версия 1.6.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
 [Последняя стабильная версия 1.6.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Установка

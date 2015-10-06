@@ -261,6 +261,7 @@ void TcpReceiveMessage(void)
             sm.FromStringSyslogd((char *)(c->Data + start), i - start, &c->Socket->destAddr);
             if( ProcessMessageRules(&sm) )
             {
+              // option is not set: "Ignore (do not save to the default file "syslog")"
               TStorageFile * sf = fdb->Get(0);
               if( sf )
                 if( ! sf->Save( sm.ToString() ) )

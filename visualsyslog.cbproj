@@ -19,10 +19,10 @@
     <CfgParent>Base</CfgParent>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Base)'!=''">
-    <OutputExt>exe</OutputExt>
     <BCC_OptimizeForSpeed>true</BCC_OptimizeForSpeed>
-    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
+    <OutputExt>exe</OutputExt>
     <Defines>NO_STRICT</Defines>
+    <DCC_CBuilderOutput>JPHNE</DCC_CBuilderOutput>
     <DynamicRTL>true</DynamicRTL>
     <ILINK_ObjectSearchPath>D:\WORK\visualsyslog;..\lmcommon;source;sourcecommon</ILINK_ObjectSearchPath>
     <ProjectType>CppVCLApplication</ProjectType>
@@ -35,13 +35,13 @@
     <Multithreaded>true</Multithreaded>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Cfg_1)'!=''">
-    <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
     <DCC_Optimize>false</DCC_Optimize>
-    <BCC_wamb>true</BCC_wamb>
-    <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+    <BCC_OptimizeForSpeed>false</BCC_OptimizeForSpeed>
     <Defines>_DEBUG;$(Defines)</Defines>
-    <DynamicRTL>false</DynamicRTL>
+    <DCC_DebugInfoInExe>true</DCC_DebugInfoInExe>
+    <BCC_wamb>true</BCC_wamb>
     <ILINK_FullDebugInfo>true</ILINK_FullDebugInfo>
+    <DynamicRTL>false</DynamicRTL>
     <ILINK_DisableIncrementalLinking>true</ILINK_DisableIncrementalLinking>
     <BCC_UseRegisterVariables>None</BCC_UseRegisterVariables>
     <DCC_Define>DEBUG</DCC_Define>
@@ -49,8 +49,8 @@
     <IntermediateOutputDir>Debug</IntermediateOutputDir>
     <TASM_DisplaySourceLines>true</TASM_DisplaySourceLines>
     <BCC_StackFrames>true</BCC_StackFrames>
-    <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
     <ILINK_LibraryPath>$(BDS)\lib\debug;$(ILINK_LibraryPath)</ILINK_LibraryPath>
+    <BCC_DisableOptimizations>true</BCC_DisableOptimizations>
     <TASM_Debugging>Full</TASM_Debugging>
     <BCC_SourceDebuggingOn>true</BCC_SourceDebuggingOn>
   </PropertyGroup>
@@ -65,7 +65,19 @@
     <Borland.Personality>CPlusPlusBuilder.Personality</Borland.Personality>
     <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">6</VersionInfo><VersionInfo Name="Release">0</VersionInfo><VersionInfo Name="Build">9</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.6.0.9</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.6.0.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
+<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">6</VersionInfo><VersionInfo Name="Release">1</VersionInfo><VersionInfo Name="Build">11</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.6.1.11</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.6.1.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
       
       
       

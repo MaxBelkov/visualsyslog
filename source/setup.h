@@ -80,6 +80,7 @@ __published:	// IDE-managed Components
     TCheckBox *D3CB;
     TGroupBox *GroupBox5;
     TCheckBox *WriteRawCB;
+    TCheckBox *ReceiveUTF8CB;
     void __fastcall OKButtonClick(TObject *Sender);
     void __fastcall SmtpSelClick(TObject *Sender);
     void __fastcall pmInsertClick(TObject *Sender);

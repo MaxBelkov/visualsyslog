@@ -60,6 +60,7 @@ __fastcall TSetupForm::TSetupForm(TComponent* Owner)
 
   D3CB->Checked = MainCfg.b3D;
   WriteRawCB->Checked = MainCfg.bWriteRaw;
+  ReceiveUTF8CB->Checked = MainCfg.bReceiveUTF8;
 
   // files
   localSFL = new TStorageFileList;
@@ -157,6 +158,7 @@ void __fastcall TSetupForm::OKButtonClick(TObject *Sender)
 
   MainCfg.b3D = D3CB->Checked;
   MainCfg.bWriteRaw = WriteRawCB->Checked;
+  MainCfg.bReceiveUTF8 = ReceiveUTF8CB->Checked;
 
   // files
   *fdb = localSFL;

@@ -2,8 +2,11 @@
 #include <vcl.h>
 #pragma hdrstop
 
+#include "cfg.h"
 #include "syslog.h"
 #include "server.h"
+
+extern TMainCfg MainCfg;
 
 //---------------------------------------------------------------------------
 TSyslogMessage::TSyslogMessage()
@@ -114,19 +117,10 @@ bool TSyslogMessage::FromStringSyslogd(char * p, int size, sockaddr_in * from_ad
     else
       Msg += p[i];
   }
-  /*
-  // and now - text message
-  // Replace all tabs by spaces
-  // and cut line end
-  for(int i=0; p[i]; i++)
-  {
-    if( p[i] == '\t' )
-      p[i] = ' ';
-    else if( p[i] == '\n' )
-      p[i] = 0;
-  }
-  Msg = p;
-  */
+
+  if( MainCfg.bReceiveUTF8 )
+    Msg = Utf8ToAnsi(Msg);
+
   return true;
 }
 //---------------------------------------------------------------------------
@@ -176,28 +170,6 @@ void TSyslogMessage::FromString(char * p, int len)
   for(c=0; p[i]!='\t' && i<len; i++,c++);
   Msg = String(p+i-c, c);
 
-/*
-  for(; *p && *p!='\t'; p++)
-    SourceAddr += *p;
-
-  for(p++; *p && *p!='\t'; p++)
-    DateStr += *p;
-
-  for(p++; *p && *p!='\t'; p++)
-    HostName += *p;
-
-  for(p++; *p && *p!='\t'; p++)
-    Facility += *p;
-
-  for(p++; *p && *p!='\t'; p++)
-    Priority += *p;
-
-  for(p++; *p && *p!='\t'; p++)
-    Tag += *p;
-
-  for(p++; *p && *p!='\t'; p++)
-    Msg += *p;
-*/
   // -1 if gettextcode nothing found
   PRI = gettextcode(Priority.c_str(), prioritynames);
   if( PRI >= 0 )

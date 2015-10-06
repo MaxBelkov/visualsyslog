@@ -226,7 +226,7 @@ object SetupForm: TSetupForm
         Left = 8
         Top = 315
         Width = 553
-        Height = 58
+        Height = 78
         Caption = 'Working'
         TabOrder = 4
         object WriteRawCB: TCheckBox
@@ -238,6 +238,14 @@ object SetupForm: TSetupForm
             'Write all received messages to a file "raw" for diagnostic purpo' +
             'ses'
           TabOrder = 0
+        end
+        object ReceiveUTF8CB: TCheckBox
+          Left = 20
+          Top = 47
+          Width = 509
+          Height = 17
+          Caption = 'Receive messages encoded in UTF8'
+          TabOrder = 1
         end
       end
     end
