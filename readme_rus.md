@@ -37,8 +37,8 @@ Visual Syslog Сервер удобен для настройки серверов, маршрутизаторов и встраиваем
 
 Получение программы
 ===
-[Последняя версия 1.6.1](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
-[Последняя стабильная версия 1.6.0](https://github.com/MaxBelkov/visualsyslog/releases/latest)
+[Последняя версия 1.6.2](https://github.com/MaxBelkov/visualsyslog/blob/master/Output/visualsyslog_setup.exe?raw=true)  
+[Последняя стабильная версия 1.6.2](https://github.com/MaxBelkov/visualsyslog/releases/latest)
 
 Установка
 ===

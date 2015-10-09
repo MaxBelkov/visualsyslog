@@ -154,6 +154,7 @@ void __fastcall TMainForm::FormCreate(TObject * Sender)
 
   FileRotationNumber = 0;
   SetFile(GetFileName(FileNumber));
+  UpdateRotationViewControl();
 
   bFirstTimerTick = true;
   Timer->Enabled = true;
@@ -373,9 +374,6 @@ void __fastcall TMainForm::TimerTimer(TObject *Sender)
   if( bFirstTimerTick )
   {
     TrayChangeIcon(0);
-    // Toolbar buttons visibility failure when
-    // call UpdateRotationViewControl() from TMainForm::FormCreate() !!!
-    UpdateRotationViewControl();
     bFirstTimerTick = false;
   }
 
@@ -1045,8 +1043,10 @@ void __fastcall TMainForm::SetViewFileMode(bool b)
       ViewFileInfoLabel->Tag = ViewFileInfoLabel->Left;
       ViewFileInfoLabel->Left = SelectFileCB->Left;
     }
-    aRotatePrev->Visible = false;
-    aRotateNext->Visible = false;
+    //aRotatePrev->Visible = false; // this caused: toolbar buttons visibility failure
+    //aRotateNext->Visible = false;
+    aRotatePrev->Enabled = false;
+    aRotateNext->Enabled = false;
   }
   else
   {
@@ -1421,8 +1421,10 @@ void __fastcall TMainForm::UpdateRotationViewControl(void)
   if( ! sf )
     return;
   bool b = sf->IsRotationEnable();
-  aRotatePrev->Visible = b;
-  aRotateNext->Visible = b;
+
+  //aRotatePrev->Visible = b; // this caused: toolbar buttons visibility failure
+  aRotatePrev->Enabled = b;
+  //aRotateNext->Visible = b; // this caused: toolbar buttons visibility failure
   aRotateNext->Enabled = FileRotationNumber > 0;
 }
 //---------------------------------------------------------------------------
