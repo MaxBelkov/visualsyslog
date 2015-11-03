@@ -18,6 +18,7 @@
 extern TStorageFileList * fdb;
 extern TMainCfg MainCfg;
 extern TSaveParamsINI * AppParams;
+extern TSendmailThread * SendmailThread;
 
 int TSetupForm::LastTabIndex = 0;
 int TSetupForm::LastFileIndex = 0;
@@ -314,7 +315,7 @@ void __fastcall TSetupForm::TestButtonClick(TObject *Sender)
   l.subject = m.Format(l.subject);
   l.message = m.Format(l.message);
   l.callback = OnTestReceiveMail;
-  TSendmailThread::Send(&l);
+  TSendmailThread::Send(SendmailThread, &l);
 
   SetupForm->TestButton->Enabled = false;
   SetupForm->TestButton->Caption = "waiting for smtp server answer...";

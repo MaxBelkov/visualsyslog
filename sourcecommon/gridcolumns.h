@@ -10,9 +10,6 @@
 
   В деструкторе формы:
     delete LivingColumns;
-
-  (С) МНПП Сатурн 2012
-  lanmon@mnppsaturn.ru
 */
 #ifndef gridcolumnsH
 #define gridcolumnsH

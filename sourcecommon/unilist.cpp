@@ -155,6 +155,7 @@ int TUniList<T>::get_count()
   }
   __finally
   { SetBusy(false); }
+  return 0;
 }
 //---------------------------------------------------------------------------
 template <class T>

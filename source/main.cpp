@@ -65,6 +65,8 @@ bool bHideToTray;
 TMainCfg MainCfg;
 static TMessStyle DefaultMessStyle;
 
+TSendmailThread * SendmailThread = NULL;
+
 TMainForm * MainForm = NULL;
 
 //---------------------------------------------------------------------------
@@ -270,7 +272,7 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   delete AppParams;
   AppParams = NULL;
 
-  TSendmailThread::Exit();
+  TSendmailThread::Exit(SendmailThread);
 
   delete [] FileReadBuffer;
   FileReadBuffer = NULL;
@@ -1237,7 +1239,7 @@ bool ProcessMessageRules(TSyslogMessage * p)
       l.subject = p->Format(l.subject);
       l.message = p->Format(l.message);
       l.callback = OnReceiveMail;
-      TSendmailThread::Send(&l);
+      TSendmailThread::Send(SendmailThread, &l);
     }
     if( pr->Process.bRunProg )
     {

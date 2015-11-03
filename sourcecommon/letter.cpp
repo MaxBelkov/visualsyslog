@@ -9,7 +9,7 @@
 TLetter::TLetter()
 {
   port = 25;
-  ssl = 0;
+  ssl = SMTP_SSL_OFF;
   callback = NULL;
   closure = NULL;
   data = NULL;
@@ -38,29 +38,29 @@ void TLetter::operator = (TLetter & l)
   result = l.result;
 }
 //---------------------------------------------------------------------------
-void TLetter::SetPredefinedServer(int profile)
+void TLetter::SetPredefinedServer(TSmtpServerType st)
 {
-  switch( profile )
+  switch( st )
   {
     case SMTP_MAIL_RU:
       server = "smtp.mail.ru";
       port = 465;
-      ssl = 1;
+      ssl = SMTP_SSL_ON;
     break;
     case SMTP_YANDEX_RU:
       server = "smtp.yandex.ru";
       port = 465;
-      ssl = 1;
+      ssl = SMTP_SSL_ON;
     break;
     case SMTP_ICLOUD:
       server = "smtp.mail.me.com";
       port = 587;
-      ssl = 2;
+      ssl = SMTP_SSL_TLS;
     break;
     case SMTP_GOOGLE:
       server = "smtp.gmail.com";
       port = 465;
-      ssl = 1;
+      ssl = SMTP_SSL_ON;
     break;
   }
 }
@@ -89,7 +89,7 @@ void TLetter::Load(XMLElementEx * p)
   port = p->ri("port", 25);
   username = p->rs("username");
   password = UnsecurePassword(p->rs("password"));
-  ssl = p->ri("ssl", 0);
+  ssl = p->ri("ssl", SMTP_SSL_OFF);
 
   // message params
   sender = p->rs("sender");
