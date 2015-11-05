@@ -29,9 +29,9 @@
     <PackageImports>vcl.bpi;rtl.bpi;bcbie.bpi;vclx.bpi;vclactnband.bpi;xmlrtl.bpi;bcbsmp.bpi;dbrtl.bpi;vcldb.bpi;vcldbx.bpi;bdertl.bpi;dsnap.bpi;dsnapcon.bpi;adortl.bpi;dbxcds.bpi;dbexpress.bpi;DbxCommonDriver.bpi;IndyCore.bpi;IndySystem.bpi;IndyProtocols.bpi;VclSmp.bpi;vclie.bpi;websnap.bpi;webdsnap.bpi;inet.bpi;inetdbbde.bpi;inetdbxpress.bpi;soaprtl.bpi;Rave75VCL.bpi;ecComnC11.bpi;SyntEdit11c.bpi;SyntEditDB11c.bpi;vclib.bpi;ibxpress.bpi;IntrawebDB_90_100.bpi;Intraweb_90_100.bpi;ZBldr190C11.bpi;EhLib110.bpi;EhLibDataDrivers110.bpi;acntBCB2007_R.bpi;dxCoreRS11.bpi;dxServerModeRS11.bpi;cxDataRS11.bpi;cxLibraryRS11.bpi;dxGDIPlusRS11.bpi;dxThemeRS11.bpi;dxADOServerModeRS11.bpi;dxDBXServerModeRS11.bpi;cxEditorsRS11.bpi;dxmdsRS11.bpi;dxBarRS11.bpi;dxComnRS11.bpi;dxBarDBNavRS11.bpi;dxBarExtDBItemsRS11.bpi;dxBarExtItemsRS11.bpi;dxRibbonRS11.bpi;cxBarEditItemRS11.bpi;dxdbtrRS11.bpi;dxtrmdRS11.bpi;cxPageControlRS11.bpi;dxDockingRS11.bpi;dxFlowChartRS11.bpi;cxPageControldxBarPopupMenuRS11.bpi;dxTabbedMDIRS11.bpi;dxLayoutControlRS11.bpi;dxNavBarRS11.bpi;dxorgcRS11.bpi;dxdborRS11.bpi;cxGridRS11.bpi;cxExportRS11.bpi;cxPivotGridRS11.bpi;cxPivotGridChartRS11.bpi;cxPivotGridOLAPRS11.bpi;cxTreeListRS11.bpi;cxTreeListdxBarPopupMenuRS11.bpi;cxSchedulerRS11.bpi;cxSchedulerGridRS11.bpi;dcldxSkinsCoreRS11.bpi;dxSkinsCoreRS11.bpi;dxSkinscxPCPainterRS11.bpi;dxSkinscxSchedulerPainterRS11.bpi;dxSkinsdxDLPainterRS11.bpi;dxSkinsdxBarPainterRS11.bpi;dxSkinsdxNavBarPainterRS11.bpi;dxSkinsdxRibbonPainterRS11.bpi;dxSpellCheckerRS11.bpi;cxSpreadSheetRS11.bpi;cxVerticalGridRS11.bpi;dxPSCoreRS11.bpi;dxPSLnksRS11.bpi;dxPScxCommonRS11.bpi;dxPScxExtCommonRS11.bpi;dxPScxGridLnkRS11.bpi;dxPSdxLCLnkRS11.bpi;dxPScxPivotGridLnkRS11.bpi;dxPScxSchedulerLnkRS11.bpi;dxPScxSSLnkRS11.bpi;dxPScxTLLnkRS11.bpi;dxPScxVGridLnkRS11.bpi;dxPSdxOCLnkRS11.bpi;dxPSdxDBOCLnkRS11.bpi;dxPSdxDBTVLnkRS11.bpi;dxPSdxFCLnkRS11.bpi;dxPScxPCProdRS11.bpi;dxPsPrVwAdvRS11.bpi;dxPSPrVwRibbonRS11.bpi;dxSkinBlackRS11.bpi;dxSkinBlueRS11.bpi;dxSkinCaramelRS11.bpi;dxSkinCoffeeRS11.bpi;dxSkinDarkRoomRS11.bpi;dxSkinDarkSideRS11.bpi;dxSkinFoggyRS11.bpi;dxSkinGlassOceansRS11.bpi;dxSkiniMaginaryRS11.bpi;dxSkinLilianRS11.bpi;dxSkinLiquidSkyRS11.bpi;dxSkinLondonLiquidSkyRS11.bpi;dxSkinMcSkinRS11.bpi;dxSkinMoneyTwinsRS11.bpi;dxSkinOffice2007BlackRS11.bpi;dxSkinOffice2007BlueRS11.bpi;dxSkinOffice2007GreenRS11.bpi;dxSkinOffice2007PinkRS11.bpi;dxSkinOffice2007SilverRS11.bpi;dxSkinOffice2010BlackRS11.bpi;dxSkinOffice2010BlueRS11.bpi;dxSkinOffice2010SilverRS11.bpi;dxSkinPumpkinRS11.bpi;dxSkinSevenRS11.bpi;dxSkinSharpRS11.bpi;dxSkinSilverRS11.bpi;dxSkinSpringTimeRS11.bpi;dxSkinStardustRS11.bpi;dxSkinSummer2008RS11.bpi;dxSkinValentineRS11.bpi;dxSkinXmas2008BlueRS11.bpi;dxSkinBlueprintRS11.bpi;dxSkinDevExpressDarkStyleRS11.bpi;dxSkinDevExpressStyleRS11.bpi;dxSkinHighContrastRS11.bpi;dxSkinSevenClassicRS11.bpi;dxSkinSharpPlusRS11.bpi;dxSkinTheAsphaltWorldRS11.bpi;dxSkinVS2010RS11.bpi;dxSkinWhiteprintRS11.bpi;dxTileControlRS11.bpi;TeeUI911.bpi;TeeDB911.bpi;Tee911.bpi;fs11.bpi;frx11.bpi;frxcs11.bpi;fsDB11.bpi;frxDB11.bpi;fsBDE11.bpi;frxBDE11.bpi;fsADO11.bpi;frxADO11.bpi;fsIBX11.bpi;frxIBX11.bpi;frxe11.bpi;fsTee11.bpi;frxTee11.bpi;PostgresDAC11.bpi</PackageImports>
     <BCC_wpar>false</BCC_wpar>
     <PackageLibs>IndyProtocols110.lib;IndyCore110.lib;IndySystem110.lib</PackageLibs>
-    <IncludePath>$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;..\visualsyslog;source;sourcecommon</IncludePath>
+    <IncludePath>$(BDS)\include;$(BDS)\include\dinkumware;$(BDS)\include\vcl;..\visualsyslog;source;sourcecommon;..\lmcommon</IncludePath>
     <AllPackageLibs>rtl.lib;vcl.lib;vcldb.lib;dbrtl.lib;IndyProtocols110.lib;IndyCore110.lib;IndySystem110.lib;vclx.lib</AllPackageLibs>
-    <ILINK_LibraryPath>$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;..\visualsyslog;source;sourcecommon</ILINK_LibraryPath>
+    <ILINK_LibraryPath>$(BDS)\lib;$(BDS)\lib\obj;$(BDS)\lib\psdk;..\visualsyslog;source;sourcecommon;..\lmcommon</ILINK_LibraryPath>
     <Multithreaded>true</Multithreaded>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Cfg_1)'!=''">
@@ -65,31 +65,7 @@
     <Borland.Personality>CPlusPlusBuilder.Personality</Borland.Personality>
     <Borland.ProjectType>CppVCLApplication</Borland.ProjectType>
     <BorlandProject>
-<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">6</VersionInfo><VersionInfo Name="Release">2</VersionInfo><VersionInfo Name="Build">13</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.6.2.13</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.6.2.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
-      
+<BorlandProject><CPlusPlusBuilder.Personality><Source><Source Name="MainSource">visualsyslog.cpp</Source></Source><VersionInfo><VersionInfo Name="IncludeVerInfo">True</VersionInfo><VersionInfo Name="AutoIncBuild">True</VersionInfo><VersionInfo Name="MajorVer">1</VersionInfo><VersionInfo Name="MinorVer">6</VersionInfo><VersionInfo Name="Release">2</VersionInfo><VersionInfo Name="Build">14</VersionInfo><VersionInfo Name="Debug">False</VersionInfo><VersionInfo Name="PreRelease">False</VersionInfo><VersionInfo Name="Special">False</VersionInfo><VersionInfo Name="Private">False</VersionInfo><VersionInfo Name="DLL">False</VersionInfo><VersionInfo Name="Locale">1033</VersionInfo><VersionInfo Name="CodePage">1252</VersionInfo></VersionInfo><VersionInfoKeys><VersionInfoKeys Name="CompanyName">Max Belkov</VersionInfoKeys><VersionInfoKeys Name="FileDescription">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="FileVersion">1.6.2.14</VersionInfoKeys><VersionInfoKeys Name="InternalName"></VersionInfoKeys><VersionInfoKeys Name="LegalCopyright">https://github.com/MaxBelkov/visualsyslog</VersionInfoKeys><VersionInfoKeys Name="LegalTrademarks"></VersionInfoKeys><VersionInfoKeys Name="OriginalFilename"></VersionInfoKeys><VersionInfoKeys Name="ProductName">Visual Syslog Server for Windows</VersionInfoKeys><VersionInfoKeys Name="ProductVersion">1.6.2.0</VersionInfoKeys><VersionInfoKeys Name="Comments"></VersionInfoKeys></VersionInfoKeys><Debugging><Debugging Name="DebugSourceDirs"></Debugging></Debugging><Parameters><Parameters Name="RunParams"></Parameters><Parameters Name="Launcher"></Parameters><Parameters Name="UseLauncher">False</Parameters><Parameters Name="DebugCWD"></Parameters><Parameters Name="HostApplication"></Parameters><Parameters Name="RemoteHost"></Parameters><Parameters Name="RemotePath"></Parameters><Parameters Name="RemoteParams"></Parameters><Parameters Name="RemoteLauncher"></Parameters><Parameters Name="UseRemoteLauncher">False</Parameters><Parameters Name="RemoteCWD"></Parameters><Parameters Name="RemoteDebug">False</Parameters><Parameters Name="Debug Symbols Search Path"></Parameters><Parameters Name="LoadAllSymbols">True</Parameters><Parameters Name="LoadUnspecifiedSymbols">False</Parameters></Parameters><Excluded_Packages>
       <Excluded_Packages Name="C:\Users\Максим\Documents\DevExpress VCL\Library\RS11\dcldxPSTeeChartRS11.bpl">ExpressPrinting System ReportLink for TeeChart by Developer Express Inc.</Excluded_Packages>
       <Excluded_Packages Name="C:\Users\Максим\Documents\DevExpress VCL\Library\RS11\dcldxPSDBTeeChartRS11.bpl">ExpressPrinting System ReportLink for DBTeeChart by Developer Express Inc.</Excluded_Packages>
       <Excluded_Packages Name="$(BDS)\bin\bcboffice2k100.bpl">CodeGear C++Builder Office 2000 Servers Package</Excluded_Packages>
@@ -103,6 +79,9 @@
     <ResFiles Include="visualsyslog.res">
       <BuildOrder>0</BuildOrder>
     </ResFiles>
+    <CppCompile Include="..\lmcommon\critsection.cpp">
+      <BuildOrder>40</BuildOrder>
+    </CppCompile>
     <CppCompile Include="sourcecommon\base64.cpp">
       <DependentOn>sourcecommon\base64.h</DependentOn>
       <BuildOrder>15</BuildOrder>

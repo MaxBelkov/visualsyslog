@@ -3,7 +3,7 @@ template <class T>
 TUniList<T>::TUniList(void)
 {
   l = new TList;
-  bEnableMT = false;
+  pcs = NULL;
 }
 //---------------------------------------------------------------------------
 template <class T>
@@ -12,167 +12,146 @@ TUniList<T>::~TUniList(void)
   Clear();
   delete l;
   l = NULL;
-  if( bEnableMT )
+  if( pcs )
   {
-    DeleteCriticalSection( &busy );
-    bEnableMT = false;
+    delete pcs;
+    pcs = NULL;
   }
-}
-//---------------------------------------------------------------------------
-template <class T>
-void TUniList<T>::Clear(void)
-{
-  SetBusy(true);
-  try
-  {
-    for(int i=0, c=l->Count; i<c; i++)
-      delete (T *)l->Items[i];
-    l->Clear();
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-T * TUniList<T>::Add(T * p)
-{
-  SetBusy(true);
-  try
-  {
-    l->Add(p);
-  }
-  __finally
-  { SetBusy(false); }
-  return p;
-}
-//---------------------------------------------------------------------------
-template <class T>
-T * TUniList<T>::Insert(int i, T * p)
-{
-  SetBusy(true);
-  try
-  {
-    l->Insert(i, p);
-    return (T *)l->Items[i];
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-void TUniList<T>::Delete(T * p)
-{
-  SetBusy(true);
-  try
-  {
-    l->Remove(p);
-    delete p;
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-void TUniList<T>::Delete(int i)
-{
-  SetBusy(true);
-  try
-  {
-    if( i>=0 && i<l->Count )
-    {
-      delete (T *)l->Items[i];
-      l->Delete(i);
-    }
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-bool TUniList<T>::Contains(T * p)
-{
-  SetBusy(true);
-  try
-  {
-    return l->IndexOf(p)>=0;
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-T * TUniList<T>::Extract(int i)
-{
-  SetBusy(true);
-  T * rv = NULL;
-  try
-  {
-    if( i>=0 && i<l->Count )
-    {
-      rv = (T *)l->Items[i];
-      l->Delete(i);
-    }
-  }
-  __finally
-  { SetBusy(false); }
-  return rv;
-}
-//---------------------------------------------------------------------------
-template <class T>
-T * TUniList<T>::Get(int i)
-{
-  SetBusy(true);
-  try
-  {
-    if( i>=0 && i<l->Count )
-      return (T *)l->Items[i];
-    return NULL;
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-void TUniList<T>::Set(int i, T * p)
-{
-  SetBusy(true);
-  try
-  {
-    if( i>=0 && i<l->Count )
-      l->Items[i] = p;
-  }
-  __finally
-  { SetBusy(false); }
-}
-//---------------------------------------------------------------------------
-template <class T>
-int TUniList<T>::get_count()
-{
-  SetBusy(true);
-  try
-  {
-    return l->Count;
-  }
-  __finally
-  { SetBusy(false); }
-  return 0;
 }
 //---------------------------------------------------------------------------
 template <class T>
 void TUniList<T>::EnableMultiTreading(void)
 {
-  if( bEnableMT )
+  if( pcs )
     return;
-  InitializeCriticalSection( &busy );
-  bEnableMT = true;
+  pcs = new TCritSection();
 }
 //---------------------------------------------------------------------------
 template <class T>
-void TUniList<T>::SetBusy(bool b)
+void TUniList<T>::Clear(void)
 {
-  if( ! bEnableMT )
-    return;
-  if( b ) EnterCriticalSection( &busy );
-  else LeaveCriticalSection( &busy );
+  TCritSectionEnter cse(pcs);
+/*
+  for(int i=0, c=l->Count; i<c; i++)
+    delete (T *)l->Items[i];
+*/
+  l->Clear();
 }
 //---------------------------------------------------------------------------
+template <class T>
+int TUniList<T>::Add(T * p)
+{
+  TCritSectionEnter cse(pcs);
+  return l->Add(p);
+}
+//---------------------------------------------------------------------------
+template <class T>
+void TUniList<T>::Insert(int i, T * p)
+{
+  TCritSectionEnter cse(pcs);
+  l->Insert(i, p);
+}
+//---------------------------------------------------------------------------
+template <class T>
+void TUniList<T>::Delete(T * p)
+{
+  TCritSectionEnter cse(pcs);
+  l->Remove(p);
+/*
+  delete p;
+*/  
+}
+//---------------------------------------------------------------------------
+template <class T>
+T * TUniList<T>::Extract(int i)
+{
+  TCritSectionEnter cse(pcs);
+  T * rv = NULL;
+  if( i>=0 && i<l->Count )
+  {
+    rv = (T *)l->Items[i];
+    l->Delete(i);
+  }
+  return rv;
+}
+//---------------------------------------------------------------------------
+template <class T>
+T * TUniList<T>::ExtractLast(void)
+{
+  TCritSectionEnter cse(pcs);
+  T * rv = NULL;
+  int c = l->Count;
+  if( c > 0 )
+  {
+    rv = (T *)l->Items[c-1];
+    l->Delete(c-1);
+  }
+  return rv;
+}
+//---------------------------------------------------------------------------
+template <class T>
+bool TUniList<T>::Contains(T * p)
+{
+  TCritSectionEnter cse(pcs);
+  return l->IndexOf(p) >= 0;
+}
+//---------------------------------------------------------------------------
+template <class T>
+T * TUniList<T>::Get(int i)
+{
+  TCritSectionEnter cse(pcs);
+  //return GetNB(i);
+  if( i>=0 && i<l->Count )
+    return (T *)l->Items[i];
+  return NULL;
+}
+//---------------------------------------------------------------------------
+template <class T>
+void TUniList<T>::Set(int i, T * p)
+{
+  TCritSectionEnter cse(pcs);
+  if( i>=0 && i<l->Count )
+    l->Items[i] = p;
+}
+//---------------------------------------------------------------------------
+template <class T>
+int TUniList<T>::GetCount(void)
+{
+  TCritSectionEnter cse(pcs);
+  return l->Count;
+}
+//---------------------------------------------------------------------------
+template <class T>
+T * TUniList<T>::GetNB(int i)
+{
+  if( i>=0 && i<l->Count )
+    return (T *)l->Items[i];
+  return NULL;
+}
+//---------------------------------------------------------------------------
+template <class T>
+void TUniList<T>::SetNB(int i, T * p)
+{
+  if( i>=0 && i<l->Count )
+    l->Items[i] = p;
+}
+//---------------------------------------------------------------------------
+template <class T>
+int TUniList<T>::GetCountNB(void)
+{
+  return l->Count;
+}
+//---------------------------------------------------------------------------
+template <class T>
+bool TUniList<T>::SetBusy(bool b)
+{
+  if( ! pcs )
+    return false;
+  if( b )
+    pcs->Enter();
+  else
+    pcs->Leave();
+  return true;  
+}
+//---------------------------------------------------------------------------
+
