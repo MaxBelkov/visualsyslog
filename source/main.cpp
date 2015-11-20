@@ -830,34 +830,6 @@ void __fastcall TMainForm::TrayChangeIcon(int State)
     TrayIcon->Hint = tip;
 }
 //---------------------------------------------------------------------------
-/* State: 0-ok 1-warning 2-error
-void __fastcall TMainForm::TrayShowBallon(AnsiString Title, AnsiString Text, int State)
-{
-  // That messages are not received, not more than once every 1000 ms
-  DWORD tc = GetTickCount();
-  if( tc - LastBalloonShowTime <= 1000UL )
-    return;
-
-  if( ! TrayIcon->Visible )
-  {
-    TrayIcon->Animate = false;
-    TrayIcon->Visible = true;
-  }
-
-  LastBalloonShowTime = tc;
-  TrayIcon->BalloonTitle = Title;
-  TrayIcon->BalloonHint = Text;
-  switch( State )
-  {
-    case 0: TrayIcon->BalloonFlags = bfInfo; break;
-    case 1: TrayIcon->BalloonFlags = bfWarning; break;
-    case 2: TrayIcon->BalloonFlags = bfError; break;
-    default: TrayIcon->BalloonFlags = bfNone; break;
-  }
-  TrayIcon->ShowBalloonHint();
-}
-*/
-//---------------------------------------------------------------------------
 void __fastcall TMainForm::FormClose(TObject *Sender, TCloseAction &Action)
 {
   Action = caNone;

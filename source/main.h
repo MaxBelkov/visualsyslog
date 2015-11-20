@@ -227,8 +227,6 @@ public:		// User declarations
 
   // Change icons and hint (State: 0-ok 1-warning 2-error)
   void __fastcall TrayChangeIcon(int State);
-  // not used yet
-  //void __fastcall TrayShowBallon(AnsiString Title, AnsiString Text, int State=0);
   void __fastcall SetViewFileMode(bool b);
 
   // Get display message by index

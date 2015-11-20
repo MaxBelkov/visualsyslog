@@ -140,9 +140,7 @@ String TStorageFile::GetNewRotationName(void)
   {
     WriteToLogError("GetNewRotationName error");
   }
-  if( f.Length() > 0 && ExtractFilePath(f).Length() == 0 )
-    return WorkDir + f;
-  return f;
+  return ExtractFilePath(GetFileName()) + f;
 }
 //---------------------------------------------------------------------------
 bool TStorageFile::IsNeedRenameAfterRotate(void)
@@ -194,7 +192,6 @@ void TStorageFile::RotateFile(void)
     // rotation log open
     TStringList * p = new TStringList;
     String rlf = RotationLogFormatFileName();
-    //try { p->LoadFromFile(rlf); } catch(...) {}
 
     for(int i=rotation_count-1; i>=0; i--)
     {
@@ -248,8 +245,10 @@ bool TStorageFile::IsRotationEnable(void)
 //---------------------------------------------------------------------------
 String TStorageFile::GetFileName(void)
 {
+  // if user specify the file name without path: WorkDir will be added
   if( file.Length() > 0 && ExtractFilePath(file).Length() == 0 )
     return WorkDir + file;
+  // full file name  
   return file;
 }
 //---------------------------------------------------------------------------

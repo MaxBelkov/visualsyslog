@@ -223,7 +223,10 @@ object FileFr: TFileFr
         Top = 46
         Width = 97
         Height = 17
+        Hint = 'File name without path'
         Caption = 'New name:'
+        ParentShowHint = False
+        ShowHint = True
         TabOrder = 1
         OnClick = Change
       end

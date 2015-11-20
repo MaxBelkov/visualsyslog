@@ -11,7 +11,8 @@ class TStorageFile
 {
 public:
   int number;   // file number to link from TMessProcess::SaveFile
-  String file;  // file name
+  String file;  // log file name (if user specify the file name without path:
+                // WorkDir will be added)
 
   // *** LogRotate ***
   int rotation_type;   // file rotation: 0-disable, 1-by size, 2-by date [0]
@@ -23,7 +24,7 @@ public:
   int rotation_hour;   // 0..23 [0]
   // file name after rotation
   int rotation_renaming; // 0-file+number[rotation_count] 1-rename file to rotation_name
-  String rotation_name;  // new file name after rotation {dd-mm-yyyy hh}
+  String rotation_name;  // new file name (without path!) after rotation {dd-mm-yyyy hh}
   int rotation_count;    // total number of rotated files >= 1 [10]
 
 private:
@@ -41,6 +42,7 @@ public:
   bool Save(AnsiString s);
 
   String GetDescription(void);
+  // get log file name with full path
   String GetFileName(void);
   void SetFileName(String f);
 
