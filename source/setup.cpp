@@ -79,6 +79,8 @@ __fastcall TSetupForm::TSetupForm(TComponent* Owner)
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::FormDestroy(TObject *Sender)
 {
+  SetupForm = NULL;
+  
   LastTabIndex = PageControl->TabIndex;
   if( DrawGrid->Row > 0 )
     LastFileIndex = DrawGrid->Row - 1;
@@ -190,7 +192,7 @@ bool TSetupForm::FromInterface(TLetter * p)
   p->port = port;
   p->username = usernameEdit->Text;
   p->password = passwordEdit->Text;
-  p->ssl = sslComboBox->ItemIndex;
+  p->ssl = (TSmtpSSLType)sslComboBox->ItemIndex;
 
   p->sender = senderEdit->Text;
   p->sender_name = sender_nameEdit->Text;
@@ -217,36 +219,11 @@ void TSetupForm::ToInterface(TLetter * p)
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::SmtpSelClick(TObject *Sender)
 {
-  int profile = ((TSpeedButton *)Sender)->Tag;
-  String server;
-  int port;
-  int ssl;
-  switch( profile )
-  {
-    case SMTP_MAIL_RU:
-      server = "smtp.mail.ru";
-      port = 465;
-      ssl = 1;
-    break;
-    case SMTP_YANDEX_RU:
-      server = "smtp.yandex.ru";
-      port = 465;
-      ssl = 1;
-    break;
-    case SMTP_ICLOUD:
-      server = "smtp.mail.me.com";
-      port = 587;
-      ssl = 2;
-    break;
-    case SMTP_GOOGLE:
-      server = "smtp.gmail.com";
-      port = 465;
-      ssl = 1;
-    break;
-  }
-  serverEdit->Text = server;
-  portEdit->Text = port;
-  sslComboBox->ItemIndex = ssl;
+  TLetter l;
+  l.SetPredefinedServer( (TSmtpServerType)((TSpeedButton *)Sender)->Tag );
+  serverEdit->Text = l.server;
+  portEdit->Text = l.port;
+  sslComboBox->ItemIndex = l.ssl;
 }
 //---------------------------------------------------------------------------
 void __fastcall TSetupForm::pmInsertClick(TObject *Sender)
@@ -284,7 +261,7 @@ void __fastcall TSetupForm::InsertSubjectButtonClick(TObject *Sender)
   ActiveControl = subjectEdit;
 }
 //---------------------------------------------------------------------------
-static void OnTestReceiveMail(TLetter * l)
+static void OnTestSendMail(TLetter * l)
 {
   if( l->result )
     ReportMess2("Test message sent successfully");
@@ -314,8 +291,8 @@ void __fastcall TSetupForm::TestButtonClick(TObject *Sender)
     return;
   l.subject = m.Format(l.subject);
   l.message = m.Format(l.message);
-  l.callback = OnTestReceiveMail;
-  TSendmailThread::Send(SendmailThread, &l);
+  l.callback = OnTestSendMail;
+  TSendmailThread::Send(&SendmailThread, &l);
 
   SetupForm->TestButton->Enabled = false;
   SetupForm->TestButton->Caption = "waiting for smtp server answer...";

@@ -21,9 +21,9 @@
      port   - порт сервера
      username - има пользователя, для аутентификации
      password - пароль, для аутентификации
-     ssl - 0 нет (незащищенная авторизация),
-           1 использовать SSL сразу (обычно 465 порт),
-           2 использовать TLS после того как сервер разрешил (обычно 587 порт)
+     ssl - SMTP_SSL_OFF нет (незащищенная авторизация),
+           SMTP_SSL_ON  использовать SSL сразу (обычно 465 порт),
+           SMTP_SSL_TLS использовать TLS после того как сервер разрешил (обычно 587 порт)
 
      sender - e-mail адрес отправителя
      sender_name - имя отправителя
@@ -38,17 +38,17 @@
      closure - то же самое что и callback, но с добавлением указателя на объект.
                Позволяет вызывать функции, являющиеся методами классов.
 
-   Определить указатель:
+   Определить указатель на поток:
    TSendmailThread * SendmailThread = NULL;
 
    После этого нужно вызвать статическую функцию
-   TSendmailThread::Send(SendmailThread, TLetter *)
+   TSendmailThread::Send(&SendmailThread, TLetter *)
    Она создаст поток отправки писем, поставит письмо в очередь на отправку и
    вернет управление мгновенно.
    Создание потока отправки писем выполняется только при отправке первого письма.
    О результате отправки письма можно узнать с помощью callback / closure
    При завершении приложения нужно вызвать статическую функцию
-   TSendmailThread::Exit(SendmailThread)
+   TSendmailThread::Exit(&SendmailThread)
    для завершения работы потока отправки писем.
 */
 
@@ -79,11 +79,10 @@ public:
   __fastcall TSendmailThread(void);
   __fastcall ~TSendmailThread();
   // Создает поток (если он еще не создан), помещает указатель на него в
-  // SendmailThread и отправляет письмо TLetter
-  static void __fastcall Send(TSendmailThread * SendmailThread, TLetter * p);
-  // Удаляет поток по указателю SendmailThread
-  static void __fastcall Exit(TSendmailThread * SendmailThread);
+  // *SendmailThread и отправляет письмо TLetter
+  static void __fastcall Send(TSendmailThread ** SendmailThread, TLetter * p);
+  // Удаляет поток по указателю *SendmailThread
+  static void __fastcall Exit(TSendmailThread ** SendmailThread);
 };
 //---------------------------------------------------------------------------
 #endif
-

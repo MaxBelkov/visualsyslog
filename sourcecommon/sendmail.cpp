@@ -101,30 +101,31 @@ void __fastcall TSendmailThread::Execute()
   }
 }
 //---------------------------------------------------------------------------
-void __fastcall TSendmailThread::Exit(TSendmailThread * SendmailThread)
+void __fastcall TSendmailThread::Exit(TSendmailThread ** SendmailThread)
 {
-  if( SendmailThread )
+  if( *SendmailThread )
   {
-    if( SendmailThread->letters.Count > 0 )
+    if( (*SendmailThread)->letters.Count > 0 )
     {
       // Если остались неотправленные письма - они утрачиваются
     }
-    SendmailThread->Terminate();
-    SendmailThread->WaitFor();
-    delete SendmailThread;
+    (*SendmailThread)->Terminate();
+    (*SendmailThread)->WaitFor();
+    delete *SendmailThread;
+    *SendmailThread = NULL;
   }
 }
 //---------------------------------------------------------------------------
-void __fastcall TSendmailThread::Send(TSendmailThread * SendmailThread, TLetter * p)
+void __fastcall TSendmailThread::Send(TSendmailThread ** SendmailThread, TLetter * p)
 {
-  if( ! SendmailThread )
+  if( ! *SendmailThread )
   {
-    SendmailThread = new TSendmailThread;
-    SendmailThread->Resume();
+    *SendmailThread = new TSendmailThread;
+    (*SendmailThread)->Resume();
   }
-  TLetter * n = new TLetter;
-  *n = *p;
-  SendmailThread->letters.Add(n);
+  // make copy of *p, and add them to queue
+  TLetter * n = new TLetter(*p);
+  (*SendmailThread)->letters.Add(n);
 }
 //---------------------------------------------------------------------------
 bool TSendmailThread::SendInternal(TLetter * p)

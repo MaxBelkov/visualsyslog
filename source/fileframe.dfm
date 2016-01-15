@@ -27,7 +27,7 @@ object FileFr: TFileFr
       Top = 39
       Width = 25
       Height = 25
-      Hint = 'Select wav file'
+      Hint = 'Select log file'
       Anchors = [akTop, akRight]
       Flat = True
       Glyph.Data = {

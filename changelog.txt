@@ -1,5 +1,9 @@
 Visual Syslog Server for Windows Version history
 
+1.6.4  2015-11-23
+
+- Fixed bug with sending e-mail
+
 1.6.3  2015-11-20
 
 - Fixed bug with file rotation by "New name"

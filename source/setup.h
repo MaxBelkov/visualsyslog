@@ -99,9 +99,9 @@ private:	// User declarations
   static int LastFileIndex;
 
 public:
-  static int LastTabIndex;
   bool bUdpRestart;
   bool bTcpRestart;
+  static int LastTabIndex;
   
 public:		// User declarations
     __fastcall TSetupForm(TComponent* Owner);

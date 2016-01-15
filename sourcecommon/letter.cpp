@@ -15,7 +15,12 @@ TLetter::TLetter()
   data = NULL;
 }
 //---------------------------------------------------------------------------
-void TLetter::operator = (TLetter & l)
+TLetter::TLetter(const TLetter & l)
+{
+  *this = l;
+}
+//---------------------------------------------------------------------------
+void TLetter::operator = (const TLetter & l)
 {
   server = l.server;
   port = l.port;
@@ -89,7 +94,7 @@ void TLetter::Load(XMLElementEx * p)
   port = p->ri("port", 25);
   username = p->rs("username");
   password = UnsecurePassword(p->rs("password"));
-  ssl = p->ri("ssl", SMTP_SSL_OFF);
+  ssl = (TSmtpSSLType)p->ri("ssl", SMTP_SSL_OFF);
 
   // message params
   sender = p->rs("sender");

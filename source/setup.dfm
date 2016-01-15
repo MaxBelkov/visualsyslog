@@ -105,10 +105,6 @@ object SetupForm: TSetupForm
     TabOrder = 0
     object TabSheet1: TTabSheet
       Caption = 'Main'
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox1: TGroupBox
         Left = 8
         Top = 187
@@ -152,7 +148,7 @@ object SetupForm: TSetupForm
           Top = 51
           Width = 170
           Height = 21
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = False
           TabOrder = 1
@@ -195,7 +191,7 @@ object SetupForm: TSetupForm
           Top = 43
           Width = 170
           Height = 21
-          ItemHeight = 0
+          ItemHeight = 13
           ParentShowHint = False
           ShowHint = False
           TabOrder = 1
@@ -432,10 +428,6 @@ object SetupForm: TSetupForm
     object TabSheet2: TTabSheet
       Caption = 'E-mail'
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object GroupBox2: TGroupBox
         Left = 8
         Top = 3

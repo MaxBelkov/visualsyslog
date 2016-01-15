@@ -272,7 +272,7 @@ void __fastcall TMainForm::FormDestroy(TObject *Sender)
   delete AppParams;
   AppParams = NULL;
 
-  TSendmailThread::Exit(SendmailThread);
+  TSendmailThread::Exit(&SendmailThread);
 
   delete [] FileReadBuffer;
   FileReadBuffer = NULL;
@@ -766,7 +766,6 @@ void __fastcall TMainForm::aSetupExecute(TObject *Sender)
     MainCfg.Save(MainCfgFile, fdb);
   }
   delete SetupForm;
-  SetupForm = NULL;
 }
 //---------------------------------------------------------------------------
 void __fastcall TMainForm::RedrawProto(void)
@@ -1171,7 +1170,7 @@ void __fastcall TMainForm::ChangeProfileClick(TObject *Sender)
   LogSG->Invalidate();
 }
 //---------------------------------------------------------------------------
-static void OnReceiveMail(TLetter * l)
+static void OnSendMail(TLetter * l)
 {
   if( ! l->result )
     WriteToLogError(String("ERROR\tSent e-mail:") + l->error);
@@ -1210,8 +1209,8 @@ bool ProcessMessageRules(TSyslogMessage * p)
         l.recipient = pr->Process.Recipient;
       l.subject = p->Format(l.subject);
       l.message = p->Format(l.message);
-      l.callback = OnReceiveMail;
-      TSendmailThread::Send(SendmailThread, &l);
+      l.callback = OnSendMail;
+      TSendmailThread::Send(&SendmailThread, &l);
     }
     if( pr->Process.bRunProg )
     {

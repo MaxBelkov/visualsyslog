@@ -22,7 +22,7 @@ public:
   int port;
   String username;
   String password;
-  int ssl;
+  TSmtpSSLType ssl;
 
   // message params
   String sender;
@@ -44,7 +44,8 @@ public:
 
 public:
   TLetter();
-  void operator = (TLetter & l);
+  TLetter(const TLetter & l);
+  void operator = (const TLetter & l);
   void SetPredefinedServer(TSmtpServerType st);
   void Save(XMLElementEx * p);
   void Load(XMLElementEx * p);
